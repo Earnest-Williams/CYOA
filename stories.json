@@ -1,0 +1,57 @@
+{
+  "Short": {
+    "start": {
+      "text": "You enter a {{tone}} {{genre}} world. A fork lies ahead.",
+      "choices": [
+        { "text": "Go left", "next": "left" },
+        { "text": "Go right", "next": "right" }
+      ]
+    },
+    "left": { "text": "A mysterious figure appears. The end!", "choices": [] },
+    "right": { "text": "You find treasure. The end!", "choices": [] }
+  },
+  "Medium": {
+    "start": {
+      "text": "You enter a {{tone}} {{genre}} world. You press onward.",
+      "choices": [
+        { "text": "Continue", "next": "middle" }
+      ]
+    },
+    "middle": {
+      "text": "The path splits ahead.",
+      "choices": [
+        { "text": "Go left", "next": "left_end" },
+        { "text": "Go right", "next": "right_end" }
+      ]
+    },
+    "left_end": { "text": "A mysterious figure appears. The end!", "choices": [] },
+    "right_end": { "text": "You find treasure. The end!", "choices": [] }
+  },
+  "Long": {
+    "start": {
+      "text": "You enter a {{tone}} {{genre}} world. Two roads stretch out ahead.",
+      "choices": [
+        { "text": "Take the forest path", "next": "forest" },
+        { "text": "Take the mountain path", "next": "mountain" }
+      ]
+    },
+    "forest": {
+      "text": "The forest thickens and a river blocks your way.",
+      "choices": [
+        { "text": "Build a raft", "next": "raft" },
+        { "text": "Search for a bridge", "next": "bridge" }
+      ]
+    },
+    "mountain": {
+      "text": "A steep climb challenges you.",
+      "choices": [
+        { "text": "Climb higher", "next": "peak" },
+        { "text": "Explore a cave", "next": "cave" }
+      ]
+    },
+    "raft": { "text": "You sail to a hidden grove. The end!", "choices": [] },
+    "bridge": { "text": "You cross safely into a village. The end!", "choices": [] },
+    "peak": { "text": "At the peak, you glimpse new horizons. The end!", "choices": [] },
+    "cave": { "text": "Inside the cave, treasure awaits. The end!", "choices": [] }
+  }
+}
