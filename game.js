@@ -1,7 +1,7 @@
 const questions = [
-  { text: "Preferred genre?", answers: ["Fantasy", "Sci‑Fi", "Mystery"] },
-  { text: "Tone?", answers: ["Light‑hearted", "Serious"] },
-  { text: "Desired length?", answers: ["Short", "Medium", "Long"] }
+  { id: "genre", text: "Preferred genre?", answers: ["Fantasy", "Sci‑Fi", "Mystery"] },
+  { id: "tone", text: "Tone?", answers: ["Light‑hearted", "Serious"] },
+  { id: "length", text: "Desired length?", answers: ["Short", "Medium", "Long"] }
 ];
 
 let prefs = {};
@@ -14,7 +14,7 @@ function renderQuestion() {
     q.answers.map(a => `<button>${a}</button>`).join("");
   [...app.querySelectorAll("button")].forEach(btn =>
     btn.addEventListener("click", () => {
-      prefs[q.text] = btn.textContent;
+      prefs[q.id] = btn.textContent;
       qIndex++;
       qIndex < questions.length ? renderQuestion() : startStory();
     })
@@ -27,8 +27,8 @@ function startStory() {
 }
 
 function buildStory(prefs) {
-  const genre = prefs["Preferred genre?"];
-  const tone = prefs["Tone?"];
+  const genre = prefs.genre;
+  const tone = prefs.tone;
   const nodes = {
     start: {
       text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. A fork lies ahead.`,
