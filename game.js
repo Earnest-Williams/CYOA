@@ -10,7 +10,9 @@ const app = document.getElementById("app");
 
 function renderQuestion() {
   const q = questions[qIndex];
-  app.innerHTML = `<h2>${q.text}</h2>` +
+  const step = qIndex + 1;
+  const total = questions.length;
+  app.innerHTML = `<p class="question-progress">Question ${step} of ${total}</p><h2>${q.text}</h2>` +
     q.answers.map(a => `<button>${a}</button>`).join("");
   [...app.querySelectorAll("button")].forEach(btn =>
     btn.addEventListener("click", () => {
