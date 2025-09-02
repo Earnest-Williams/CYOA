@@ -66,5 +66,9 @@ function populateThemeDropdown() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', populateThemeDropdown);
+if (document.readyState === 'complete') {
+  populateThemeDropdown();
+} else {
+  window.addEventListener('load', populateThemeDropdown);
+}
 
