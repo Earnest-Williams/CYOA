@@ -1,27 +1,30 @@
-function setTheme(href) {
-  const link = document.querySelector('link[rel="stylesheet"]');
-  if (link) {
-    link.setAttribute('href', href);
-  }
-}
-
 function populateThemeDropdown() {
   const select = document.getElementById('theme-select');
   if (!select) return;
-  const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-  links.forEach(link => {
-    const href = link.getAttribute('href');
-    const label = link.getAttribute('title') || href;
+
+  const themes = [
+    { value: '', label: 'Default' },
+    { value: 'theme-moss', label: 'Moss' },
+    { value: 'theme-autumn', label: 'Autumn' }
+  ];
+
+  themes.forEach(({ value, label }) => {
     const option = document.createElement('option');
-    option.value = href;
+    option.value = value;
     option.textContent = label;
     select.appendChild(option);
   });
-  const current = document.querySelector('link[rel="stylesheet"]').getAttribute('href');
-  select.value = current;
-  select.addEventListener('change', () => {
-    setTheme(select.value);
+
+  const savedTheme = localStorage.getItem('theme') || '';
+  document.body.className = savedTheme;
+  select.value = savedTheme;
+
+  select.addEventListener('change', (e) => {
+    const theme = e.target.value;
+    document.body.className = theme;
+    localStorage.setItem('theme', theme);
   });
 }
 
-window.addEventListener('load', populateThemeDropdown);
+window.addEventListener('DOMContentLoaded', populateThemeDropdown);
+
