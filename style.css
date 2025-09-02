@@ -6,6 +6,8 @@ body {
   align-items: center;
   min-height: 100vh;
   background: #fafafa;
+  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 #app {
   max-width: 600px;
@@ -16,10 +18,174 @@ button {
   padding: 0.8rem;
   margin: 0.4rem 0;
   font-size: 1rem;
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+button:hover {
+  background: #f0f0f0;
 }
 .question-progress {
   font-size: 0.8rem;
   text-align: center;
   color: #555;
   margin-bottom: 0.5rem;
+}
+
+/* Theme Selector */
+.theme-selector {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.theme-selector label {
+  color: inherit;
+  font-weight: 500;
+}
+.theme-selector select {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Theme: Default (already applied above) */
+body.theme-default {
+  background: #fafafa;
+  color: #333;
+}
+body.theme-default button {
+  background: white;
+  color: #333;
+  border-color: #ddd;
+}
+body.theme-default .theme-selector select {
+  background: white;
+  color: #333;
+  border-color: #ddd;
+}
+
+/* Theme: Dark */
+body.theme-dark {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+body.theme-dark button {
+  background: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #444;
+}
+body.theme-dark button:hover {
+  background: #3d3d3d;
+}
+body.theme-dark .theme-selector select {
+  background: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #444;
+}
+body.theme-dark .question-progress {
+  color: #aaa;
+}
+
+/* Theme: Ocean */
+body.theme-ocean {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+body.theme-ocean button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+body.theme-ocean button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+body.theme-ocean .theme-selector select {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+body.theme-ocean .question-progress {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Theme: Forest */
+body.theme-forest {
+  background: linear-gradient(135deg, #2d5016 0%, #3d7317 50%, #4a7c59 100%);
+  color: #e8f5e8;
+}
+body.theme-forest button {
+  background: rgba(232, 245, 232, 0.1);
+  color: #e8f5e8;
+  border-color: rgba(232, 245, 232, 0.3);
+}
+body.theme-forest button:hover {
+  background: rgba(232, 245, 232, 0.2);
+}
+body.theme-forest .theme-selector select {
+  background: rgba(232, 245, 232, 0.1);
+  color: #e8f5e8;
+  border-color: rgba(232, 245, 232, 0.3);
+}
+body.theme-forest .question-progress {
+  color: rgba(232, 245, 232, 0.8);
+}
+
+/* Theme: Sunset */
+body.theme-sunset {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+  color: #5d4e75;
+}
+body.theme-sunset button {
+  background: rgba(255, 255, 255, 0.2);
+  color: #5d4e75;
+  border-color: rgba(93, 78, 117, 0.3);
+}
+body.theme-sunset button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+body.theme-sunset .theme-selector select {
+  background: rgba(255, 255, 255, 0.2);
+  color: #5d4e75;
+  border-color: rgba(93, 78, 117, 0.3);
+}
+body.theme-sunset .question-progress {
+  color: rgba(93, 78, 117, 0.8);
+}
+
+/* Theme: Neon */
+body.theme-neon {
+  background: #0a0a0a;
+  color: #00ff41;
+}
+body.theme-neon button {
+  background: rgba(0, 255, 65, 0.1);
+  color: #00ff41;
+  border-color: #00ff41;
+  box-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+}
+body.theme-neon button:hover {
+  background: rgba(0, 255, 65, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+body.theme-neon .theme-selector select {
+  background: rgba(0, 255, 65, 0.1);
+  color: #00ff41;
+  border-color: #00ff41;
+}
+body.theme-neon .question-progress {
+  color: #00ff41;
 }

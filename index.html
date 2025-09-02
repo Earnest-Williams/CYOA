@@ -6,7 +6,13 @@
   <title>Heuristic CYOA</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-default">
+  <div class="theme-selector">
+    <label for="theme-select">Theme:</label>
+    <select id="theme-select">
+      <!-- Options will be populated by JavaScript -->
+    </select>
+  </div>
   <div id="app"></div>
   <button id="clear-save">Clear save</button>
   <script src="game.js"></script>

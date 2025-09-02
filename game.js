@@ -6,6 +6,89 @@ let qIndex = Number(localStorage.getItem("qIndex")) || 0;
 let currentNode = localStorage.getItem("currentNode") || null;
 const app = document.getElementById("app");
 
+// Theme functionality
+let currentTheme = localStorage.getItem("selectedTheme") || "default";
+let previewTimeout = null;
+
+function initThemes() {
+  const themeSelect = document.getElementById("theme-select");
+  const themes = getAvailableThemes();
+  
+  // Populate theme dropdown
+  themes.forEach(theme => {
+    const option = document.createElement("option");
+    option.value = theme;
+    option.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+    themeSelect.appendChild(option);
+  });
+  
+  // Set current theme
+  themeSelect.value = currentTheme;
+  applyTheme(currentTheme);
+  
+  // Add event listeners
+  themeSelect.addEventListener("change", handleThemeChange);
+  themeSelect.addEventListener("mouseover", handleThemePreview);
+  themeSelect.addEventListener("focus", handleThemePreview);
+  themeSelect.addEventListener("mouseout", clearThemePreview);
+  themeSelect.addEventListener("blur", clearThemePreview);
+}
+
+function getAvailableThemes() {
+  const themes = [];
+  const stylesheets = Array.from(document.styleSheets);
+  
+  stylesheets.forEach(stylesheet => {
+    try {
+      const rules = Array.from(stylesheet.cssRules || []);
+      rules.forEach(rule => {
+        if (rule.selectorText && rule.selectorText.includes("body.theme-")) {
+          const match = rule.selectorText.match(/body\.theme-(\w+)/);
+          if (match && !themes.includes(match[1])) {
+            themes.push(match[1]);
+          }
+        }
+      });
+    } catch (e) {
+      // Skip stylesheets that can't be accessed (CORS)
+    }
+  });
+  
+  return themes.sort();
+}
+
+function applyTheme(themeName) {
+  const body = document.body;
+  const themeClasses = Array.from(body.classList).filter(cls => cls.startsWith("theme-"));
+  themeClasses.forEach(cls => body.classList.remove(cls));
+  body.classList.add(`theme-${themeName}`);
+}
+
+function handleThemeChange(event) {
+  const selectedTheme = event.target.value;
+  currentTheme = selectedTheme;
+  localStorage.setItem("selectedTheme", selectedTheme);
+  applyTheme(selectedTheme);
+  clearThemePreview();
+}
+
+function handleThemePreview(event) {
+  const selectedTheme = event.target.value;
+  if (selectedTheme !== currentTheme) {
+    clearTimeout(previewTimeout);
+    previewTimeout = setTimeout(() => {
+      applyTheme(selectedTheme);
+    }, 200);
+  }
+}
+
+function clearThemePreview() {
+  clearTimeout(previewTimeout);
+  setTimeout(() => {
+    applyTheme(currentTheme);
+  }, 100);
+}
+
 function saveState() {
   localStorage.setItem("prefs", JSON.stringify(prefs));
   localStorage.setItem("qIndex", qIndex);
@@ -96,6 +179,7 @@ async function loadData() {
 
 async function init() {
   await loadData();
+  initThemes();
   if (qIndex >= questions.length) {
     const story = buildStory(prefs);
     const start = currentNode || "start";
