@@ -55,7 +55,7 @@ function populateThemeDropdown() {
     select.appendChild(option);
   });
 
-  const savedTheme = localStorage.getItem('theme') || '';
+  const savedTheme = localStorage.getItem('theme') || 'theme-dark';
   applyTheme(savedTheme);
   select.value = savedTheme;
 
@@ -65,6 +65,8 @@ function populateThemeDropdown() {
     localStorage.setItem('theme', theme);
   });
 }
+
+document.body.classList.add('theme-dark');
 
 if (document.readyState === 'complete') {
   populateThemeDropdown();
