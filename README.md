@@ -4,6 +4,17 @@ An experimental **choose your own adventure** engine for the browser. The game i
 completely data‑driven – story content, player preferences and world state are
 expressed as JSON that is loaded at runtime.
 
+## Themes
+
+The interface supports multiple color themes that can be selected from the
+dropdown in the UI:
+
+- **Dark** (default)
+- **Moss**
+- **Autumn**
+
+If no theme has been chosen, the dark theme is applied automatically.
+
 ## Stats
 
 Player state is tracked through a simple stats object. Typical fields include
