@@ -100,7 +100,7 @@ function renderNode(nodeId, story) {
 
   const buttons = [...app.querySelectorAll("button")];
   if (node.choices.length === 0) {
-    buttons[0].addEventListener("click", () => location.reload());
+    buttons[0].addEventListener("click", resetGame);
   } else {
     buttons.forEach((btn, i) =>
       btn.addEventListener("click", () =>
@@ -108,6 +108,12 @@ function renderNode(nodeId, story) {
       )
     );
   }
+}
+
+function resetGame() {
+  prefs = {};
+  qIndex = 0;
+  renderQuestion();
 }
 
 renderQuestion();
