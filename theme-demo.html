@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CYOA Theme Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .theme-selector {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+      background: var(--button-bg);
+      border: 2px solid var(--button-border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+    .theme-selector select {
+      padding: 5px;
+      border: 1px solid var(--button-border);
+      border-radius: 4px;
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+    .theme-selector label {
+      color: var(--button-text);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-selector">
+    <label for="theme-select">Choose Theme:</label>
+    <select id="theme-select">
+      <option value="">Moss Green (Default)</option>
+      <option value="theme-autumn">Autumn Orange</option>
+      <option value="theme-night">Night Sky</option>
+      <option value="theme-blue-lagoon">Blue Lagoon</option>
+      <option value="theme-pastel-spring">Pastel Spring</option>
+      <option value="theme-retro-pop">Retro Pop</option>
+      <option value="theme-cool-mint">Cool Mint</option>
+      <option value="theme-royal-night">Royal Night</option>
+    </select>
+  </div>
+
+  <div id="app"></div>
+  <button id="clear-save">Clear save</button>
+  
+  <script src="game.js"></script>
+  <script>
+    // Theme switching functionality
+    const themeSelect = document.getElementById('theme-select');
+    
+    themeSelect.addEventListener('change', function() {
+      document.body.className = this.value;
+      // Store theme preference in localStorage
+      localStorage.setItem('theme', this.value);
+    });
+    
+    // Load saved theme on page load
+    window.addEventListener('load', function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.className = savedTheme;
+        themeSelect.value = savedTheme;
+      }
+    });
+  </script>
+</body>
+</html>
