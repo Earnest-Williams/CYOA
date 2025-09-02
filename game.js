@@ -115,6 +115,8 @@ function clearSave() {
   localStorage.removeItem("qIndex");
   localStorage.removeItem("currentNode");
   localStorage.removeItem("theme");
+  localStorage.removeItem("questionsData");
+  localStorage.removeItem("storyTemplatesData");
   const select = document.getElementById("theme-select");
   if (select) {
     const themeClasses =
@@ -130,18 +132,47 @@ function clearSave() {
 document.getElementById("clear-save").addEventListener("click", clearSave);
 
 async function loadData() {
-  const [qRes, sRes] = await Promise.all([
-    fetch("questions.json"),
-    fetch("stories.json")
-  ]);
-  const qData = await qRes.json();
-  const sData = await sRes.json();
-  questions = qData.questions;
-  storyTemplates = sData;
+  try {
+    const [qRes, sRes] = await Promise.all([
+      fetch("questions.json"),
+      fetch("stories.json")
+    ]);
+    const qData = await qRes.json();
+    const sData = await sRes.json();
+    questions = qData.questions;
+    storyTemplates = sData;
+    localStorage.setItem("questionsData", JSON.stringify(qData));
+    localStorage.setItem("storyTemplatesData", JSON.stringify(sData));
+  } catch (error) {
+    const qCache = localStorage.getItem("questionsData");
+    const sCache = localStorage.getItem("storyTemplatesData");
+    if (qCache && sCache) {
+      try {
+        const qData = JSON.parse(qCache);
+        const sData = JSON.parse(sCache);
+        questions = qData.questions;
+        storyTemplates = sData;
+        return;
+      } catch (e) {
+        // fall through to display error
+      }
+    }
+    app.textContent = "Failed to load game data. Check your connection and try again.";
+    const retry = document.createElement("button");
+    retry.textContent = "Retry";
+    retry.addEventListener("click", init);
+    app.append(retry);
+    throw error;
+  }
 }
 
 async function init() {
-  await loadData();
+  try {
+    await loadData();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
   if (qIndex >= questions.length) {
     const story = buildStory(prefs);
     const start = currentNode || "start";
