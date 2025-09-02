@@ -4,11 +4,22 @@ const questions = [
   { id: "length", text: "Desired length?", answers: ["Short", "Medium", "Long"] }
 ];
 
-let prefs = {};
-let qIndex = 0;
+let prefs = JSON.parse(localStorage.getItem("prefs")) || {};
+let qIndex = Number(localStorage.getItem("qIndex")) || 0;
+let currentNode = localStorage.getItem("currentNode") || null;
 const app = document.getElementById("app");
 
+function saveState() {
+  localStorage.setItem("prefs", JSON.stringify(prefs));
+  localStorage.setItem("qIndex", qIndex);
+  currentNode
+    ? localStorage.setItem("currentNode", currentNode)
+    : localStorage.removeItem("currentNode");
+}
+
 function renderQuestion() {
+  currentNode = null;
+  saveState();
   const q = questions[qIndex];
   const step = qIndex + 1;
   const total = questions.length;
@@ -18,6 +29,7 @@ function renderQuestion() {
     btn.addEventListener("click", () => {
       prefs[q.id] = btn.textContent;
       qIndex++;
+      saveState();
       qIndex < questions.length ? renderQuestion() : startStory();
     })
   );
@@ -96,6 +108,8 @@ function buildStory(prefs) {
 }
 
 function renderNode(nodeId, story) {
+  currentNode = nodeId;
+  saveState();
   const node = story.nodes[nodeId];
   app.innerHTML = `<p>${node.text}</p>` +
     (node.choices.map(c => `<button>${c.text}</button>`).join("") || "<button>Restart</button>");
@@ -115,7 +129,28 @@ function renderNode(nodeId, story) {
 function resetGame() {
   prefs = {};
   qIndex = 0;
+  currentNode = null;
+  saveState();
   renderQuestion();
 }
 
-renderQuestion();
+function clearSave() {
+  localStorage.removeItem("prefs");
+  localStorage.removeItem("qIndex");
+  localStorage.removeItem("currentNode");
+  resetGame();
+}
+
+document.getElementById("clear-save").addEventListener("click", clearSave);
+
+function init() {
+  if (qIndex >= questions.length) {
+    const story = buildStory(prefs);
+    const start = currentNode || "start";
+    renderNode(start, story);
+  } else {
+    renderQuestion();
+  }
+}
+
+init();
