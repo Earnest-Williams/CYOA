@@ -28,3 +28,26 @@ button:focus-visible {
   color: #555;
   margin-bottom: 0.5rem;
 }
+
+/* Theme styles */
+body.theme-moss {
+  background: #dfe8d8;
+  color: #123;
+}
+
+body.theme-moss button {
+  background: #6b8e23;
+  color: #f0fff0;
+  border: 1px solid #4a5d23;
+}
+
+body.theme-autumn {
+  background: #f5e2c4;
+  color: #431;
+}
+
+body.theme-autumn button {
+  background: #cc7400;
+  color: #fff7e6;
+  border: 1px solid #a95d00;
+}
