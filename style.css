@@ -138,6 +138,42 @@ body.theme-autumn {
   --inventory-bg: #f9e9d6;
 }
 
+body.theme-dark {
+  --bg: #1a1a1a;
+  --fg: #f5f5f5;
+  --btn-bg: #333;
+  --btn-fg: #f5f5f5;
+  --btn-border: #555;
+  --stats-bg: #2a2a2a;
+  --stats-fg: #ddd;
+  --inventory-bg: #222;
+  --inventory-fg: #ddd;
+}
+
+body.theme-ocean {
+  --bg: #e0f7fa;
+  --fg: #003d4d;
+  --btn-bg: #0288d1;
+  --btn-fg: #e0f7fa;
+  --btn-border: #01579b;
+  --stats-bg: #b2ebf2;
+  --stats-fg: #003d4d;
+  --inventory-bg: #e0f2f1;
+  --inventory-fg: #003d4d;
+}
+
+body.theme-desert {
+  --bg: #f5e9d3;
+  --fg: #5a3e0d;
+  --btn-bg: #c97a2c;
+  --btn-fg: #fff4e0;
+  --btn-border: #a6631a;
+  --stats-bg: #edd8b7;
+  --stats-fg: #5a3e0d;
+  --inventory-bg: #f9efdc;
+  --inventory-fg: #5a3e0d;
+}
+
 /* Question progress */
 .question-progress {
   font-size: 0.8rem;
