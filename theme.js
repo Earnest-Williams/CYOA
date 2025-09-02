@@ -8,6 +8,13 @@ function populateThemeDropdown() {
     { value: 'theme-autumn', label: 'Autumn' }
   ];
 
+  const themeClasses = ['theme-moss', 'theme-autumn'];
+
+  function applyTheme(theme) {
+    themeClasses.forEach((cls) => document.body.classList.remove(cls));
+    if (theme) document.body.classList.add(theme);
+  }
+
   themes.forEach(({ value, label }) => {
     const option = document.createElement('option');
     option.value = value;
@@ -16,12 +23,12 @@ function populateThemeDropdown() {
   });
 
   const savedTheme = localStorage.getItem('theme') || '';
-  document.body.className = savedTheme;
+  applyTheme(savedTheme);
   select.value = savedTheme;
 
   select.addEventListener('change', (e) => {
     const theme = e.target.value;
-    document.body.className = theme;
+    applyTheme(theme);
     localStorage.setItem('theme', theme);
   });
 }
