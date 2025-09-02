@@ -82,6 +82,16 @@ function clearSave() {
   localStorage.removeItem("prefs");
   localStorage.removeItem("qIndex");
   localStorage.removeItem("currentNode");
+  localStorage.removeItem("theme");
+  const select = document.getElementById("theme-select");
+  if (select) {
+    const themeClasses =
+      typeof getThemesFromStyleSheets === "function"
+        ? getThemesFromStyleSheets()
+        : [];
+    themeClasses.forEach(cls => document.body.classList.remove(cls));
+    select.value = "";
+  }
   resetGame();
 }
 
