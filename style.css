@@ -17,8 +17,17 @@ button {
   margin: 0.4rem 0;
   font-size: 1rem;
 }
+
+#theme-select,
+#clear-save {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+}
 button:focus,
-button:focus-visible {
+button:focus-visible,
+select:focus,
+select:focus-visible {
   outline: 3px solid #005fcc;
   outline-offset: 2px;
 }
@@ -41,7 +50,8 @@ body.theme-moss {
   color: #123;
 }
 
-body.theme-moss button {
+body.theme-moss button,
+body.theme-moss select {
   background: #6b8e23;
   color: #f0fff0;
   border: 1px solid #4a5d23;
@@ -52,7 +62,8 @@ body.theme-autumn {
   color: #431;
 }
 
-body.theme-autumn button {
+body.theme-autumn button,
+body.theme-autumn select {
   background: #cc7400;
   color: #fff7e6;
   border: 1px solid #a95d00;
