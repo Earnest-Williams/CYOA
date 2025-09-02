@@ -21,18 +21,34 @@ function renderQuestion() {
   const q = questions[qIndex];
   const step = qIndex + 1;
   const total = questions.length;
-  app.innerHTML = `<p class="question-progress" aria-live="polite">Question ${step} of ${total}</p><h2 aria-live="polite">${q.text}</h2>` +
-    q.answers.map(a => `<button>${a}</button>`).join("");
-  const buttons = [...app.querySelectorAll("button")];
-  buttons[0].focus();
-  buttons.forEach(btn =>
+  app.textContent = "";
+  const progress = document.createElement("p");
+  progress.className = "question-progress";
+  progress.setAttribute("aria-live", "polite");
+  progress.textContent = `Question ${step} of ${total}`;
+  app.append(progress);
+
+  const heading = document.createElement("h2");
+  heading.setAttribute("aria-live", "polite");
+  heading.textContent = q.text;
+  app.append(heading);
+
+  const buttons = q.answers.map(a => {
+    const btn = document.createElement("button");
+    btn.textContent = a;
     btn.addEventListener("click", () => {
       prefs[q.id] = btn.textContent;
       qIndex++;
       saveState();
       qIndex < questions.length ? renderQuestion() : startStory();
-    })
-  );
+    });
+    app.append(btn);
+    return btn;
+  });
+
+  if (buttons.length) {
+    buttons[0].focus();
+  }
 }
 
 function startStory() {
@@ -54,19 +70,35 @@ function renderNode(nodeId, story) {
   currentNode = nodeId;
   saveState();
   const node = story.nodes[nodeId];
-  app.innerHTML = `<p aria-live="polite">${node.text}</p>` +
-    (node.choices.map(c => `<button>${c.text}</button>`).join("") || "<button>Restart</button>");
+  app.textContent = "";
+  const para = document.createElement("p");
+  para.setAttribute("aria-live", "polite");
+  para.textContent = node.text;
+  app.append(para);
 
-  const buttons = [...app.querySelectorAll("button")];
-  buttons[0].focus();
-  if (node.choices.length === 0) {
-    buttons[0].addEventListener("click", resetGame);
-  } else {
-    buttons.forEach((btn, i) =>
-      btn.addEventListener("click", () =>
-        renderNode(node.choices[i].next, story)
-      )
-    );
+  const buttons =
+    node.choices.length > 0
+      ? node.choices.map(c => {
+          const btn = document.createElement("button");
+          btn.textContent = c.text;
+          btn.addEventListener("click", () =>
+            renderNode(c.next, story)
+          );
+          app.append(btn);
+          return btn;
+        })
+      : [
+          (() => {
+            const btn = document.createElement("button");
+            btn.textContent = "Restart";
+            btn.addEventListener("click", resetGame);
+            app.append(btn);
+            return btn;
+          })()
+        ];
+
+  if (buttons.length) {
+    buttons[0].focus();
   }
 }
 
