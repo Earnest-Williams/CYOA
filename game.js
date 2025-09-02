@@ -5,6 +5,7 @@ let prefs = JSON.parse(localStorage.getItem("prefs")) || {};
 let qIndex = Number(localStorage.getItem("qIndex")) || 0;
 let currentNode = localStorage.getItem("currentNode") || null;
 const app = document.getElementById("app");
+app.setAttribute("aria-live", "polite");
 
 function saveState() {
   localStorage.setItem("prefs", JSON.stringify(prefs));
@@ -20,9 +21,11 @@ function renderQuestion() {
   const q = questions[qIndex];
   const step = qIndex + 1;
   const total = questions.length;
-  app.innerHTML = `<p class="question-progress">Question ${step} of ${total}</p><h2>${q.text}</h2>` +
+  app.innerHTML = `<p class="question-progress" aria-live="polite">Question ${step} of ${total}</p><h2 aria-live="polite">${q.text}</h2>` +
     q.answers.map(a => `<button>${a}</button>`).join("");
-  [...app.querySelectorAll("button")].forEach(btn =>
+  const buttons = [...app.querySelectorAll("button")];
+  buttons[0].focus();
+  buttons.forEach(btn =>
     btn.addEventListener("click", () => {
       prefs[q.id] = btn.textContent;
       qIndex++;
@@ -51,10 +54,11 @@ function renderNode(nodeId, story) {
   currentNode = nodeId;
   saveState();
   const node = story.nodes[nodeId];
-  app.innerHTML = `<p>${node.text}</p>` +
+  app.innerHTML = `<p aria-live="polite">${node.text}</p>` +
     (node.choices.map(c => `<button>${c.text}</button>`).join("") || "<button>Restart</button>");
 
   const buttons = [...app.querySelectorAll("button")];
+  buttons[0].focus();
   if (node.choices.length === 0) {
     buttons[0].addEventListener("click", resetGame);
   } else {

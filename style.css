@@ -17,6 +17,11 @@ button {
   margin: 0.4rem 0;
   font-size: 1rem;
 }
+button:focus,
+button:focus-visible {
+  outline: 3px solid #005fcc;
+  outline-offset: 2px;
+}
 .question-progress {
   font-size: 0.8rem;
   text-align: center;
