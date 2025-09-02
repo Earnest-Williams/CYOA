@@ -23,27 +23,78 @@ function renderQuestion() {
 
 function startStory() {
   const story = buildStory(prefs);
-  renderNode(story.start, story);
+  renderNode("start", story);
 }
 
 function buildStory(prefs) {
   const genre = prefs.genre;
   const tone = prefs.tone;
-  const nodes = {
-    start: {
-      text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. A fork lies ahead.`,
-      choices: [
-        { text: "Go left", next: "left" },
-        { text: "Go right", next: "right" }
-      ]
-    },
-    left: { text: "A mysterious figure appears. The end!", choices: [] },
-    right: { text: "You find treasure. The end!", choices: [] }
-  };
-  return { start: nodes.start, nodes };
+  const length = prefs.length;
+  let nodes;
+
+  if (length === "Medium") {
+    nodes = {
+      start: {
+        text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. You press onward.`,
+        choices: [{ text: "Continue", next: "middle" }]
+      },
+      middle: {
+        text: "The path splits ahead.",
+        choices: [
+          { text: "Go left", next: "left_end" },
+          { text: "Go right", next: "right_end" }
+        ]
+      },
+      left_end: { text: "A mysterious figure appears. The end!", choices: [] },
+      right_end: { text: "You find treasure. The end!", choices: [] }
+    };
+  } else if (length === "Long") {
+    nodes = {
+      start: {
+        text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. Two roads stretch out ahead.`,
+        choices: [
+          { text: "Take the forest path", next: "forest" },
+          { text: "Take the mountain path", next: "mountain" }
+        ]
+      },
+      forest: {
+        text: "The forest thickens and a river blocks your way.",
+        choices: [
+          { text: "Build a raft", next: "raft" },
+          { text: "Search for a bridge", next: "bridge" }
+        ]
+      },
+      mountain: {
+        text: "A steep climb challenges you.",
+        choices: [
+          { text: "Climb higher", next: "peak" },
+          { text: "Explore a cave", next: "cave" }
+        ]
+      },
+      raft: { text: "You sail to a hidden grove. The end!", choices: [] },
+      bridge: { text: "You cross safely into a village. The end!", choices: [] },
+      peak: { text: "At the peak, you glimpse new horizons. The end!", choices: [] },
+      cave: { text: "Inside the cave, treasure awaits. The end!", choices: [] }
+    };
+  } else {
+    nodes = {
+      start: {
+        text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. A fork lies ahead.`,
+        choices: [
+          { text: "Go left", next: "left" },
+          { text: "Go right", next: "right" }
+        ]
+      },
+      left: { text: "A mysterious figure appears. The end!", choices: [] },
+      right: { text: "You find treasure. The end!", choices: [] }
+    };
+  }
+
+  return { nodes };
 }
 
-function renderNode(node, story) {
+function renderNode(nodeId, story) {
+  const node = story.nodes[nodeId];
   app.innerHTML = `<p>${node.text}</p>` +
     (node.choices.map(c => `<button>${c.text}</button>`).join("") || "<button>Restart</button>");
 
@@ -53,7 +104,7 @@ function renderNode(node, story) {
   } else {
     buttons.forEach((btn, i) =>
       btn.addEventListener("click", () =>
-        renderNode(story.nodes[node.choices[i].next], story)
+        renderNode(node.choices[i].next, story)
       )
     );
   }
