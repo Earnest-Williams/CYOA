@@ -17,3 +17,9 @@ button {
   margin: 0.4rem 0;
   font-size: 1rem;
 }
+.question-progress {
+  font-size: 0.8rem;
+  text-align: center;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
