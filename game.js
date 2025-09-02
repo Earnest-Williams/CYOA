@@ -1,8 +1,5 @@
-const questions = [
-  { id: "genre", text: "Preferred genre?", answers: ["Fantasy", "Sci‑Fi", "Mystery"] },
-  { id: "tone", text: "Tone?", answers: ["Light‑hearted", "Serious"] },
-  { id: "length", text: "Desired length?", answers: ["Short", "Medium", "Long"] }
-];
+let questions = [];
+let storyTemplates = {};
 
 let prefs = JSON.parse(localStorage.getItem("prefs")) || {};
 let qIndex = Number(localStorage.getItem("qIndex")) || 0;
@@ -41,69 +38,12 @@ function startStory() {
 }
 
 function buildStory(prefs) {
-  const genre = prefs.genre;
-  const tone = prefs.tone;
-  const length = prefs.length;
-  let nodes;
-
-  if (length === "Medium") {
-    nodes = {
-      start: {
-        text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. You press onward.`,
-        choices: [{ text: "Continue", next: "middle" }]
-      },
-      middle: {
-        text: "The path splits ahead.",
-        choices: [
-          { text: "Go left", next: "left_end" },
-          { text: "Go right", next: "right_end" }
-        ]
-      },
-      left_end: { text: "A mysterious figure appears. The end!", choices: [] },
-      right_end: { text: "You find treasure. The end!", choices: [] }
-    };
-  } else if (length === "Long") {
-    nodes = {
-      start: {
-        text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. Two roads stretch out ahead.`,
-        choices: [
-          { text: "Take the forest path", next: "forest" },
-          { text: "Take the mountain path", next: "mountain" }
-        ]
-      },
-      forest: {
-        text: "The forest thickens and a river blocks your way.",
-        choices: [
-          { text: "Build a raft", next: "raft" },
-          { text: "Search for a bridge", next: "bridge" }
-        ]
-      },
-      mountain: {
-        text: "A steep climb challenges you.",
-        choices: [
-          { text: "Climb higher", next: "peak" },
-          { text: "Explore a cave", next: "cave" }
-        ]
-      },
-      raft: { text: "You sail to a hidden grove. The end!", choices: [] },
-      bridge: { text: "You cross safely into a village. The end!", choices: [] },
-      peak: { text: "At the peak, you glimpse new horizons. The end!", choices: [] },
-      cave: { text: "Inside the cave, treasure awaits. The end!", choices: [] }
-    };
-  } else {
-    nodes = {
-      start: {
-        text: `You enter a ${tone.toLowerCase()} ${genre.toLowerCase()} world. A fork lies ahead.`,
-        choices: [
-          { text: "Go left", next: "left" },
-          { text: "Go right", next: "right" }
-        ]
-      },
-      left: { text: "A mysterious figure appears. The end!", choices: [] },
-      right: { text: "You find treasure. The end!", choices: [] }
-    };
-  }
-
+  const nodes = JSON.parse(JSON.stringify(storyTemplates[prefs.length]));
+  Object.values(nodes).forEach(node => {
+    node.text = node.text
+      .replace(/{{tone}}/g, prefs.tone.toLowerCase())
+      .replace(/{{genre}}/g, prefs.genre.toLowerCase());
+  });
   return { nodes };
 }
 
@@ -143,7 +83,19 @@ function clearSave() {
 
 document.getElementById("clear-save").addEventListener("click", clearSave);
 
-function init() {
+async function loadData() {
+  const [qRes, sRes] = await Promise.all([
+    fetch("questions.json"),
+    fetch("stories.json")
+  ]);
+  const qData = await qRes.json();
+  const sData = await sRes.json();
+  questions = qData.questions;
+  storyTemplates = sData;
+}
+
+async function init() {
+  await loadData();
   if (qIndex >= questions.length) {
     const story = buildStory(prefs);
     const start = currentNode || "start";

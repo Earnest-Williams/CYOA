@@ -1,0 +1,7 @@
+{
+  "questions": [
+    { "id": "genre", "text": "Preferred genre?", "answers": ["Fantasy", "Sci-Fi", "Mystery"] },
+    { "id": "tone", "text": "Tone?", "answers": ["Light-hearted", "Serious"] },
+    { "id": "length", "text": "Desired length?", "answers": ["Short", "Medium", "Long"] }
+  ]
+}
