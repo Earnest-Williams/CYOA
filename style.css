@@ -1,3 +1,93 @@
+/* CSS Custom Properties for Themes */
+:root {
+  /* Default Theme: Moss Green */
+  --bg-color: #f0f4f0;
+  --text-color: #2d4a32;
+  --accent-color: #5a7c5a;
+  --button-bg: #7a9a7a;
+  --button-text: #ffffff;
+  --button-hover-bg: #6a8a6a;
+  --button-border: #5a7c5a;
+}
+
+/* Theme: Autumn Orange */
+.theme-autumn {
+  --bg-color: #fdf6f0;
+  --text-color: #8b4513;
+  --accent-color: #d2691e;
+  --button-bg: #ff8c00;
+  --button-text: #ffffff;
+  --button-hover-bg: #e67e00;
+  --button-border: #d2691e;
+}
+
+/* Theme: Night Sky */
+.theme-night {
+  --bg-color: #1a1a2e;
+  --text-color: #e6e6ff;
+  --accent-color: #4c4c9d;
+  --button-bg: #16213e;
+  --button-text: #e6e6ff;
+  --button-hover-bg: #0f1a35;
+  --button-border: #4c4c9d;
+}
+
+/* Theme: Blue Lagoon */
+.theme-blue-lagoon {
+  --bg-color: #e8f4fd;
+  --text-color: #1e3a5f;
+  --accent-color: #4a90c2;
+  --button-bg: #5ba3d4;
+  --button-text: #ffffff;
+  --button-hover-bg: #4a90c2;
+  --button-border: #3a7eb8;
+}
+
+/* Theme: Pastel Spring */
+.theme-pastel-spring {
+  --bg-color: #fdf8ff;
+  --text-color: #6b4c7a;
+  --accent-color: #b19cd9;
+  --button-bg: #dda0dd;
+  --button-text: #ffffff;
+  --button-hover-bg: #d387d3;
+  --button-border: #b19cd9;
+}
+
+/* Theme: Retro Pop */
+.theme-retro-pop {
+  --bg-color: #ffeb3b;
+  --text-color: #e91e63;
+  --accent-color: #ff5722;
+  --button-bg: #e91e63;
+  --button-text: #ffffff;
+  --button-hover-bg: #c2185b;
+  --button-border: #ff5722;
+}
+
+/* Theme: Cool Mint */
+.theme-cool-mint {
+  --bg-color: #f0ffff;
+  --text-color: #2f4f4f;
+  --accent-color: #20b2aa;
+  --button-bg: #48d1cc;
+  --button-text: #ffffff;
+  --button-hover-bg: #40e0d0;
+  --button-border: #20b2aa;
+}
+
+/* Theme: Royal Night */
+.theme-royal-night {
+  --bg-color: #2c1810;
+  --text-color: #f4e4bc;
+  --accent-color: #8b7355;
+  --button-bg: #d4af37;
+  --button-text: #2c1810;
+  --button-hover-bg: #b8941f;
+  --button-border: #8b7355;
+}
+
+/* Core Styles Using CSS Variables */
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
@@ -5,21 +95,36 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #fafafa;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 #app {
   max-width: 600px;
   width: 90%;
 }
+
 button {
   width: 100%;
   padding: 0.8rem;
   margin: 0.4rem 0;
   font-size: 1rem;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 2px solid var(--button-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
+
+button:hover {
+  background: var(--button-hover-bg);
+}
+
 .question-progress {
   font-size: 0.8rem;
   text-align: center;
-  color: #555;
+  color: var(--accent-color);
   margin-bottom: 0.5rem;
 }
