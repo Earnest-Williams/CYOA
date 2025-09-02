@@ -1,3 +1,11 @@
+:root {
+  --bg: #fafafa;
+  --fg: #000;
+  --btn-bg: #e0e0e0;
+  --btn-fg: #000;
+  --btn-border: #888;
+}
+
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
@@ -5,12 +13,15 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background: #fafafa;
+  background: var(--bg);
+  color: var(--fg);
 }
+
 #app {
   max-width: 600px;
   width: 90%;
 }
+
 button {
   width: 100%;
   padding: 0.8rem;
@@ -24,6 +35,14 @@ button {
   padding: 0.8rem;
   font-size: 1rem;
 }
+
+button,
+select {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-border);
+}
+
 button:focus,
 button:focus-visible,
 select:focus,
@@ -31,6 +50,7 @@ select:focus-visible {
   outline: 3px solid #005fcc;
   outline-offset: 2px;
 }
+
 .question-progress {
   font-size: 0.8rem;
   text-align: center;
@@ -46,25 +66,18 @@ select:focus-visible {
 
 /* Theme styles */
 body.theme-moss {
-  background: #dfe8d8;
-  color: #123;
-}
-
-body.theme-moss button,
-body.theme-moss select {
-  background: #6b8e23;
-  color: #f0fff0;
-  border: 1px solid #4a5d23;
+  --bg: #dfe8d8;
+  --fg: #123;
+  --btn-bg: #6b8e23;
+  --btn-fg: #f0fff0;
+  --btn-border: #4a5d23;
 }
 
 body.theme-autumn {
-  background: #f5e2c4;
-  color: #431;
+  --bg: #f5e2c4;
+  --fg: #431;
+  --btn-bg: #cc7400;
+  --btn-fg: #fff7e6;
+  --btn-border: #a95d00;
 }
 
-body.theme-autumn button,
-body.theme-autumn select {
-  background: #cc7400;
-  color: #fff7e6;
-  border: 1px solid #a95d00;
-}
