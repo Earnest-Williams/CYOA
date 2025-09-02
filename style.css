@@ -2,7 +2,7 @@ body {
   margin: 0;
   font-family: system-ui, sans-serif;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
   background: #fafafa;
@@ -27,6 +27,12 @@ button:focus-visible {
   text-align: center;
   color: #555;
   margin-bottom: 0.5rem;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 /* Theme styles */
