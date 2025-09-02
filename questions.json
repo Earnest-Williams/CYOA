@@ -1,7 +1,9 @@
 {
   "questions": [
     { "id": "genre", "text": "Preferred genre?", "answers": ["Fantasy", "Sci-Fi", "Mystery"] },
-    { "id": "tone", "text": "Tone?", "answers": ["Light-hearted", "Serious"] },
-    { "id": "length", "text": "Desired length?", "answers": ["Short", "Medium", "Long"] }
+    { "id": "tone", "text": "Preferred tone?", "answers": ["Light-hearted", "Serious"] },
+    { "id": "length", "text": "Desired length?", "answers": ["Short", "Medium", "Long"] },
+    { "id": "playstyle", "text": "Preferred playstyle?", "answers": ["Casual", "Strategic", "Narrative"] },
+    { "id": "focus", "text": "Main story focus?", "answers": ["Character", "Plot", "World"] }
   ]
 }
