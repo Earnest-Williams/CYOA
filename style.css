@@ -4,6 +4,10 @@
   --btn-bg: #e0e0e0;
   --btn-fg: #000;
   --btn-border: #888;
+  --stats-bg: #f0f4f8;
+  --stats-fg: #333;
+  --inventory-bg: #fff8e1;
+  --inventory-fg: #333;
 }
 
 body {
@@ -22,6 +26,38 @@ body {
   width: 90%;
 }
 
+/* Stats and inventory sections */
+.game-stats {
+  background: var(--stats-bg);
+  color: var(--stats-fg);
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.game-stats .stats-list {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.inventory {
+  background: var(--inventory-bg);
+  color: var(--inventory-fg);
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 1rem;
+}
+
+.inventory ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Buttons and select styling */
 button {
   width: 100%;
   padding: 0.8rem;
@@ -51,17 +87,34 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-.question-progress {
-  font-size: 0.8rem;
-  text-align: center;
-  color: #555;
-  margin-bottom: 0.5rem;
+/* Disabled choice styling */
+.choice.disabled,
+button:disabled {
+  background: #ccc;
+  border-color: #999;
+  color: #666;
+  cursor: not-allowed;
 }
 
+/* Controls layout */
 .controls {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+/* Responsive rules */
+@media (min-width: 600px) {
+  .controls {
+    flex-direction: row;
+  }
+
+  button,
+  #theme-select,
+  #clear-save {
+    width: auto;
+    flex: 1;
+  }
 }
 
 /* Theme styles */
@@ -71,6 +124,8 @@ body.theme-moss {
   --btn-bg: #6b8e23;
   --btn-fg: #f0fff0;
   --btn-border: #4a5d23;
+  --stats-bg: #c9d9c1;
+  --inventory-bg: #e2e9d8;
 }
 
 body.theme-autumn {
@@ -79,5 +134,14 @@ body.theme-autumn {
   --btn-bg: #cc7400;
   --btn-fg: #fff7e6;
   --btn-border: #a95d00;
+  --stats-bg: #f0d5b8;
+  --inventory-bg: #f9e9d6;
 }
 
+/* Question progress */
+.question-progress {
+  font-size: 0.8rem;
+  text-align: center;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
