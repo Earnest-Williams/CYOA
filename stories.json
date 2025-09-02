@@ -1,57 +1,220 @@
 {
-  "Short": {
-    "start": {
-      "text": "You enter a {{tone}} {{genre}} world. A fork lies ahead.",
-      "choices": [
-        { "text": "Go left", "next": "left" },
-        { "text": "Go right", "next": "right" }
+  "storySeeds": {
+    "fantasy": {
+      "serious": [
+        "A dragon terrorizes the kingdom.",
+        "A prophecy foretells a hero's return."
+      ],
+      "humorous": [
+        "A wizard's spells keep backfiring.",
+        "A dragon wants to open a bakery."
       ]
     },
-    "left": { "text": "A mysterious figure appears. The end!", "choices": [] },
-    "right": { "text": "You find treasure. The end!", "choices": [] }
+    "sci-fi": {
+      "serious": [
+        "A colonist is stranded on Mars.",
+        "An AI uprising begins."
+      ],
+      "humorous": [
+        "Aliens misplace their invasion plans.",
+        "A robot stand-up comic tours the galaxy."
+      ]
+    }
   },
-  "Medium": {
-    "start": {
-      "text": "You enter a {{tone}} {{genre}} world. You press onward.",
-      "choices": [
-        { "text": "Continue", "next": "middle" }
-      ]
+  "templates": {
+    "Short": {
+      "stats": { "health": 10, "gold": 0 },
+      "inventory": [],
+      "start": {
+        "text": "You awaken in a {{tone}} {{genre}} world at a crossroads.",
+        "choices": [
+          { "text": "Take the left path", "next": "left" },
+          { "text": "Take the right path", "next": "right" }
+        ]
+      },
+      "left": {
+        "text": "A mysterious figure offers you a quest.",
+        "choices": [
+          { "text": "Accept", "next": "quest" },
+          { "text": "Decline", "next": "decline" }
+        ]
+      },
+      "right": {
+        "text": "You stumble upon a hidden cache of supplies.",
+        "inventory": ["mysterious key"],
+        "choices": [
+          { "text": "Take them and continue", "next": "quest" }
+        ]
+      },
+      "quest": {
+        "text": "Your adventure concludes swiftly.",
+        "choices": []
+      },
+      "decline": {
+        "text": "You return home without incident.",
+        "choices": []
+      }
     },
-    "middle": {
-      "text": "The path splits ahead.",
-      "choices": [
-        { "text": "Go left", "next": "left_end" },
-        { "text": "Go right", "next": "right_end" }
-      ]
+    "Medium": {
+      "stats": { "health": 15, "gold": 5 },
+      "inventory": ["map"],
+      "start": {
+        "text": "You set out on a {{tone}} {{genre}} journey.",
+        "choices": [
+          { "text": "Follow the river", "next": "river" },
+          { "text": "Climb the hill", "next": "hill" }
+        ]
+      },
+      "river": {
+        "text": "The river leads to an abandoned camp.",
+        "choices": [
+          { "text": "Search the camp", "next": "camp" },
+          { "text": "Move on", "next": "crossroads" }
+        ]
+      },
+      "hill": {
+        "text": "From the hill, you spot a distant tower.",
+        "choices": [
+          { "text": "Head to the tower", "next": "tower" },
+          { "text": "Return to the path", "next": "crossroads" }
+        ]
+      },
+      "camp": {
+        "text": "You find supplies and gain gold.",
+        "stats": { "gold": 10 },
+        "choices": [
+          { "text": "Continue", "next": "crossroads" }
+        ]
+      },
+      "tower": {
+        "text": "The tower hides an ancient relic.",
+        "inventory": ["relic"],
+        "choices": [
+          { "text": "Take the relic and leave", "next": "crossroads" }
+        ]
+      },
+      "crossroads": {
+        "text": "Two final paths stand before you.",
+        "choices": [
+          { "text": "Path of bravery", "next": "brave_end" },
+          { "text": "Path of wisdom", "next": "wise_end" }
+        ]
+      },
+      "brave_end": {
+        "text": "You confront the final challenge and prevail.",
+        "choices": []
+      },
+      "wise_end": {
+        "text": "You solve the final puzzle and succeed.",
+        "choices": []
+      }
     },
-    "left_end": { "text": "A mysterious figure appears. The end!", "choices": [] },
-    "right_end": { "text": "You find treasure. The end!", "choices": [] }
-  },
-  "Long": {
-    "start": {
-      "text": "You enter a {{tone}} {{genre}} world. Two roads stretch out ahead.",
-      "choices": [
-        { "text": "Take the forest path", "next": "forest" },
-        { "text": "Take the mountain path", "next": "mountain" }
-      ]
-    },
-    "forest": {
-      "text": "The forest thickens and a river blocks your way.",
-      "choices": [
-        { "text": "Build a raft", "next": "raft" },
-        { "text": "Search for a bridge", "next": "bridge" }
-      ]
-    },
-    "mountain": {
-      "text": "A steep climb challenges you.",
-      "choices": [
-        { "text": "Climb higher", "next": "peak" },
-        { "text": "Explore a cave", "next": "cave" }
-      ]
-    },
-    "raft": { "text": "You sail to a hidden grove. The end!", "choices": [] },
-    "bridge": { "text": "You cross safely into a village. The end!", "choices": [] },
-    "peak": { "text": "At the peak, you glimpse new horizons. The end!", "choices": [] },
-    "cave": { "text": "Inside the cave, treasure awaits. The end!", "choices": [] }
+    "Long": {
+      "stats": { "health": 20, "gold": 10 },
+      "inventory": ["map", "compass"],
+      "start": {
+        "text": "An epic {{tone}} {{genre}} quest begins at the village gate.",
+        "choices": [
+          { "text": "Visit the tavern", "next": "tavern" },
+          { "text": "Head straight to the wilderness", "next": "wilderness" }
+        ]
+      },
+      "tavern": {
+        "text": "The tavern is bustling with rumors.",
+        "choices": [
+          { "text": "Listen to rumors", "next": "rumors" },
+          { "text": "Recruit an ally", "next": "ally" }
+        ]
+      },
+      "wilderness": {
+        "text": "The wilderness is harsh and uncharted.",
+        "choices": [
+          { "text": "Explore the forest", "next": "forest" },
+          { "text": "Traverse the desert", "next": "desert" }
+        ]
+      },
+      "rumors": {
+        "text": "You learn of treasure in the north.",
+        "choices": [
+          { "text": "Set out north", "next": "mountains" }
+        ]
+      },
+      "ally": {
+        "text": "A seasoned adventurer joins you.",
+        "stats": { "health": 25 },
+        "inventory": ["ally"],
+        "choices": [
+          { "text": "Begin the quest", "next": "wilderness" }
+        ]
+      },
+      "forest": {
+        "text": "You encounter hostile creatures.",
+        "choices": [
+          { "text": "Fight", "next": "fight" },
+          { "text": "Flee", "next": "flee" }
+        ]
+      },
+      "desert": {
+        "text": "The desert tests your endurance.",
+        "choices": [
+          { "text": "Search for an oasis", "next": "oasis" },
+          { "text": "Push forward", "next": "ruins" }
+        ]
+      },
+      "mountains": {
+        "text": "Treacherous mountains block your path.",
+        "choices": [
+          { "text": "Climb carefully", "next": "peak" },
+          { "text": "Find a cave", "next": "cave" }
+        ]
+      },
+      "fight": {
+        "text": "After a fierce battle, you emerge victorious.",
+        "choices": [
+          { "text": "Continue", "next": "ruins" }
+        ]
+      },
+      "flee": {
+        "text": "You escape but lose some gold.",
+        "stats": { "gold": -5 },
+        "choices": [
+          { "text": "Regroup", "next": "ruins" }
+        ]
+      },
+      "oasis": {
+        "text": "The oasis refreshes you.",
+        "stats": { "health": 5 },
+        "choices": [
+          { "text": "Head to the ruins", "next": "ruins" }
+        ]
+      },
+      "ruins": {
+        "text": "Ancient ruins contain the final challenge.",
+        "choices": [
+          { "text": "Solve the puzzle", "next": "puzzle_end" },
+          { "text": "Force the door", "next": "battle_end" }
+        ]
+      },
+      "peak": {
+        "text": "From the peak, the world unfolds before you.",
+        "choices": [
+          { "text": "Descend to the ruins", "next": "ruins" }
+        ]
+      },
+      "cave": {
+        "text": "A hidden passage leads toward the ruins.",
+        "choices": [
+          { "text": "Follow the passage", "next": "ruins" }
+        ]
+      },
+      "puzzle_end": {
+        "text": "You unlock the secrets and claim your reward.",
+        "choices": []
+      },
+      "battle_end": {
+        "text": "You battle guardians and seize the treasure.",
+        "choices": []
+      }
+    }
   }
 }
