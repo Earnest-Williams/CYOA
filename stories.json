@@ -198,6 +198,216 @@
             "choices": []
           }
         }
+      },
+      {
+        "meta": {
+          "title": "Velvet Midnight Affair",
+          "subtitle": "An intimate {{tone}} {{genre}} escape embracing {{focus_trait}} and {{playstyle_trait}}.",
+          "genreTags": [
+            "erotic romance",
+            "romance"
+          ],
+          "stats": {
+            "health": 10,
+            "influence": 5,
+            "empathy": 4,
+            "resolve": 3,
+            "daring": 2
+          },
+          "inventory": [
+            "Velvet Token"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Velvet Conservatory",
+            "text": "Candlelight and soft music welcome you to the Velvet Conservatory, a refuge where hearts explore {{genre}} delights without shame.",
+            "flavor": "{{companion}} traces the edge of your {{signature}}, inviting you to choose how boldly you'll indulge.",
+            "log": "You enter the Velvet Conservatory.",
+            "choices": [
+              {
+                "text": "Accept the host's invitation to the masked salon",
+                "next": "mask",
+                "style": "primary"
+              },
+              {
+                "text": "Slip with {{companion}} into the moonlit garden",
+                "next": "garden",
+                "style": "secondary"
+              }
+            ]
+          },
+          "mask": {
+            "title": "Invitation Behind Silk",
+            "text": "An enigmatic host ties a silken mask over your eyes, promising conversations where desire and trust intertwine.",
+            "log": "You explore the masked salon.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Silken Mask"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Share your secret yearnings with the circle",
+                "next": "salon",
+                "hint": "Lean into {{focus_trait}}."
+              },
+              {
+                "text": "Let the host guide you onto the private balcony",
+                "next": "balcony"
+              }
+            ]
+          },
+          "garden": {
+            "title": "Moonlit Garden",
+            "text": "You and {{companion}} wander between jasmine-draped arches where couples steal whispers and gentle touches.",
+            "log": "You drift through the moonlit garden.",
+            "effects": {
+              "stats": {
+                "empathy": 1,
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Invite your companion to the secret grove",
+                "next": "grove",
+                "style": "primary"
+              },
+              {
+                "text": "Follow laughter toward the hidden cascade",
+                "next": "cascade",
+                "style": "secondary"
+              }
+            ]
+          },
+          "salon": {
+            "title": "Confessions in Amber Light",
+            "text": "Voices around you trade fantasies of devotion and playful mischief, encouraging you to describe how {{motivation}} fuels your desires.",
+            "log": "You bare your heart within the salon.",
+            "effects": {
+              "stats": {
+                "influence": 1,
+                "empathy": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Craft a mutual vow with the alluring host",
+                "next": "tryst_salon",
+                "style": "primary"
+              },
+              {
+                "text": "Seek {{companion}} to share the warmth you've gathered",
+                "next": "tryst_companion",
+                "style": "secondary"
+              }
+            ]
+          },
+          "balcony": {
+            "title": "Balcony Beneath Starlight",
+            "text": "The city hums below while the host invites you to remove the mask and match their breathing, trading promises in hushed tones.",
+            "log": "You share vulnerable breath beneath the stars.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Promise a night of slow discovery together",
+                "next": "tryst_host"
+              },
+              {
+                "text": "Invite the host to join your trusted circle",
+                "next": "tryst_circle",
+                "style": "secondary"
+              }
+            ]
+          },
+          "grove": {
+            "title": "Secret Grove",
+            "text": "Soft moss cushions your steps as {{companion}} entwines their fingers with yours, asking how {{playstyle_trait}} shapes your affections.",
+            "log": "You linger in the grove.",
+            "effects": {
+              "stats": {
+                "empathy": 1
+              },
+              "inventory": {
+                "add": [
+                  "Jasmine Keepsake"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Seal the moment with a whispered promise",
+                "next": "tryst_companion"
+              },
+              {
+                "text": "Ask the host to honor your bond",
+                "next": "tryst_circle",
+                "style": "secondary"
+              }
+            ]
+          },
+          "cascade": {
+            "title": "Hidden Cascade",
+            "text": "Steam rises from a secluded pool where lovers laugh softly, beckoning you to shed inhibition and join their playful revelry.",
+            "log": "You approach the hidden cascade.",
+            "effects": {
+              "stats": {
+                "daring": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Step into the waters and celebrate your body",
+                "next": "tryst_circle",
+                "hint": "Trust your {{tone}} courage.",
+                "style": "primary"
+              },
+              {
+                "text": "Collect the warmth to share privately later",
+                "next": "tryst_companion",
+                "style": "secondary"
+              }
+            ]
+          },
+          "tryst_salon": {
+            "title": "Lovers' Accord",
+            "text": "Together with the salon circle, you script a night of sensual storytelling, taking turns offering gentle caresses and affirmations.",
+            "flavor": "You exchange boundaries before inviting each new touch, weaving safety into every gasp and sigh.",
+            "log": "You design a sensual celebration in the salon.",
+            "choices": []
+          },
+          "tryst_host": {
+            "title": "Host's Devoted Focus",
+            "text": "In a chamber draped with velvet, the host traces constellations over your skin, promising evenings of attentive exploration whenever you desire them.",
+            "flavor": "Playful touches and heartfelt words carry you through the night until dawn blushes through the curtains.",
+            "log": "You commit to an intimate night with the host.",
+            "choices": []
+          },
+          "tryst_companion": {
+            "title": "Companion's Tender Promise",
+            "text": "{{companion}} guides you somewhere secluded, exploring each other's boundaries with consent and patient curiosity until your hearts slow in unison.",
+            "flavor": "You share lingering kisses and soft laughter, trusting {{focus_trait}} to keep the connection bright.",
+            "log": "You share an intimate evening with your companion.",
+            "choices": []
+          },
+          "tryst_circle": {
+            "title": "Circle of Trust",
+            "text": "You join a circle of lovers who honor boundaries before delighting in aromatic oils, whispered compliments, and the thrill of being seen.",
+            "flavor": "Mutual consent shapes every caress, and the night becomes a celebration of shared pleasure and respect.",
+            "log": "You bask in a consensual celebration among new friends.",
+            "choices": []
+          }
+        }
       }
     ],
     "Medium": [
