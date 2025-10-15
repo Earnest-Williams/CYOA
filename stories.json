@@ -35,6 +35,10 @@
                 "text": "Explore the flickering market stall",
                 "next": "market",
                 "style": "secondary"
+              },
+              {
+                "text": "Answer the envoy of the {{faction}}",
+                "next": "envoy"
               }
             ]
           },
@@ -45,6 +49,24 @@
             "effects": {
               "stats": {
                 "insight": 1
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "mistway_path",
+                    "title": "Chart the Mistway",
+                    "summary": "Trace the hidden route whispered about in crossroad legends."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "whispering_milestone",
+                    "title": "Whispering Milestone",
+                    "summary": "A rune-carved marker that unveils the Mistway when touched with intent."
+                  }
+                ]
               }
             },
             "choices": [
@@ -71,6 +93,15 @@
                 "add": [
                   "Runed Token"
                 ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "flickering_market",
+                    "title": "Flickering Market",
+                    "summary": "A bazaar where merchants exchange memories and curios tied to the Mistway."
+                  }
+                ]
               }
             },
             "choices": [
@@ -82,6 +113,42 @@
               {
                 "text": "Inspect the milestone after all",
                 "next": "milestone"
+              }
+            ]
+          },
+          "envoy": {
+            "title": "Envoy of the {{faction}}",
+            "text": "A courier bearing {{faction_trait}} colors arrives breathless, pleading for guidance along the Mistway.",
+            "log": "An envoy seeks your aid on behalf of your faction.",
+            "effects": {
+              "quests": {
+                "add": [
+                  {
+                    "id": "mistway_path",
+                    "title": "Chart the Mistway",
+                    "summary": "Escort the envoy through the Mistway so your faction can share its relief."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "mistway_envoy",
+                    "title": "Mistway Envoy",
+                    "summary": "Envoys rely on the Moonlit Glade to move unseen supplies for {{faction_trait}}."
+                  }
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Follow the envoy toward the glade",
+                "next": "glade",
+                "style": "primary"
+              },
+              {
+                "text": "Gather supplies at the market first",
+                "next": "market"
               }
             ]
           },
@@ -112,6 +179,15 @@
                 "add": [
                   "Story Charm"
                 ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "echoed_legend",
+                    "title": "Legend of the Mistway",
+                    "summary": "A tale describing how the Moonlit Glade binds distant kin through shared vows."
+                  }
+                ]
               }
             },
             "choices": [
@@ -129,9 +205,29 @@
           },
           "glade": {
             "title": "Moonlit Glade",
-            "text": "Moonlight collects into a mirrorlike pool, reflecting futures shaped by {{motivation}}.",
+            "text": "Moonlight collects into a mirrorlike pool, reflecting futures shaped by {{motivation}} and the promises of the {{faction}}.",
             "flavor": "The air carries music reminiscent of {{focus_trait}}, resonating with your {{signature}}.",
             "log": "You reach the moonlit glade.",
+            "effects": {
+              "quests": {
+                "complete": [
+                  {
+                    "id": "mistway_path",
+                    "title": "Chart the Mistway",
+                    "summary": "The Mistway now answers to your guidance."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "moonlit_glade",
+                    "title": "Moonlit Glade",
+                    "summary": "A sanctuary where oaths echo through mirrored water and guide the Mistway."
+                  }
+                ]
+              }
+            },
             "choices": [
               {
                 "text": "Offer the runed token to the waters",
@@ -157,6 +253,16 @@
                   }
                 },
                 "hint": "Stand together with {{companion}}."
+              },
+              {
+                "text": "Pledge the Mistway to the {{faction}}",
+                "next": "end_faction",
+                "requirements": {
+                  "stats": {
+                    "influence": 4
+                  }
+                },
+                "style": "primary"
               },
               {
                 "text": "Release the storyteller's charm",
@@ -186,6 +292,24 @@
             "title": "Oathbound Companions",
             "text": "Your vow echoes across the glade, weaving {{playstyle_trait}} into a promise of protection.",
             "log": "You swear a binding oath with your companion.",
+            "choices": []
+          },
+          "end_faction": {
+            "title": "Mistway Accord",
+            "text": "You dedicate the Mistway to the {{faction}}, ensuring {{faction_trait}} flows through every crossing.",
+            "flavor": "Allies whisper that your pledge will echo through the coalition's story-web.",
+            "log": "You pledge the Mistway to your faction.",
+            "effects": {
+              "codex": {
+                "add": [
+                  {
+                    "id": "mistway_accord",
+                    "title": "Mistway Accord",
+                    "summary": "An oath binding the Moonlit Glade to the {{faction}}'s cause."
+                  }
+                ]
+              }
+            },
             "choices": []
           },
           "end_charm": {

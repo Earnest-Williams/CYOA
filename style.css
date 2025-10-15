@@ -360,6 +360,98 @@ button:disabled {
   font-size: 0.85rem;
 }
 
+.log-quest,
+.log-codex {
+  border-left: 3px solid rgba(104, 243, 197, 0.4);
+  padding-left: 0.75rem;
+}
+
+.log-quest {
+  color: rgba(104, 243, 197, 0.9);
+}
+
+.log-quest.completed {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: rgba(245, 246, 250, 0.8);
+}
+
+.log-quest-detail,
+.log-codex-detail {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.log-codex {
+  border-color: rgba(135, 206, 250, 0.55);
+  color: rgba(186, 220, 255, 0.92);
+}
+
+.quest-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.quest-list.completed {
+  opacity: 0.85;
+}
+
+.quest-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.quest-item.completed {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.quest-item-title {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--fg);
+  font-size: 0.88rem;
+}
+
+.quest-item-summary {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.codex-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.codex-entry {
+  background: rgba(135, 206, 250, 0.12);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.codex-entry-title {
+  font-weight: 600;
+  color: rgba(186, 220, 255, 0.95);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.codex-entry-summary {
+  font-size: 0.78rem;
+  color: rgba(245, 246, 250, 0.75);
+}
+
 .log-choice {
   font-style: italic;
   color: var(--fg);
