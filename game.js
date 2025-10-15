@@ -21,6 +21,7 @@ function createDefaultGameState() {
     stats: {},
     inventory: [],
     log: [],
+    history: [],
     appliedNodeEffects: {},
     identity: {},
   };
@@ -40,9 +41,17 @@ function normalizeGameState(state) {
     base.inventory = [...state.inventory];
   }
 
-  if (Array.isArray(state.log)) {
-    base.log = [...state.log];
-  }
+  const historySource = Array.isArray(state.history)
+    ? state.history
+    : Array.isArray(state.log)
+      ? state.log
+      : [];
+
+  base.history = historySource
+    .map(entry => normalizeHistoryEntry(entry))
+    .filter(Boolean);
+
+  base.log = base.history.map(entry => entry.text || entry.choiceText || entry.nodeTitle || '').filter(Boolean);
 
   if (state.appliedNodeEffects && typeof state.appliedNodeEffects === 'object') {
     base.appliedNodeEffects = { ...state.appliedNodeEffects };
@@ -53,6 +62,30 @@ function normalizeGameState(state) {
   }
 
   return base;
+}
+
+function normalizeHistoryEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') {
+    return {
+      type: 'event',
+      text: entry,
+    };
+  }
+  if (typeof entry === 'object') {
+    const normalized = { ...entry };
+    if (!normalized.type) {
+      if (normalized.nodeId && normalized.choiceText) {
+        normalized.type = 'choice';
+      } else if (normalized.nodeId) {
+        normalized.type = 'node';
+      } else {
+        normalized.type = 'event';
+      }
+    }
+    return normalized;
+  }
+  return null;
 }
 
 // Load saved state if running in browser
@@ -85,12 +118,33 @@ function saveState() {
   }
 }
 
+function appendHistoryEntry(entry) {
+  const normalized = normalizeHistoryEntry(entry);
+  if (!normalized) return;
+
+  if (!Array.isArray(gameState.history)) {
+    gameState.history = [];
+  }
+
+  const timestamp = normalized.timestamp || Date.now();
+  gameState.history.push({ ...normalized, timestamp });
+
+  if (!Array.isArray(gameState.log)) {
+    gameState.log = [];
+  }
+
+  const summaryText = normalized.text || normalized.choiceText || normalized.nodeTitle || '';
+  if (summaryText) {
+    gameState.log.push(summaryText);
+  }
+}
+
 function logEvent(message) {
   if (!message) return;
-  if (!Array.isArray(gameState.log)) gameState.log = [];
-  gameState.log.push(message);
-  if (gameState.log.length > 12) {
-    gameState.log.shift();
+  if (typeof message === 'string') {
+    appendHistoryEntry({ type: 'event', text: message });
+  } else {
+    appendHistoryEntry(message);
   }
 }
 
@@ -469,15 +523,70 @@ function renderGameState(state = gameState) {
     const logContainer = document.getElementById('log');
     if (logContainer) {
       logContainer.textContent = '';
-      const logEntries = Array.isArray(state.log) ? state.log.slice(-10).reverse() : [];
-      if (logEntries.length) {
+      const historyEntries = Array.isArray(state.history) ? state.history : [];
+      if (historyEntries.length) {
         const list = document.createElement('ul');
         list.className = 'log-list';
-        logEntries.forEach((entry) => {
-          const item = document.createElement('li');
-          item.textContent = entry;
-          list.appendChild(item);
+        let currentGroup = null;
+
+        const createNodeTitle = (entry) => {
+          const title = document.createElement('p');
+          title.className = 'log-node-title';
+          const fallback = entry.nodeId ? `Scene ${entry.nodeId}` : 'Scene';
+          title.textContent = entry.nodeTitle || entry.text || fallback;
+          return title;
+        };
+
+        historyEntries.forEach((entry) => {
+          if (!entry) return;
+          if (entry.type === 'node') {
+            const nodeItem = document.createElement('li');
+            nodeItem.className = 'log-node';
+
+            nodeItem.appendChild(createNodeTitle(entry));
+
+            if (entry.text) {
+              const summary = document.createElement('p');
+              summary.className = 'log-node-summary';
+              summary.textContent = entry.text;
+              nodeItem.appendChild(summary);
+            }
+
+            if (entry.body && entry.body.trim()) {
+              const body = document.createElement('p');
+              body.className = 'log-node-body';
+              body.textContent = entry.body;
+              nodeItem.appendChild(body);
+            }
+
+            if (entry.flavor && entry.flavor.trim()) {
+              const flavor = document.createElement('p');
+              flavor.className = 'log-node-flavor';
+              flavor.textContent = entry.flavor;
+              nodeItem.appendChild(flavor);
+            }
+
+            const nested = document.createElement('ul');
+            nested.className = 'log-node-events';
+            nodeItem.appendChild(nested);
+            list.appendChild(nodeItem);
+            currentGroup = nested;
+          } else {
+            const parent = currentGroup || list;
+            const item = document.createElement('li');
+            if (entry.type === 'choice') {
+              item.className = 'log-choice';
+              item.textContent = entry.choiceText ? `You chose: ${entry.choiceText}` : 'You made a choice.';
+            } else {
+              item.className = 'log-event';
+              const text = entry.text || entry.message || '';
+              if (!text) return;
+              item.textContent = text;
+            }
+            parent.appendChild(item);
+          }
         });
+
         logContainer.appendChild(list);
       } else {
         const empty = document.createElement('p');
@@ -653,6 +762,7 @@ function buildStory(prefs, { resetState = true } = {}) {
         ? [...story.meta.inventory]
         : [],
       log: [],
+      history: [],
       appliedNodeEffects: {},
     });
   } else {
@@ -863,9 +973,26 @@ function renderNode(nodeId, story) {
   if (!node) return;
   applyNodeEffects(nodeId, node);
   const summary = node.log || node.title || (node.text ? node.text.split(/[.!?]/)[0] : 'A turning point');
-  const lastLog = Array.isArray(gameState.log) ? gameState.log[gameState.log.length - 1] : null;
-  if (summary && summary !== lastLog) {
-    logEvent(summary);
+  let lastNodeEntry = null;
+  if (Array.isArray(gameState.history)) {
+    for (let i = gameState.history.length - 1; i >= 0; i--) {
+      const entry = gameState.history[i];
+      if (entry && entry.type === 'node') {
+        lastNodeEntry = entry;
+        break;
+      }
+    }
+  }
+
+  if (!lastNodeEntry || lastNodeEntry.nodeId !== nodeId) {
+    appendHistoryEntry({
+      type: 'node',
+      nodeId,
+      nodeTitle: node.title || (nodeId === 'start' ? story.meta?.title : summary),
+      text: summary,
+      body: node.text || '',
+      flavor: node.flavor || '',
+    });
   }
   renderGameState();
   saveState();
@@ -927,6 +1054,13 @@ function renderNode(nodeId, story) {
       btn.title = c.hint;
     }
     btn.addEventListener('click', () => {
+      appendHistoryEntry({
+        type: 'choice',
+        nodeId,
+        nodeTitle: node.title || (nodeId === 'start' ? story.meta?.title : summary),
+        choiceText: c.text,
+        nextNode: c.next || null,
+      });
       applyChoiceEffects(c);
       saveState();
       if (c.next) {
