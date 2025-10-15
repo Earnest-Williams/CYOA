@@ -2,6 +2,7 @@
 // Data holders
 let questions = [];
 let storyTemplates = {};
+let genrePackages = {};
 
 function loadStoredJson(key, fallback) {
   if (typeof localStorage === 'undefined') return fallback;
@@ -865,6 +866,100 @@ function canonicalKey(value) {
 function resolveKey(value, aliases = {}) {
   const key = canonicalKey(value);
   return aliases[key] || key;
+}
+
+function normalizeGenrePackages(packages) {
+  if (!packages || typeof packages !== 'object') {
+    return {};
+  }
+
+  const normalized = {};
+  for (const [rawKey, pkg] of Object.entries(packages)) {
+    const key = canonicalKey(rawKey);
+    if (!key || !pkg || typeof pkg !== 'object') continue;
+    normalized[key] = normalizeEffectPackage(pkg);
+  }
+  return normalized;
+}
+
+function normalizeEffectPackage(pkg) {
+  const normalized = {};
+  if (pkg.log) normalized.log = pkg.log;
+
+  if (pkg.stats && typeof pkg.stats === 'object') {
+    normalized.stats = { ...pkg.stats };
+  }
+
+  if (pkg.inventory) {
+    if (Array.isArray(pkg.inventory)) {
+      normalized.inventory = { add: [...pkg.inventory] };
+    } else {
+      const inventory = {};
+      if (Array.isArray(pkg.inventory.add)) inventory.add = [...pkg.inventory.add];
+      if (Array.isArray(pkg.inventory.remove)) inventory.remove = [...pkg.inventory.remove];
+      if (Object.keys(inventory).length) normalized.inventory = inventory;
+    }
+  }
+
+  if (pkg.skills) {
+    if (Array.isArray(pkg.skills)) {
+      normalized.skills = { learn: pkg.skills.map(entry => ({ ...entry })) };
+    } else {
+      const skills = {};
+      ['learn', 'upgrade', 'remove', 'forget'].forEach(action => {
+        if (Array.isArray(pkg.skills[action])) {
+          skills[action] = pkg.skills[action].map(entry => ({ ...entry }));
+        }
+      });
+      if (Object.keys(skills).length) normalized.skills = skills;
+    }
+  }
+
+  if (pkg.status) {
+    if (Array.isArray(pkg.status)) {
+      normalized.status = { add: pkg.status.map(entry => ({ ...entry })) };
+    } else {
+      const status = {};
+      if (Array.isArray(pkg.status.add)) status.add = pkg.status.add.map(entry => ({ ...entry }));
+      if (Array.isArray(pkg.status.remove)) status.remove = [...pkg.status.remove];
+      if (pkg.status.clear) status.clear = true;
+      if (Object.keys(status).length) normalized.status = status;
+    }
+  }
+
+  if (pkg.quests) {
+    if (Array.isArray(pkg.quests)) {
+      normalized.quests = { add: pkg.quests.map(entry => ({ ...entry })) };
+    } else {
+      const quests = {};
+      if (Array.isArray(pkg.quests.add)) quests.add = pkg.quests.add.map(entry => ({ ...entry }));
+      if (Array.isArray(pkg.quests.complete)) quests.complete = pkg.quests.complete.map(entry => ({ ...entry }));
+      if (Object.keys(quests).length) normalized.quests = quests;
+    }
+  }
+
+  if (pkg.codex) {
+    if (Array.isArray(pkg.codex)) {
+      normalized.codex = { add: pkg.codex.map(entry => ({ ...entry })) };
+    } else {
+      const codex = {};
+      if (Array.isArray(pkg.codex.add)) codex.add = pkg.codex.add.map(entry => ({ ...entry }));
+      if (Array.isArray(pkg.codex.remove)) codex.remove = [...pkg.codex.remove];
+      if (Object.keys(codex).length) normalized.codex = codex;
+    }
+  }
+
+  if (pkg.reputation) {
+    if (Array.isArray(pkg.reputation)) {
+      normalized.reputation = { factions: pkg.reputation.map(entry => ({ ...entry })) };
+    } else if (Array.isArray(pkg.reputation.factions)) {
+      normalized.reputation = {
+        factions: pkg.reputation.factions.map(entry => ({ ...entry })),
+      };
+    }
+  }
+
+  return normalized;
 }
 
 function deriveIdentity(state = gameState, preferences = prefs) {
@@ -1761,6 +1856,13 @@ function buildStory(prefs, { resetState = true } = {}) {
       history: [],
       appliedNodeEffects: {},
     });
+
+    const genreKey = canonicalKey(prefs.genre);
+    const genrePackage = genrePackages[genreKey];
+    if (genrePackage) {
+      applyChoiceEffects({ effects: genrePackage }, gameState);
+    }
+    updateIdentity(gameState, prefs);
   } else {
     gameState = normalizeGameState(gameState);
   }
@@ -2331,6 +2433,7 @@ async function loadData() {
     const qData = await qRes.json();
     const sData = await sRes.json();
     questions = qData.questions;
+    genrePackages = normalizeGenrePackages(sData.genrePackages || {});
     storyTemplates = sData.templates || sData;
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('questionsData', JSON.stringify(qData));
@@ -2342,6 +2445,7 @@ async function loadData() {
       const sCache = loadStoredJson('storyTemplatesData', null);
       if (qCache && sCache) {
         questions = qCache.questions;
+        genrePackages = normalizeGenrePackages(sCache.genrePackages || {});
         storyTemplates = sCache.templates || sCache;
         return;
       }

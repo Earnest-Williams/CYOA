@@ -1,4 +1,372 @@
 {
+  "genrePackages": {
+    "fantasy": {
+      "log": "Legends of the old kingdoms gird your spirit.",
+      "stats": {
+        "lore": 2,
+        "resolve": 1
+      },
+      "inventory": {
+        "add": [
+          "Wyrdbound Charm"
+        ]
+      },
+      "skills": {
+        "learn": [
+          {
+            "id": "wyrd_channeling",
+            "name": "Wyrd Channeling",
+            "summary": "You weave raw ley-light into protective sigils and subtle wards.",
+            "rank": 1
+          }
+        ]
+      },
+      "status": {
+        "add": [
+          {
+            "id": "faelight_aegis",
+            "name": "Faelight Aegis",
+            "summary": "A shimmering aura shields you from the first strike that would land true.",
+            "duration": "Until your first major rest"
+          }
+        ]
+      },
+      "quests": {
+        "add": [
+          {
+            "id": "wardstones_awakened",
+            "title": "Awaken the Wardstones",
+            "summary": "Coax dormant wardstones to answer your call and protect nearby folk."
+          }
+        ]
+      },
+      "codex": {
+        "add": [
+          {
+            "id": "elderspires",
+            "title": "Elderspires",
+            "summary": "Ancient citadels anchoring ley-lines that respond to sworn guardians."
+          }
+        ]
+      },
+      "reputation": {
+        "factions": [
+          {
+            "id": "arcane_conclave",
+            "name": "Arcane Conclave",
+            "delta": 3,
+            "summary": "Mystic scholars trust your command of the ley.",
+            "tags": ["Mystic"]
+          }
+        ]
+      }
+    },
+    "sci-fi": {
+      "log": "Years aboard the void lanes hone your technical prowess.",
+      "stats": {
+        "insight": 1,
+        "tech": 2
+      },
+      "inventory": {
+        "add": [
+          "Phase Calibration Rig"
+        ]
+      },
+      "skills": {
+        "learn": [
+          {
+            "id": "quantum_navigation",
+            "name": "Quantum Navigation",
+            "summary": "You read fluctuating data streams to plot faster-than-light vectors in seconds.",
+            "rank": 1
+          }
+        ]
+      },
+      "status": {
+        "add": [
+          {
+            "id": "gravitic_attunement",
+            "name": "Gravitic Attunement",
+            "summary": "Subtle changes in gravity warn you of approaching threats.",
+            "duration": "For the next three encounters"
+          }
+        ]
+      },
+      "quests": {
+        "add": [
+          {
+            "id": "relay_safeguard",
+            "title": "Safeguard the Relay Network",
+            "summary": "Keep frontier relays synchronized and free from sabotage."
+          }
+        ]
+      },
+      "codex": {
+        "add": [
+          {
+            "id": "void_currents",
+            "title": "Void Currents",
+            "summary": "Nebula tides that navigators treat as weather patterns among the stars."
+          }
+        ]
+      },
+      "reputation": {
+        "factions": [
+          {
+            "id": "stellar_vanguard",
+            "name": "Stellar Vanguard",
+            "delta": 2,
+            "summary": "Frontier captains respect your steady hand on the helm.",
+            "tags": ["Frontier"]
+          }
+        ]
+      }
+    },
+    "mystery": {
+      "log": "Investigator instincts sharpen as you catalog every clue.",
+      "stats": {
+        "insight": 2,
+        "cunning": 1
+      },
+      "inventory": {
+        "add": [
+          "Clue-Laden Journal"
+        ]
+      },
+      "skills": {
+        "learn": [
+          {
+            "id": "forensic_poise",
+            "name": "Forensic Poise",
+            "summary": "You steady suspects with calm insight, coaxing truths from half-formed tales.",
+            "rank": 1
+          }
+        ]
+      },
+      "status": {
+        "add": [
+          {
+            "id": "whisper_network",
+            "name": "Whisper Network",
+            "summary": "Confidants funnel rumors toward you before rivals can bury them.",
+            "duration": "While pursuing your current case"
+          }
+        ]
+      },
+      "quests": {
+        "add": [
+          {
+            "id": "unmask_conspiracy",
+            "title": "Unmask the Conspiracy",
+            "summary": "Trace the hidden mastermind orchestrating tonight's intrigues."
+          }
+        ]
+      },
+      "codex": {
+        "add": [
+          {
+            "id": "velvet_dossiers",
+            "title": "Velvet Dossiers",
+            "summary": "Collected notes on debts, scandals, and favors within elite salons."
+          }
+        ]
+      },
+      "reputation": {
+        "factions": [
+          {
+            "id": "investigators_guild",
+            "name": "Investigators' Guild",
+            "delta": 3,
+            "summary": "Peers applaud the precision of your deductions.",
+            "tags": ["Society"]
+          }
+        ]
+      }
+    },
+    "post-apocalyptic": {
+      "log": "Hard-won survival lessons steel your resolve.",
+      "stats": {
+        "health": 2,
+        "daring": 1
+      },
+      "inventory": {
+        "add": [
+          "Salvaged Ration Kit"
+        ]
+      },
+      "skills": {
+        "learn": [
+          {
+            "id": "scavenger_instincts",
+            "name": "Scavenger Instincts",
+            "summary": "You spot useful scrap and supplies even in wind-scoured ruins.",
+            "rank": 1
+          }
+        ]
+      },
+      "status": {
+        "add": [
+          {
+            "id": "ashen_resilience",
+            "name": "Ashen Resilience",
+            "summary": "Lingering resistance wards you from the worst fallout.",
+            "duration": "Until you reach a fully sheltered haven"
+          }
+        ]
+      },
+      "quests": {
+        "add": [
+          {
+            "id": "stabilize_supply_line",
+            "title": "Stabilize the Supply Line",
+            "summary": "Keep food, water, and medicine flowing to desperate enclaves."
+          }
+        ]
+      },
+      "codex": {
+        "add": [
+          {
+            "id": "emberfall_routes",
+            "title": "Emberfall Trade Routes",
+            "summary": "Fragile highways linking the remaining settlements across ash-choked plains."
+          }
+        ]
+      },
+      "reputation": {
+        "factions": [
+          {
+            "id": "survivors_coalition",
+            "name": "Survivors' Coalition",
+            "delta": 3,
+            "summary": "Caravans trust your knack for keeping them alive.",
+            "tags": ["Frontier"]
+          }
+        ]
+      }
+    },
+    "steampunk": {
+      "log": "Clockwork ingenuity hums at your fingertips.",
+      "stats": {
+        "insight": 1,
+        "ingenuity": 2
+      },
+      "inventory": {
+        "add": [
+          "Brasswork Multi-Tool"
+        ]
+      },
+      "skills": {
+        "learn": [
+          {
+            "id": "aether_engineering",
+            "name": "Aether Engineering",
+            "summary": "You splice steam and aether tech to coax machines beyond their design.",
+            "rank": 1
+          }
+        ]
+      },
+      "status": {
+        "add": [
+          {
+            "id": "cogwork_resonance",
+            "name": "Cogwork Resonance",
+            "summary": "Nearby mechanisms sync to your touch, easing repairs and recalibrations.",
+            "duration": "Until your next maintenance cycle"
+          }
+        ]
+      },
+      "quests": {
+        "add": [
+          {
+            "id": "prime_the_engines",
+            "title": "Prime the Engines",
+            "summary": "Restore dormant machines to bolster allied fleets and caravans."
+          }
+        ]
+      },
+      "codex": {
+        "add": [
+          {
+            "id": "gearbound_guilds",
+            "title": "Gearbound Guilds",
+            "summary": "Powerful artisan guilds controlling the era's steam infrastructure."
+          }
+        ]
+      },
+      "reputation": {
+        "factions": [
+          {
+            "id": "skyward_coalition",
+            "name": "Skyward Coalition",
+            "delta": 2,
+            "summary": "Skywrights applaud your mechanical mastery.",
+            "tags": ["Sky"]
+          }
+        ]
+      }
+    },
+    "erotic romance": {
+      "log": "You center relationships, letting intimacy guide the journey.",
+      "stats": {
+        "empathy": 2,
+        "influence": 1
+      },
+      "inventory": {
+        "add": [
+          "Keepsake Ribbon"
+        ]
+      },
+      "skills": {
+        "learn": [
+          {
+            "id": "heartbound_presence",
+            "name": "Heartbound Presence",
+            "summary": "You attune to partners' needs, blending passion with sincere care.",
+            "rank": 1
+          }
+        ]
+      },
+      "status": {
+        "add": [
+          {
+            "id": "glowing_affection",
+            "name": "Glowing Affection",
+            "summary": "A gentle aura draws confidences and softens guarded hearts.",
+            "duration": "While trust remains unbroken"
+          }
+        ]
+      },
+      "quests": {
+        "add": [
+          {
+            "id": "weave_shared_desires",
+            "title": "Weave Shared Desires",
+            "summary": "Ensure every ally feels seen, cherished, and empowered."
+          }
+        ]
+      },
+      "codex": {
+        "add": [
+          {
+            "id": "velvet_etiquette",
+            "title": "Velvet Etiquette",
+            "summary": "Guidelines safeguarding consent and mutual joy within the Conservatory."
+          }
+        ]
+      },
+      "reputation": {
+        "factions": [
+          {
+            "id": "velvet_conservatory",
+            "name": "Velvet Conservatory",
+            "delta": 4,
+            "summary": "Hosts celebrate the warmth you bring to every encounter.",
+            "tags": ["Society"]
+          }
+        ]
+      }
+    }
+  },
   "templates": {
     "Short": [
       {
