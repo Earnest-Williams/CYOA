@@ -277,7 +277,7 @@ function generateIdentityReaction(identity, node) {
 }
 
 // Select a random story seed based on desired length
-function selectRandomStorySeed(templates, length) {
+function selectRandomStorySeed(templates, length, prefs = {}) {
   if (!templates || !Object.keys(templates).length) {
     return { nodes: {} };
   }
@@ -288,8 +288,35 @@ function selectRandomStorySeed(templates, length) {
   }
   const pool = Array.isArray(target) ? target : [target];
   if (!pool.length) return { nodes: {} };
-  const idx = Math.floor(Math.random() * pool.length);
-  return JSON.parse(JSON.stringify(pool[idx]));
+
+  const genrePreference = canonicalKey(prefs.genre);
+  let filtered = pool;
+  if (genrePreference) {
+    const matchByTag = pool.filter(seed => {
+      const tags = Array.isArray(seed?.meta?.genreTags)
+        ? seed.meta.genreTags.map(tag => canonicalKey(tag))
+        : [];
+      if (!tags.length) return false;
+      return tags.includes(genrePreference);
+    });
+
+    if (matchByTag.length) {
+      filtered = matchByTag;
+    } else {
+      const genericSeeds = pool.filter(seed => {
+        const tags = Array.isArray(seed?.meta?.genreTags)
+          ? seed.meta.genreTags.map(tag => canonicalKey(tag))
+          : [];
+        return !tags.length;
+      });
+      if (genericSeeds.length) {
+        filtered = genericSeeds;
+      }
+    }
+  }
+
+  const idx = Math.floor(Math.random() * filtered.length);
+  return JSON.parse(JSON.stringify(filtered[idx]));
 }
 
 // Update the visible stats and inventory
@@ -609,7 +636,7 @@ function startStory() {
 
 function buildStory(prefs, { resetState = true } = {}) {
   const lengthPref = prefs.length || 'Medium';
-  const seed = selectRandomStorySeed(storyTemplates, lengthPref);
+  const seed = selectRandomStorySeed(storyTemplates, lengthPref, prefs);
   if (!seed || !seed.nodes) {
     return { nodes: {} };
   }

@@ -3,7 +3,14 @@
     {
       "id": "genre",
       "text": "Choose your favorite setting:",
-      "answers": ["Fantasy", "Sci-Fi", "Mystery", "Post-Apocalyptic", "Steampunk"]
+      "answers": [
+        "Fantasy",
+        "Sci-Fi",
+        "Mystery",
+        "Post-Apocalyptic",
+        "Steampunk",
+        "Erotic Romance"
+      ]
     },
     {
       "id": "tone",
