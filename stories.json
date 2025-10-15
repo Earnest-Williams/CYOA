@@ -419,6 +419,11 @@
               {
                 "text": "Answer the envoy of the {{faction}}",
                 "next": "envoy"
+              },
+              {
+                "text": "Trace the prism-lit footpath",
+                "next": "wayfinder",
+                "style": "secondary"
               }
             ],
             "effects": {
@@ -526,6 +531,10 @@
               {
                 "text": "Consult your companion about the omen",
                 "next": "return"
+              },
+              {
+                "text": "Listen for echoes within the stone",
+                "next": "echo_vault"
               }
             ]
           },
@@ -571,6 +580,10 @@
               {
                 "text": "Inspect the milestone after all",
                 "next": "milestone"
+              },
+              {
+                "text": "Follow the lanternkeeper behind the stall",
+                "next": "lanternkeeper"
               }
             ]
           },
@@ -617,6 +630,10 @@
               {
                 "text": "Gather supplies at the market first",
                 "next": "market"
+              },
+              {
+                "text": "Detour to the river herald's post",
+                "next": "river_herald"
               }
             ]
           },
@@ -632,6 +649,10 @@
               {
                 "text": "Find the elder storyteller first",
                 "next": "storyteller"
+              },
+              {
+                "text": "Climb the observatory to watch the Mistway",
+                "next": "mist_observatory"
               }
             ],
             "effects": {
@@ -804,6 +825,28 @@
                   ]
                 },
                 "style": "primary"
+              },
+              {
+                "text": "Raise the glimmer lantern above the pool",
+                "next": "end_lantern",
+                "requirements": {
+                  "inventory": [
+                    "Glimmer Lantern"
+                  ]
+                },
+                "style": "primary",
+                "hint": "Lanternlight steadies uncertain reflections."
+              },
+              {
+                "text": "Sing the milestone echoes into the water",
+                "next": "end_echo",
+                "requirements": {
+                  "inventory": [
+                    "Echo Glass Shard"
+                  ]
+                },
+                "style": "secondary",
+                "hint": "Resonant shards remember the crossroads."
               },
               {
                 "text": "Gaze quietly and carry the moment",
@@ -1061,6 +1104,393 @@
                     "id": "glade_reflection",
                     "title": "Glade Reflection",
                     "summary": "Meditations recorded after contemplating the Moonlit Glade's still waters."
+                  }
+                ]
+              }
+            }
+          },
+          "wayfinder": {
+            "title": "Prism Footpath",
+            "text": "Prismatic motes gather along a footpath that curves around the milestone, echoing {{playstyle_trait}} improvisation.",
+            "flavor": "Your {{signature}} resonates with the shifting spectrum.",
+            "log": "You trace the prism-lit footpath.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Prism Compass Sketch"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "prismatic_orientation",
+                    "name": "Prismatic Orientation",
+                    "summary": "You translate splintered light into reliable bearings within the Mistway.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "prism_footpath",
+                    "title": "Prism Footpath",
+                    "summary": "A transient trail that appears when the Mistway listens for creative intent."
+                  }
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Seek the lanternkeeper hidden nearby",
+                "next": "lanternkeeper",
+                "style": "primary"
+              },
+              {
+                "text": "Fold the sketch and consult your companion",
+                "next": "return"
+              },
+              {
+                "text": "Circle back toward the market stall",
+                "next": "market",
+                "style": "secondary"
+              }
+            ]
+          },
+          "lanternkeeper": {
+            "title": "Lanternkeeper's Alcove",
+            "text": "A quiet alcove shelters a lanternkeeper coaxing steady light from bottled mist.",
+            "flavor": "Lanternlight tastes of {{focus_trait}} hope.",
+            "log": "You barter with the lanternkeeper.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Glimmer Lantern"
+                ]
+              },
+              "stats": {
+                "fortune": 1
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "lantern_vigil",
+                    "title": "Kindle the Guiding Lantern",
+                    "summary": "Carry the lantern's glow to a place where the Mistway needs assurance."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "lanternkeeper_alcove",
+                    "title": "Lanternkeeper's Alcove",
+                    "summary": "Lanternkeepers bottle mistlight so travelers can shepherd one another through the fog."
+                  }
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Carry the lantern into the glade",
+                "next": "glade",
+                "style": "primary"
+              },
+              {
+                "text": "Chart the lights from the observatory",
+                "next": "mist_observatory"
+              },
+              {
+                "text": "Share the lantern with the envoy",
+                "next": "envoy"
+              }
+            ]
+          },
+          "mist_observatory": {
+            "title": "Mistway Observatory",
+            "text": "An abandoned watch platform peers across swirling vapors, perfect for aligning new constellations to your {{motivation}}.",
+            "log": "You climb to the Mistway observatory.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Star Chart Sigil"
+                ]
+              },
+              "stats": {
+                "insight": 1
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "prismatic_orientation",
+                    "name": "Prismatic Orientation",
+                    "amount": 1,
+                    "summary": "Aligning constellations sharpens your feel for prism-guided routes."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "mistway_observatory",
+                    "title": "Mistway Observatory",
+                    "summary": "A forgotten platform once used to chart the Mistway's shifting stars."
+                  }
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Fix the constellations into a guiding compass",
+                "next": "end_compass",
+                "style": "primary",
+                "requirements": {
+                  "inventory": [
+                    "Prism Compass Sketch"
+                  ]
+                }
+              },
+              {
+                "text": "Descend with your readings toward the glade",
+                "next": "glade"
+              }
+            ]
+          },
+          "echo_vault": {
+            "title": "Milestone Echo Vault",
+            "text": "Pressing your ear to the stone reveals a hollow singing with voices of {{archetype_trait}} wanderers.",
+            "log": "You listen to the milestone's echoes.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Echo Glass Shard"
+                ]
+              },
+              "stats": {
+                "insight": 1
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "crossroads_command",
+                    "name": "Crossroads Command",
+                    "amount": 1,
+                    "summary": "The echo teaches you harmonics for guiding fellow travelers."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "milestone_echo_vault",
+                    "title": "Milestone Echo Vault",
+                    "summary": "A resonance chamber hidden within the milestone that stores unfinished vows."
+                  }
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Carry the echo toward the glade",
+                "next": "glade"
+              },
+              {
+                "text": "Seek the river herald who left this tone",
+                "next": "river_herald"
+              },
+              {
+                "text": "Share the revelation with the storyteller",
+                "next": "storyteller",
+                "style": "secondary"
+              }
+            ]
+          },
+          "river_herald": {
+            "title": "River Herald's Niche",
+            "text": "At a mist-fed brook, a herald arranges offerings destined for distant tributary villages.",
+            "log": "You meet the river herald.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "River Herald Seal"
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "tributary_aid",
+                    "title": "Promise Aid to the Tributaries",
+                    "summary": "Carry the herald's seal to prove the Mistway is open to river villages."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "river_wardens",
+                    "name": "River Wardens",
+                    "delta": 2,
+                    "summary": "River wardens trust you to keep the tributaries supplied."
+                  }
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Carry the seal straight to the glade",
+                "next": "glade",
+                "style": "primary"
+              },
+              {
+                "text": "Deliver aid directly to the tributaries",
+                "next": "end_tributary"
+              },
+              {
+                "text": "Return to the envoy with news",
+                "next": "envoy",
+                "style": "secondary"
+              }
+            ]
+          },
+          "end_lantern": {
+            "title": "Lantern Vigil",
+            "text": "Lanternlight arcs across the pool, braiding safe corridors for travelers loyal to {{motivation}}.",
+            "log": "You fix the lantern's glow within the Mistway.",
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1,
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Lanternlit Keepsake"
+                ],
+                "remove": [
+                  "Glimmer Lantern"
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "lantern_vigil",
+                    "title": "Kindle the Guiding Lantern",
+                    "summary": "The glade now remembers the lantern's steady glow."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "lantern_vigil_record",
+                    "title": "Lantern Vigil Record",
+                    "summary": "Accounts of lanternkeepers who sealed light into the Mistway pools."
+                  }
+                ]
+              }
+            }
+          },
+          "end_echo": {
+            "title": "Chorus of Footfalls",
+            "text": "Echoes swirl through the pool, promising wanderers will always find one another along the Mistway.",
+            "log": "You weave echoes into the glade.",
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Echo Resonance Pendant"
+                ],
+                "remove": [
+                  "Echo Glass Shard"
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "chorus_of_footfalls",
+                    "title": "Chorus of Footfalls",
+                    "summary": "A melody used to reunite separated travelers across the Mistway."
+                  }
+                ]
+              }
+            }
+          },
+          "end_tributary": {
+            "title": "Tributary Accord",
+            "text": "Villages along the river rejoice as supplies arrive ahead of the rising mist, sealed by your {{playstyle_trait}} promises.",
+            "log": "You deliver relief to the tributaries.",
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Tributary Accord Token"
+                ],
+                "remove": [
+                  "River Herald Seal"
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "tributary_aid",
+                    "title": "Promise Aid to the Tributaries",
+                    "summary": "The river heralds celebrate your swift aid to their villages."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "river_wardens",
+                    "name": "River Wardens",
+                    "delta": 3,
+                    "summary": "The river wardens spread word of your dependable aid."
+                  }
+                ]
+              }
+            }
+          },
+          "end_compass": {
+            "title": "Compass of Many Paths",
+            "text": "Aligning prism light with starlit sigils, you craft a compass that answers the cadence of your {{motivation}}.",
+            "log": "You forge a Mistway compass.",
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1,
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Harmonic Star Compass"
+                ],
+                "remove": [
+                  "Star Chart Sigil",
+                  "Prism Compass Sketch"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "prismatic_orientation",
+                    "name": "Prismatic Orientation",
+                    "amount": 1,
+                    "summary": "The compass holds the Mistway's shifting spectrums steady for you."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "harmonic_compass_record",
+                    "title": "Harmonic Compass Record",
+                    "summary": "Schematics for compasses woven from light, intent, and Mistway echoes."
                   }
                 ]
               }
