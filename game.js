@@ -29,6 +29,11 @@ function createDefaultGameState() {
       completed: [],
     },
     codex: [],
+    skills: [],
+    statusEffects: [],
+    reputation: {
+      factions: [],
+    },
   };
 }
 
@@ -51,6 +56,20 @@ function normalizeGameState(state) {
       .map(entry => normalizeCodexEntry(entry))
       .filter(Boolean);
   }
+
+  if (Array.isArray(state.skills)) {
+    base.skills = state.skills
+      .map(entry => normalizeSkillEntry(entry))
+      .filter(Boolean);
+  }
+
+  if (Array.isArray(state.statusEffects)) {
+    base.statusEffects = state.statusEffects
+      .map(entry => normalizeStatusEffect(entry))
+      .filter(Boolean);
+  }
+
+  base.reputation = normalizeReputation(state.reputation);
 
   base.quests = normalizeQuestState(state.quests);
 
@@ -178,6 +197,459 @@ function normalizeCodexEntry(entry) {
   }
 
   return null;
+}
+
+function normalizeSkillEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') {
+    const id = canonicalKey(entry);
+    if (!id) return null;
+    return {
+      id,
+      name: formatLabel(id),
+      rank: 1,
+      summary: '',
+    };
+  }
+  if (typeof entry === 'object') {
+    const nameCandidate = entry.name || entry.title || entry.label || '';
+    const id = canonicalKey(entry.id || nameCandidate || entry.skillId || '');
+    if (!id && !nameCandidate) return null;
+    const rawRank = entry.rank ?? entry.level ?? entry.tier;
+    const numericRank = rawRank !== undefined ? Number(rawRank) : undefined;
+    const fallbackRank = entry.amount !== undefined ? Number(entry.amount) : undefined;
+    return {
+      id: id || canonicalKey(nameCandidate) || `skill_${Date.now()}`,
+      name: nameCandidate || formatLabel(id),
+      rank: Number.isFinite(numericRank)
+        ? numericRank
+        : Number.isFinite(fallbackRank)
+          ? fallbackRank
+          : 0,
+      summary: entry.summary || entry.description || '',
+    };
+  }
+  return null;
+}
+
+function normalizeStatusEffect(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') {
+    const id = canonicalKey(entry);
+    if (!id) return null;
+    return {
+      id,
+      name: formatLabel(id),
+      summary: '',
+      duration: '',
+      tags: [],
+    };
+  }
+  if (typeof entry === 'object') {
+    const nameCandidate = entry.name || entry.title || entry.id || '';
+    const id = canonicalKey(entry.id || nameCandidate || '');
+    if (!id && !nameCandidate) return null;
+    return {
+      id: id || canonicalKey(nameCandidate) || `status_${Date.now()}`,
+      name: nameCandidate || formatLabel(id),
+      summary: entry.summary || entry.description || '',
+      duration: entry.duration || entry.length || '',
+      tags: Array.isArray(entry.tags) ? entry.tags : [],
+    };
+  }
+  return null;
+}
+
+function normalizeReputation(reputation) {
+  const base = {
+    factions: [],
+  };
+
+  if (!reputation || typeof reputation !== 'object') {
+    return base;
+  }
+
+  if (Array.isArray(reputation.factions)) {
+    base.factions = reputation.factions
+      .map(entry => normalizeFactionReputationEntry(entry))
+      .filter(Boolean);
+  }
+
+  return base;
+}
+
+function normalizeFactionReputationEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') {
+    const id = canonicalKey(entry);
+    if (!id) return null;
+    return {
+      id,
+      name: formatLabel(id),
+      score: 0,
+      summary: '',
+      tags: [],
+    };
+  }
+  if (typeof entry === 'object') {
+    const nameCandidate = entry.name || entry.title || entry.id || '';
+    const id = canonicalKey(entry.id || nameCandidate || '');
+    if (!id && !nameCandidate) return null;
+    const rawScore = entry.score ?? entry.value ?? entry.rating;
+    const numericScore = rawScore !== undefined ? Number(rawScore) : undefined;
+    return {
+      id: id || canonicalKey(nameCandidate) || `faction_${Date.now()}`,
+      name: nameCandidate || formatLabel(id),
+      score: Number.isFinite(numericScore) ? numericScore : 0,
+      summary: entry.summary || entry.description || '',
+      tags: Array.isArray(entry.tags) ? entry.tags : [],
+    };
+  }
+  return null;
+}
+
+function ensureSkillList(state = gameState) {
+  if (!Array.isArray(state.skills)) {
+    state.skills = [];
+  }
+  return state.skills;
+}
+
+function ensureStatusList(state = gameState) {
+  if (!Array.isArray(state.statusEffects)) {
+    state.statusEffects = [];
+  }
+  return state.statusEffects;
+}
+
+function ensureReputationState(state = gameState) {
+  if (!state.reputation || typeof state.reputation !== 'object') {
+    state.reputation = { factions: [] };
+  }
+  if (!Array.isArray(state.reputation.factions)) {
+    state.reputation.factions = [];
+  }
+  return state.reputation;
+}
+
+function addSkill(entry, state = gameState) {
+  const normalized = normalizeSkillEntry(entry);
+  if (!normalized || !normalized.id) return;
+  const skills = ensureSkillList(state);
+  const existingIndex = skills.findIndex(skill => skill.id === normalized.id);
+  const parsedRank = Number.isFinite(Number(normalized.rank)) ? Number(normalized.rank) : null;
+  if (existingIndex === -1) {
+    const skill = {
+      ...normalized,
+      rank: parsedRank !== null ? parsedRank : 1,
+    };
+    skills.push(skill);
+    skills.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    const rankLabel = skill.rank ? ` (Rank ${skill.rank})` : '';
+    logEvent(`You learn ${skill.name}${rankLabel}.`);
+    appendHistoryEntry({
+      type: 'skill',
+      skillId: skill.id,
+      nodeTitle: skill.name,
+      text: `Skill learned: ${skill.name}${rankLabel}`,
+      body: skill.summary || '',
+    });
+    return;
+  }
+
+  const existing = skills[existingIndex];
+  const hasRankChange = parsedRank !== null && parsedRank !== existing.rank;
+  const hasSummaryChange = normalized.summary && normalized.summary !== existing.summary;
+  const hasNameChange = normalized.name && normalized.name !== existing.name;
+  if (!hasRankChange && !hasSummaryChange && !hasNameChange) {
+    return;
+  }
+
+  skills[existingIndex] = {
+    ...existing,
+    name: normalized.name || existing.name,
+    rank: hasRankChange ? parsedRank : existing.rank,
+    summary: hasSummaryChange ? normalized.summary : existing.summary,
+  };
+  logEvent(`Your understanding of ${skills[existingIndex].name} deepens.`);
+  appendHistoryEntry({
+    type: 'skill',
+    skillId: skills[existingIndex].id,
+    nodeTitle: skills[existingIndex].name,
+    text: `Skill updated: ${skills[existingIndex].name}`,
+    body: skills[existingIndex].summary || '',
+  });
+}
+
+function upgradeSkill(entry, state = gameState) {
+  if (!entry) return;
+  const id = canonicalKey(entry.id || entry.name || entry.skillId || entry);
+  if (!id) return;
+  const skills = ensureSkillList(state);
+  const name = entry.name || entry.title || formatLabel(id);
+  const delta = typeof entry.amount === 'number'
+    ? entry.amount
+    : typeof entry.delta === 'number'
+      ? entry.delta
+      : typeof entry.rank === 'number'
+        ? entry.rank
+        : 1;
+  const summary = entry.summary || '';
+  const index = skills.findIndex(skill => skill.id === id);
+  if (index === -1) {
+    const skill = normalizeSkillEntry({ id, name, rank: delta > 0 ? delta : 1, summary });
+    skills.push(skill);
+    skills.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    logEvent(`You cultivate ${skill.name} to rank ${skill.rank}.`);
+    appendHistoryEntry({
+      type: 'skill',
+      skillId: skill.id,
+      nodeTitle: skill.name,
+      text: `Skill advanced: ${skill.name}`,
+      body: skill.summary ? `${skill.summary} (Rank ${skill.rank})` : `Rank ${skill.rank}`,
+    });
+    return;
+  }
+
+  const existing = skills[index];
+  const newRank = Math.max(0, Math.round(((existing.rank || 0) + delta) * 100) / 100);
+  const summaryChanged = summary && summary !== existing.summary;
+  const nameChanged = name && name !== existing.name;
+  if (newRank === existing.rank && !summaryChanged && !nameChanged) {
+    return;
+  }
+
+  skills[index] = {
+    ...existing,
+    name: name || existing.name,
+    rank: newRank,
+    summary: summaryChanged ? summary : existing.summary,
+  };
+  skills.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  logEvent(`Your ${skills[index].name} grows to rank ${skills[index].rank}.`);
+  appendHistoryEntry({
+    type: 'skill',
+    skillId: skills[index].id,
+    nodeTitle: skills[index].name,
+    text: `Skill advanced: ${skills[index].name}`,
+    body: skills[index].summary ? `${skills[index].summary} (Rank ${skills[index].rank})` : `Rank ${skills[index].rank}`,
+  });
+}
+
+function removeSkill(entry, state = gameState) {
+  if (!entry) return;
+  const id = canonicalKey(entry.id || entry.name || entry);
+  if (!id) return;
+  const skills = ensureSkillList(state);
+  const index = skills.findIndex(skill => skill.id === id);
+  if (index === -1) return;
+  const [removed] = skills.splice(index, 1);
+  logEvent(`You let go of the ${removed.name} discipline.`);
+  appendHistoryEntry({
+    type: 'skill',
+    skillId: removed.id,
+    nodeTitle: removed.name,
+    text: `Skill forgotten: ${removed.name}`,
+    body: removed.summary || '',
+  });
+}
+
+function addStatusEffect(entry, state = gameState) {
+  const normalized = normalizeStatusEffect(entry);
+  if (!normalized || !normalized.id) return;
+  const effects = ensureStatusList(state);
+  const index = effects.findIndex(effect => effect.id === normalized.id);
+  if (index === -1) {
+    effects.push(normalized);
+    effects.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    const durationText = normalized.duration ? ` (${normalized.duration})` : '';
+    logEvent(`Status gained: ${normalized.name}${durationText}.`);
+    appendHistoryEntry({
+      type: 'status',
+      statusId: normalized.id,
+      nodeTitle: normalized.name,
+      text: `Status gained: ${normalized.name}${durationText}`,
+      body: normalized.summary || '',
+    });
+    return;
+  }
+
+  const existing = effects[index];
+  const summaryChanged = normalized.summary && normalized.summary !== existing.summary;
+  const durationChanged = normalized.duration && normalized.duration !== existing.duration;
+  const nameChanged = normalized.name && normalized.name !== existing.name;
+  if (!summaryChanged && !durationChanged && !nameChanged) {
+    return;
+  }
+
+  effects[index] = {
+    ...existing,
+    name: normalized.name || existing.name,
+    summary: summaryChanged ? normalized.summary : existing.summary,
+    duration: durationChanged ? normalized.duration : existing.duration,
+    tags: Array.isArray(normalized.tags) ? normalized.tags : existing.tags,
+  };
+  logEvent(`Status updated: ${effects[index].name}.`);
+  appendHistoryEntry({
+    type: 'status',
+    statusId: effects[index].id,
+    nodeTitle: effects[index].name,
+    text: `Status updated: ${effects[index].name}`,
+    body: effects[index].summary || '',
+  });
+}
+
+function removeStatusEffect(entry, state = gameState) {
+  if (!entry) return;
+  const id = canonicalKey(entry.id || entry.name || entry);
+  if (!id) return;
+  const effects = ensureStatusList(state);
+  const index = effects.findIndex(effect => effect.id === id);
+  if (index === -1) return;
+  const [removed] = effects.splice(index, 1);
+  logEvent(`Status ended: ${removed.name}.`);
+  appendHistoryEntry({
+    type: 'status',
+    statusId: removed.id,
+    nodeTitle: removed.name,
+    text: `Status ended: ${removed.name}`,
+    body: removed.summary || '',
+  });
+}
+
+function clearStatusEffects(state = gameState) {
+  const effects = ensureStatusList(state);
+  if (!effects.length) return;
+  const snapshot = [...effects];
+  snapshot.forEach(effect => removeStatusEffect(effect, state));
+}
+
+function adjustFactionReputation(entry, state = gameState) {
+  const normalized = normalizeFactionReputationEntry(entry);
+  if (!normalized || !normalized.id) return;
+  const reputation = ensureReputationState(state);
+  const factions = reputation.factions;
+  const index = factions.findIndex(faction => faction.id === normalized.id);
+  const delta = typeof entry.delta === 'number'
+    ? entry.delta
+    : typeof entry.change === 'number'
+      ? entry.change
+      : null;
+  const setValue = entry.set !== undefined ? entry.set : entry.score;
+  const summary = entry.summary || normalized.summary || (index !== -1 ? factions[index].summary : '');
+  const name = entry.name || normalized.name || (index !== -1 ? factions[index].name : formatLabel(normalized.id));
+
+  if (index === -1) {
+    const baseScore = setValue !== undefined && setValue !== null && !Number.isNaN(Number(setValue))
+      ? Number(setValue)
+      : normalized.score || 0;
+    const finalScore = Math.round(((delta !== null ? baseScore + delta : baseScore) || 0) * 100) / 100;
+    const factionEntry = {
+      id: normalized.id,
+      name,
+      score: finalScore,
+      summary,
+      tags: Array.isArray(entry.tags) ? entry.tags : normalized.tags || [],
+    };
+    factions.push(factionEntry);
+    factions.sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || (a.name || '').localeCompare(b.name || ''));
+    logEvent(`Your standing with ${name} is now ${finalScore}.`);
+    appendHistoryEntry({
+      type: 'reputation',
+      factionId: factionEntry.id,
+      nodeTitle: factionEntry.name,
+      text: `Reputation gained: ${factionEntry.name}`,
+      body: summary ? `${summary} (Score: ${finalScore})` : `Score: ${finalScore}`,
+    });
+    return;
+  }
+
+  const existing = factions[index];
+  let newScore = existing.score || 0;
+  let changed = false;
+  if (setValue !== undefined && setValue !== null && !Number.isNaN(Number(setValue))) {
+    const numericSet = Number(setValue);
+    if (numericSet !== newScore) {
+      newScore = numericSet;
+      changed = true;
+    }
+  }
+  if (delta !== null) {
+    newScore = Math.round((newScore + delta) * 100) / 100;
+    if (delta !== 0) {
+      changed = true;
+    }
+  }
+  const summaryChanged = summary && summary !== existing.summary;
+  const nameChanged = name && name !== existing.name;
+  if (!changed && !summaryChanged && !nameChanged) {
+    return;
+  }
+
+  factions[index] = {
+    ...existing,
+    name: name || existing.name,
+    score: newScore,
+    summary: summaryChanged ? summary : existing.summary,
+    tags: Array.isArray(entry.tags) ? entry.tags : existing.tags,
+  };
+  factions.sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || (a.name || '').localeCompare(b.name || ''));
+  logEvent(`Your standing with ${factions[index].name} shifts to ${factions[index].score}.`);
+  appendHistoryEntry({
+    type: 'reputation',
+    factionId: factions[index].id,
+    nodeTitle: factions[index].name,
+    text: `Reputation updated: ${factions[index].name}`,
+    body: factions[index].summary ? `${factions[index].summary} (Score: ${factions[index].score})` : `Score: ${factions[index].score}`,
+  });
+}
+
+function applySkillEffects(effects, state = gameState) {
+  if (!effects) return;
+  if (Array.isArray(effects)) {
+    effects.forEach(entry => addSkill(entry, state));
+    return;
+  }
+  if (Array.isArray(effects.learn)) {
+    effects.learn.forEach(entry => addSkill(entry, state));
+  }
+  if (Array.isArray(effects.upgrade)) {
+    effects.upgrade.forEach(entry => upgradeSkill(entry, state));
+  }
+  if (Array.isArray(effects.remove)) {
+    effects.remove.forEach(entry => removeSkill(entry, state));
+  }
+  if (Array.isArray(effects.forget)) {
+    effects.forget.forEach(entry => removeSkill(entry, state));
+  }
+}
+
+function applyStatusEffects(effects, state = gameState) {
+  if (!effects) return;
+  if (Array.isArray(effects)) {
+    effects.forEach(entry => addStatusEffect(entry, state));
+    return;
+  }
+  if (Array.isArray(effects.add)) {
+    effects.add.forEach(entry => addStatusEffect(entry, state));
+  }
+  if (Array.isArray(effects.remove)) {
+    effects.remove.forEach(entry => removeStatusEffect(entry, state));
+  }
+  if (effects.clear) {
+    clearStatusEffects(state);
+  }
+}
+
+function applyReputationEffects(effects, state = gameState) {
+  if (!effects) return;
+  if (Array.isArray(effects)) {
+    effects.forEach(entry => adjustFactionReputation(entry, state));
+    return;
+  }
+  if (Array.isArray(effects.factions)) {
+    effects.factions.forEach(entry => adjustFactionReputation(entry, state));
+  }
 }
 
 // Load saved state if running in browser
@@ -469,6 +941,10 @@ function deriveIdentity(state = gameState, preferences = prefs) {
     summaryPieces.push(`Allied with the ${preferences.faction}.`);
   }
 
+  if (preferences?.archetype) {
+    summaryPieces.push(`Disciplined as a ${preferences.archetype}.`);
+  }
+
   const summary = summaryPieces.join(' ');
 
   return {
@@ -481,6 +957,7 @@ function deriveIdentity(state = gameState, preferences = prefs) {
     origin: preferences?.origin || '',
     temperament: preferences?.temperament || '',
     motivation: preferences?.motivation || '',
+    archetype: preferences?.archetype || '',
     summary,
   };
 }
@@ -672,6 +1149,14 @@ function renderGameState(state = gameState) {
           tags.appendChild(temperamentTag);
         }
 
+        const archetypeValue = identity.archetype || prefs.archetype;
+        if (archetypeValue) {
+          const archetypeTag = document.createElement('span');
+          archetypeTag.className = 'persona-pill';
+          archetypeTag.textContent = `Archetype: ${archetypeValue}`;
+          tags.appendChild(archetypeTag);
+        }
+
         if (prefs.faction) {
           const factionTag = document.createElement('span');
           factionTag.className = 'persona-pill';
@@ -734,6 +1219,133 @@ function renderGameState(state = gameState) {
         empty.className = 'muted-text';
         empty.textContent = 'You have yet to gather any notable gear.';
         section.appendChild(empty);
+      }
+
+      addHeading('Skills');
+      const knownSkills = Array.isArray(state.skills) ? state.skills : [];
+      if (knownSkills.length) {
+        const list = document.createElement('ul');
+        list.className = 'skill-list';
+        knownSkills.forEach((skill) => {
+          const item = document.createElement('li');
+          item.className = 'skill-item';
+
+          const header = document.createElement('div');
+          header.className = 'skill-header';
+
+          const name = document.createElement('span');
+          name.className = 'skill-name';
+          name.textContent = skill.name || 'Unnamed Skill';
+          header.appendChild(name);
+
+          if (skill.rank !== undefined && skill.rank !== null) {
+            const rank = document.createElement('span');
+            rank.className = 'skill-rank';
+            rank.textContent = `Rank ${skill.rank}`;
+            header.appendChild(rank);
+          }
+
+          item.appendChild(header);
+
+          if (skill.summary) {
+            const summary = document.createElement('p');
+            summary.className = 'skill-summary';
+            summary.textContent = skill.summary;
+            item.appendChild(summary);
+          }
+
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      } else {
+        const emptySkills = document.createElement('p');
+        emptySkills.className = 'muted-text';
+        emptySkills.textContent = 'No special techniques have been mastered yet.';
+        section.appendChild(emptySkills);
+      }
+
+      addHeading('Status Effects');
+      const activeStatuses = Array.isArray(state.statusEffects) ? state.statusEffects : [];
+      if (activeStatuses.length) {
+        const list = document.createElement('ul');
+        list.className = 'status-list';
+        activeStatuses.forEach((effect) => {
+          const item = document.createElement('li');
+          item.className = 'status-item';
+
+          const header = document.createElement('div');
+          header.className = 'status-header';
+
+          const name = document.createElement('span');
+          name.className = 'status-name';
+          name.textContent = effect.name || 'Unnamed Effect';
+          header.appendChild(name);
+
+          if (effect.duration) {
+            const duration = document.createElement('span');
+            duration.className = 'status-duration';
+            duration.textContent = effect.duration;
+            header.appendChild(duration);
+          }
+
+          item.appendChild(header);
+
+          if (effect.summary) {
+            const summary = document.createElement('p');
+            summary.className = 'status-summary';
+            summary.textContent = effect.summary;
+            item.appendChild(summary);
+          }
+
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      } else {
+        const emptyStatus = document.createElement('p');
+        emptyStatus.className = 'muted-text';
+        emptyStatus.textContent = 'No active boons or afflictions.';
+        section.appendChild(emptyStatus);
+      }
+
+      addHeading('Reputation');
+      const factionStanding = Array.isArray(state.reputation?.factions) ? state.reputation.factions : [];
+      if (factionStanding.length) {
+        const list = document.createElement('ul');
+        list.className = 'reputation-list';
+        factionStanding.forEach((entry) => {
+          const item = document.createElement('li');
+          item.className = 'reputation-item';
+
+          const header = document.createElement('div');
+          header.className = 'reputation-header';
+
+          const name = document.createElement('span');
+          name.className = 'reputation-name';
+          name.textContent = entry.name || formatLabel(entry.id);
+          header.appendChild(name);
+
+          const score = document.createElement('span');
+          score.className = 'reputation-score';
+          score.textContent = `${Math.round((entry.score ?? 0) * 100) / 100}`;
+          header.appendChild(score);
+
+          item.appendChild(header);
+
+          if (entry.summary) {
+            const summary = document.createElement('p');
+            summary.className = 'reputation-summary';
+            summary.textContent = entry.summary;
+            item.appendChild(summary);
+          }
+
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      } else {
+        const emptyReputation = document.createElement('p');
+        emptyReputation.className = 'muted-text';
+        emptyReputation.textContent = 'No factions have taken special notice yet.';
+        section.appendChild(emptyReputation);
       }
 
       if (prefEntries.length) {
@@ -959,7 +1571,7 @@ function renderGameState(state = gameState) {
 // Apply effects from a choice to the current game state
 function applyChoiceEffects(choice, state = gameState) {
   if (!choice || !choice.effects) return;
-  const { stats = {}, inventory = {}, log, quests, codex } = choice.effects;
+  const { stats = {}, inventory = {}, log, quests, codex, skills, status, reputation } = choice.effects;
   for (const [k, v] of Object.entries(stats)) {
     state.stats[k] = (state.stats[k] || 0) + v;
     if (v !== 0) {
@@ -1002,6 +1614,18 @@ function applyChoiceEffects(choice, state = gameState) {
     if (Array.isArray(entries)) {
       entries.forEach(entry => addCodexEntry(entry, state));
     }
+  }
+
+  if (skills) {
+    applySkillEffects(skills, state);
+  }
+
+  if (status) {
+    applyStatusEffects(status, state);
+  }
+
+  if (reputation) {
+    applyReputationEffects(reputation, state);
   }
 
   updateIdentity(state, prefs);
@@ -1257,6 +1881,105 @@ function buildStory(prefs, { resetState = true } = {}) {
     },
   };
 
+  const archetypePackages = {
+    'blade dancer': {
+      stats: { daring: 2, resolve: 1 },
+      skills: {
+        learn: [
+          {
+            id: 'blade_dance',
+            name: 'Blade Dance',
+            rank: 1,
+            summary: 'Whirling strikes and balanced footing keep you a step ahead in combat.',
+          },
+        ],
+      },
+      status: {
+        add: [
+          {
+            id: 'battle_ready',
+            name: 'Battle Ready',
+            summary: 'Your stance remains poised for sudden duels.',
+            duration: 'Opening encounters',
+          },
+        ],
+      },
+      log: 'Blade dancer drills leave your reflexes razor sharp.',
+    },
+    'spellbinder': {
+      stats: { insight: 2, lore: 2 },
+      skills: {
+        learn: [
+          {
+            id: 'arcane_weaving',
+            name: 'Arcane Weaving',
+            rank: 1,
+            summary: 'You stitch protective sigils and channel latent energy with ease.',
+          },
+        ],
+      },
+      status: {
+        add: [
+          {
+            id: 'spellfocus',
+            name: 'Spellfocus',
+            summary: 'Concentrated mana hums at your fingertips.',
+            duration: 'Next ritual',
+          },
+        ],
+      },
+      log: 'Arcane studies have disciplined your mind and will.',
+    },
+    'wayfinder': {
+      stats: { insight: 1, health: 1, fortune: 1 },
+      skills: {
+        learn: [
+          {
+            id: 'trailblazing',
+            name: 'Trailblazing',
+            rank: 1,
+            summary: 'You spot safe passages and hidden byways wherever you travel.',
+          },
+        ],
+      },
+      status: {
+        add: [
+          {
+            id: 'course_set',
+            name: 'Course Set',
+            summary: 'An internal compass keeps you aligned with your goal.',
+            duration: 'While exploring',
+          },
+        ],
+      },
+      log: 'Seasons of scouting grant you an instinct for direction.',
+    },
+    'silver tongue': {
+      stats: { influence: 2, empathy: 1 },
+      skills: {
+        learn: [
+          {
+            id: 'honeyed_words',
+            name: 'Honeyed Words',
+            rank: 1,
+            summary: 'Persuasive cadence can sway even skeptical hearts.',
+          },
+        ],
+      },
+      status: {
+        add: [
+          {
+            id: 'social_momentum',
+            name: 'Social Momentum',
+            summary: 'Compliments and witty banter flow effortlessly.',
+            duration: 'Next audience',
+          },
+        ],
+      },
+      log: 'Years of negotiation have polished your charm.',
+    },
+  };
+
   const applyBonuses = (bonusMap, key) => {
     if (!key) return;
     const canonical = resolveKey(key);
@@ -1295,6 +2018,15 @@ function buildStory(prefs, { resetState = true } = {}) {
         pkg.quests.complete.forEach(entry => completeQuest(entry, gameState));
       }
     }
+    if (pkg.skills) {
+      applySkillEffects(pkg.skills, gameState);
+    }
+    if (pkg.status) {
+      applyStatusEffects(pkg.status, gameState);
+    }
+    if (pkg.reputation) {
+      applyReputationEffects(pkg.reputation, gameState);
+    }
     if (includeStats && pkg.log) {
       logEvent(pkg.log);
     }
@@ -1308,6 +2040,7 @@ function buildStory(prefs, { resetState = true } = {}) {
   });
   const temperamentKey = resolveKey(prefs.temperament);
   const factionKey = resolveKey(prefs.faction);
+  const archetypeKey = resolveKey(prefs.archetype);
 
   if (resetState) {
     applyBonuses(preferenceBonuses, prefs.playstyle);
@@ -1316,6 +2049,7 @@ function buildStory(prefs, { resetState = true } = {}) {
     applyPackage(originPackages[originKey], { includeStats: true });
     applyPackage(temperamentPackages[temperamentKey], { includeStats: true });
     applyPackage(factionPackages[factionKey], { includeStats: true });
+    applyPackage(archetypePackages[archetypeKey], { includeStats: true });
 
     if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
       gameState.inventory.push(prefs.companion);
@@ -1327,6 +2061,7 @@ function buildStory(prefs, { resetState = true } = {}) {
     applyPackage(originPackages[originKey], { includeStats: false });
     applyPackage(temperamentPackages[temperamentKey], { includeStats: false });
     applyPackage(factionPackages[factionKey], { includeStats: false });
+    applyPackage(archetypePackages[archetypeKey], { includeStats: false });
     if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
       gameState.inventory.push(prefs.companion);
     }
@@ -1366,6 +2101,13 @@ function buildStory(prefs, { resetState = true } = {}) {
     'obsidian syndicate': 'veiled alliances',
     'azure vanguard': 'ever-watchful guardianship',
   }[factionKey] || 'shared purpose';
+  replacements.archetype = prefs.archetype || 'Adventurer';
+  replacements.archetype_trait = {
+    'blade dancer': 'whirling blades',
+    'spellbinder': 'arcane focus',
+    'wayfinder': 'trail-tested instincts',
+    'silver tongue': 'silvered promises',
+  }[archetypeKey] || 'versatile talents';
   replacements.hero_epithet = identity?.epithet || 'the Adventurer';
   replacements.primary_stat = identity?.primaryStatLabel || 'Potential';
   replacements.primary_stat_value = String(identity?.primaryStatValue ?? '0');

@@ -35,6 +35,30 @@ Choices can grant or remove items, and future nodes may check for their
 presence with `requires` clauses just like stats. The inventory enables puzzle
 solving and resource management within narrative flows.
 
+## Skills & Disciplines
+
+Heroes can now learn and improve discrete skills that persist across the
+adventure. Skill effects are expressed through `effects.skills` with `learn`
+and `upgrade` arrays. Each entry includes an `id`, `name`, optional `rank`,
+and supporting summary text. The profile sidebar displays every known skill
+with its current rank, while the journey log calls out when mastery advances.
+
+## Status Effects
+
+Transient boons and afflictions are tracked through a dedicated status system.
+Nodes and choices may add or remove entries via `effects.status.add` and
+`effects.status.remove`. Status cards include a `duration` field and are shown
+prominently alongside the hero profile so players can react to ongoing
+conditions.
+
+## Faction Reputation
+
+Every interaction can now sway the hero's standing with the world's major
+factions. Using `effects.reputation.factions`, designers can increase or set
+reputation scores and optionally update the faction's summary. Changes appear
+in the sidebar with clear feedback in the log, giving players a sense of how
+their deeds reshape political alliances.
+
 ## Quest Journal
 
 Branching narratives now surface their objectives through a quest journal. The
