@@ -24,6 +24,11 @@ function createDefaultGameState() {
     history: [],
     appliedNodeEffects: {},
     identity: {},
+    quests: {
+      active: [],
+      completed: [],
+    },
+    codex: [],
   };
 }
 
@@ -40,6 +45,14 @@ function normalizeGameState(state) {
   if (Array.isArray(state.inventory)) {
     base.inventory = [...state.inventory];
   }
+
+  if (Array.isArray(state.codex)) {
+    base.codex = state.codex
+      .map(entry => normalizeCodexEntry(entry))
+      .filter(Boolean);
+  }
+
+  base.quests = normalizeQuestState(state.quests);
 
   const historySource = Array.isArray(state.history)
     ? state.history
@@ -85,6 +98,85 @@ function normalizeHistoryEntry(entry) {
     }
     return normalized;
   }
+  return null;
+}
+
+function normalizeQuestState(quests) {
+  const base = {
+    active: [],
+    completed: [],
+  };
+
+  if (!quests || typeof quests !== 'object') {
+    return base;
+  }
+
+  if (Array.isArray(quests.active)) {
+    base.active = quests.active
+      .map(entry => normalizeQuestEntry(entry, 'active'))
+      .filter(Boolean);
+  }
+
+  if (Array.isArray(quests.completed)) {
+    base.completed = quests.completed
+      .map(entry => normalizeQuestEntry(entry, 'completed'))
+      .filter(Boolean);
+  }
+
+  return base;
+}
+
+function normalizeQuestEntry(entry, fallbackStatus = 'active') {
+  if (!entry) return null;
+  if (typeof entry === 'string') {
+    const id = canonicalKey(entry);
+    if (!id) return null;
+    return {
+      id,
+      title: entry,
+      summary: '',
+      status: fallbackStatus,
+    };
+  }
+
+  if (typeof entry === 'object') {
+    const title = entry.title || entry.name || entry.id || '';
+    const id = canonicalKey(entry.id || title || entry.summary || entry.text || '');
+    if (!id && !title) return null;
+    return {
+      id: id || canonicalKey(title) || `quest_${Date.now()}`,
+      title: title || 'Untitled Quest',
+      summary: entry.summary || entry.description || entry.text || '',
+      status: entry.status || fallbackStatus,
+    };
+  }
+
+  return null;
+}
+
+function normalizeCodexEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') {
+    const id = canonicalKey(entry);
+    if (!id) return null;
+    return {
+      id,
+      title: entry,
+      summary: '',
+    };
+  }
+
+  if (typeof entry === 'object') {
+    const title = entry.title || entry.name || entry.id || '';
+    const id = canonicalKey(entry.id || title || entry.summary || entry.text || '');
+    if (!id && !title) return null;
+    return {
+      id: id || canonicalKey(title) || `codex_${Date.now()}`,
+      title: title || 'Untitled Entry',
+      summary: entry.summary || entry.description || entry.text || '',
+    };
+  }
+
   return null;
 }
 
@@ -158,6 +250,140 @@ function formatLabel(key) {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
   return label;
+}
+
+function ensureQuestContainers(state = gameState) {
+  if (!state.quests || typeof state.quests !== 'object') {
+    state.quests = { active: [], completed: [] };
+  }
+  if (!Array.isArray(state.quests.active)) {
+    state.quests.active = [];
+  }
+  if (!Array.isArray(state.quests.completed)) {
+    state.quests.completed = [];
+  }
+  return state.quests;
+}
+
+function addQuest(entry, state = gameState) {
+  const normalized = normalizeQuestEntry(entry, 'active');
+  if (!normalized || !normalized.id) return;
+  const quests = ensureQuestContainers(state);
+  const alreadyCompleted = quests.completed.find(q => q.id === normalized.id);
+  if (alreadyCompleted) {
+    return;
+  }
+  const existingIndex = quests.active.findIndex(q => q.id === normalized.id);
+  if (existingIndex !== -1) {
+    quests.active[existingIndex] = {
+      ...quests.active[existingIndex],
+      summary: normalized.summary || quests.active[existingIndex].summary,
+    };
+    return;
+  }
+  quests.active.push({ ...normalized, status: 'active' });
+  appendHistoryEntry({
+    type: 'quest',
+    questId: normalized.id,
+    questTitle: normalized.title,
+    status: 'active',
+    text: `Quest started: ${normalized.title}`,
+    body: normalized.summary,
+  });
+}
+
+function completeQuest(entry, state = gameState) {
+  const normalized = normalizeQuestEntry(entry, 'completed');
+  if (!normalized || !normalized.id) return;
+  const quests = ensureQuestContainers(state);
+  const completedIndex = quests.completed.findIndex(q => q.id === normalized.id);
+  let quest = null;
+  const activeIndex = quests.active.findIndex(q => q.id === normalized.id);
+  if (activeIndex !== -1) {
+    quest = quests.active.splice(activeIndex, 1)[0];
+  }
+  if (activeIndex === -1 && completedIndex !== -1) {
+    const existing = quests.completed[completedIndex];
+    const updated = {
+      ...existing,
+      title: normalized.title || existing.title,
+      summary: normalized.summary || existing.summary,
+    };
+    if (updated.title === existing.title && updated.summary === existing.summary) {
+      return;
+    }
+    quests.completed[completedIndex] = updated;
+    appendHistoryEntry({
+      type: 'quest',
+      questId: updated.id,
+      questTitle: updated.title,
+      status: 'completed',
+      text: `Quest revised: ${updated.title}`,
+      body: updated.summary,
+    });
+    return;
+  }
+  if (!quest) {
+    quest = normalized;
+  }
+  quest.status = 'completed';
+  if (completedIndex === -1) {
+    quests.completed.push(quest);
+  } else {
+    quests.completed[completedIndex] = {
+      ...quests.completed[completedIndex],
+      title: quest.title || quests.completed[completedIndex].title,
+      summary: quest.summary || quests.completed[completedIndex].summary,
+      status: 'completed',
+    };
+    quest = quests.completed[completedIndex];
+  }
+  appendHistoryEntry({
+    type: 'quest',
+    questId: quest.id,
+    questTitle: quest.title,
+    status: 'completed',
+    text: `Quest completed: ${quest.title}`,
+    body: quest.summary,
+  });
+}
+
+function addCodexEntry(entry, state = gameState) {
+  const normalized = normalizeCodexEntry(entry);
+  if (!normalized || !normalized.id) return;
+  if (!Array.isArray(state.codex)) {
+    state.codex = [];
+  }
+
+  const index = state.codex.findIndex(item => item.id === normalized.id);
+  const isNew = index === -1;
+  if (index !== -1) {
+    const existing = state.codex[index];
+    const updated = {
+      ...existing,
+      summary: normalized.summary || existing.summary,
+      title: normalized.title || existing.title,
+    };
+    if (updated.summary === existing.summary && updated.title === existing.title) {
+      return;
+    }
+    state.codex[index] = updated;
+  } else {
+    state.codex.push(normalized);
+  }
+
+  state.codex.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+
+  const targetEntry = state.codex.find(item => item.id === normalized.id);
+  const entryTitle = (isNew ? normalized.title : targetEntry?.title) || normalized.id;
+  const entrySummary = normalized.summary || targetEntry?.summary || '';
+  appendHistoryEntry({
+    type: 'codex',
+    codexId: normalized.id,
+    nodeTitle: entryTitle,
+    text: `${isNew ? 'Codex updated' : 'Codex revised'}: ${entryTitle}`,
+    body: entrySummary,
+  });
 }
 
 function canonicalKey(value) {
@@ -237,6 +463,10 @@ function deriveIdentity(state = gameState, preferences = prefs) {
   }
   if (motivationInsights[motivationKey]) {
     summaryPieces.push(motivationInsights[motivationKey]);
+  }
+
+  if (preferences?.faction) {
+    summaryPieces.push(`Allied with the ${preferences.faction}.`);
   }
 
   const summary = summaryPieces.join(' ');
@@ -442,6 +672,13 @@ function renderGameState(state = gameState) {
           tags.appendChild(temperamentTag);
         }
 
+        if (prefs.faction) {
+          const factionTag = document.createElement('span');
+          factionTag.className = 'persona-pill';
+          factionTag.textContent = `Faction: ${prefs.faction}`;
+          tags.appendChild(factionTag);
+        }
+
         if (identity.motivation) {
           const motivationTag = document.createElement('span');
           motivationTag.className = 'persona-pill';
@@ -577,6 +814,27 @@ function renderGameState(state = gameState) {
             if (entry.type === 'choice') {
               item.className = 'log-choice';
               item.textContent = entry.choiceText ? `You chose: ${entry.choiceText}` : 'You made a choice.';
+            } else if (entry.type === 'quest') {
+              item.className = entry.status === 'completed' ? 'log-quest completed' : 'log-quest';
+              const questTitle = entry.questTitle || entry.text || 'Quest updated';
+              const prefix = entry.status === 'completed' ? 'Completed' : 'Started';
+              item.textContent = entry.text || `${prefix}: ${questTitle}`;
+              if (entry.body) {
+                const detail = document.createElement('p');
+                detail.className = 'log-quest-detail';
+                detail.textContent = entry.body;
+                item.appendChild(detail);
+              }
+            } else if (entry.type === 'codex') {
+              item.className = 'log-codex';
+              const codexTitle = entry.nodeTitle || entry.text || 'Codex entry unlocked';
+              item.textContent = entry.text || `Codex updated: ${codexTitle}`;
+              if (entry.body) {
+                const detail = document.createElement('p');
+                detail.className = 'log-codex-detail';
+                detail.textContent = entry.body;
+                item.appendChild(detail);
+              }
             } else {
               item.className = 'log-event';
               const text = entry.text || entry.message || '';
@@ -597,13 +855,111 @@ function renderGameState(state = gameState) {
     }
   }
 
+  const questContainer = typeof document !== 'undefined' ? document.getElementById('quests') : null;
+  if (questContainer) {
+    questContainer.textContent = '';
+    const quests = ensureQuestContainers(state);
+    const hasActive = quests.active.length > 0;
+    const hasCompleted = quests.completed.length > 0;
+
+    if (!hasActive && !hasCompleted) {
+      const empty = document.createElement('p');
+      empty.className = 'muted-text';
+      empty.textContent = 'No quests are currently tracked.';
+      questContainer.appendChild(empty);
+    } else {
+      if (hasActive) {
+        const heading = document.createElement('p');
+        heading.className = 'section-heading';
+        heading.textContent = 'Active Quests';
+        questContainer.appendChild(heading);
+
+        const list = document.createElement('ul');
+        list.className = 'quest-list';
+        quests.active.forEach((quest) => {
+          const item = document.createElement('li');
+          item.className = 'quest-item';
+          const title = document.createElement('span');
+          title.className = 'quest-item-title';
+          title.textContent = quest.title;
+          item.appendChild(title);
+          if (quest.summary) {
+            const summary = document.createElement('span');
+            summary.className = 'quest-item-summary';
+            summary.textContent = quest.summary;
+            item.appendChild(summary);
+          }
+          list.appendChild(item);
+        });
+        questContainer.appendChild(list);
+      }
+
+      if (hasCompleted) {
+        const heading = document.createElement('p');
+        heading.className = 'section-heading';
+        heading.textContent = 'Completed Quests';
+        questContainer.appendChild(heading);
+
+        const list = document.createElement('ul');
+        list.className = 'quest-list completed';
+        quests.completed.forEach((quest) => {
+          const item = document.createElement('li');
+          item.className = 'quest-item completed';
+          const title = document.createElement('span');
+          title.className = 'quest-item-title';
+          title.textContent = quest.title;
+          item.appendChild(title);
+          if (quest.summary) {
+            const summary = document.createElement('span');
+            summary.className = 'quest-item-summary';
+            summary.textContent = quest.summary;
+            item.appendChild(summary);
+          }
+          list.appendChild(item);
+        });
+        questContainer.appendChild(list);
+      }
+    }
+  }
+
+  const codexContainer = typeof document !== 'undefined' ? document.getElementById('codex') : null;
+  if (codexContainer) {
+    codexContainer.textContent = '';
+    const entries = Array.isArray(state.codex) ? state.codex : [];
+    if (!entries.length) {
+      const empty = document.createElement('p');
+      empty.className = 'muted-text';
+      empty.textContent = 'Discover lore to expand your codex.';
+      codexContainer.appendChild(empty);
+    } else {
+      const list = document.createElement('ul');
+      list.className = 'codex-list';
+      entries.forEach((entry) => {
+        const item = document.createElement('li');
+        item.className = 'codex-entry';
+        const title = document.createElement('span');
+        title.className = 'codex-entry-title';
+        title.textContent = entry.title;
+        item.appendChild(title);
+        if (entry.summary) {
+          const summary = document.createElement('span');
+          summary.className = 'codex-entry-summary';
+          summary.textContent = entry.summary;
+          item.appendChild(summary);
+        }
+        list.appendChild(item);
+      });
+      codexContainer.appendChild(list);
+    }
+  }
+
   return { statsText, invText };
 }
 
 // Apply effects from a choice to the current game state
 function applyChoiceEffects(choice, state = gameState) {
   if (!choice || !choice.effects) return;
-  const { stats = {}, inventory = {}, log } = choice.effects;
+  const { stats = {}, inventory = {}, log, quests, codex } = choice.effects;
   for (const [k, v] of Object.entries(stats)) {
     state.stats[k] = (state.stats[k] || 0) + v;
     if (v !== 0) {
@@ -630,6 +986,22 @@ function applyChoiceEffects(choice, state = gameState) {
   }
   if (log) {
     logEvent(log);
+  }
+
+  if (quests) {
+    if (Array.isArray(quests.add)) {
+      quests.add.forEach(entry => addQuest(entry, state));
+    }
+    if (Array.isArray(quests.complete)) {
+      quests.complete.forEach(entry => completeQuest(entry, state));
+    }
+  }
+
+  if (codex) {
+    const entries = Array.isArray(codex) ? codex : codex.add;
+    if (Array.isArray(entries)) {
+      entries.forEach(entry => addCodexEntry(entry, state));
+    }
   }
 
   updateIdentity(state, prefs);
@@ -834,6 +1206,57 @@ function buildStory(prefs, { resetState = true } = {}) {
     },
   };
 
+  const factionPackages = {
+    'skyward coalition': {
+      stats: { influence: 1, insight: 1 },
+      inventory: ["Coalition Signaller"],
+      codex: [
+        {
+          id: 'skyward_coalition',
+          title: 'Skyward Coalition',
+          summary: 'An alliance of aerostat cities pledged to mutual aid and open skies.',
+        },
+      ],
+      log: 'Coalition envoys salute your renewed allegiance.',
+    },
+    'verdant circle': {
+      stats: { empathy: 1, lore: 1 },
+      inventory: ["Seed of Accord"],
+      codex: [
+        {
+          id: 'verdant_circle',
+          title: 'Verdant Circle',
+          summary: 'Keepers of living groves who weave diplomacy through cultivated ecosystems.',
+        },
+      ],
+      log: 'Rootspeakers share whispers of the Verdant Circle.',
+    },
+    'obsidian syndicate': {
+      stats: { stealth: 1, fortune: 1 },
+      inventory: ["Obsidian Marker"],
+      codex: [
+        {
+          id: 'obsidian_syndicate',
+          title: 'Obsidian Syndicate',
+          summary: 'A shadow network trading secrets for protection beneath city foundations.',
+        },
+      ],
+      log: 'Syndicate brokers acknowledge your subtle authority.',
+    },
+    'azure vanguard': {
+      stats: { resolve: 1, health: 1 },
+      inventory: ["Vanguard Beacon"],
+      codex: [
+        {
+          id: 'azure_vanguard',
+          title: 'Azure Vanguard',
+          summary: 'Skyborne guardians sworn to defend the horizon from stormborne threats.',
+        },
+      ],
+      log: 'The Vanguard renews your oath to safeguard the horizon.',
+    },
+  };
+
   const applyBonuses = (bonusMap, key) => {
     if (!key) return;
     const canonical = resolveKey(key);
@@ -858,6 +1281,20 @@ function buildStory(prefs, { resetState = true } = {}) {
         }
       });
     }
+    if (pkg.codex) {
+      const entries = Array.isArray(pkg.codex) ? pkg.codex : pkg.codex.add;
+      if (Array.isArray(entries)) {
+        entries.forEach(entry => addCodexEntry(entry, gameState));
+      }
+    }
+    if (pkg.quests) {
+      if (Array.isArray(pkg.quests.add)) {
+        pkg.quests.add.forEach(entry => addQuest(entry, gameState));
+      }
+      if (Array.isArray(pkg.quests.complete)) {
+        pkg.quests.complete.forEach(entry => completeQuest(entry, gameState));
+      }
+    }
     if (includeStats && pkg.log) {
       logEvent(pkg.log);
     }
@@ -870,6 +1307,7 @@ function buildStory(prefs, { resetState = true } = {}) {
     'hidden enclave': 'outcast',
   });
   const temperamentKey = resolveKey(prefs.temperament);
+  const factionKey = resolveKey(prefs.faction);
 
   if (resetState) {
     applyBonuses(preferenceBonuses, prefs.playstyle);
@@ -877,6 +1315,7 @@ function buildStory(prefs, { resetState = true } = {}) {
     applyBonuses(motivationBonuses, prefs.motivation);
     applyPackage(originPackages[originKey], { includeStats: true });
     applyPackage(temperamentPackages[temperamentKey], { includeStats: true });
+    applyPackage(factionPackages[factionKey], { includeStats: true });
 
     if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
       gameState.inventory.push(prefs.companion);
@@ -887,6 +1326,7 @@ function buildStory(prefs, { resetState = true } = {}) {
   } else {
     applyPackage(originPackages[originKey], { includeStats: false });
     applyPackage(temperamentPackages[temperamentKey], { includeStats: false });
+    applyPackage(factionPackages[factionKey], { includeStats: false });
     if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
       gameState.inventory.push(prefs.companion);
     }
@@ -919,6 +1359,13 @@ function buildStory(prefs, { resetState = true } = {}) {
   replacements.signature = prefs.signature || 'wits';
   replacements.origin = prefs.origin || 'an unknown past';
   replacements.temperament = prefs.temperament || 'balanced instincts';
+  replacements.faction = prefs.faction || 'allies';
+  replacements.faction_trait = {
+    'skyward coalition': 'skyborne unity',
+    'verdant circle': 'living concord',
+    'obsidian syndicate': 'veiled alliances',
+    'azure vanguard': 'ever-watchful guardianship',
+  }[factionKey] || 'shared purpose';
   replacements.hero_epithet = identity?.epithet || 'the Adventurer';
   replacements.primary_stat = identity?.primaryStatLabel || 'Potential';
   replacements.primary_stat_value = String(identity?.primaryStatValue ?? '0');
