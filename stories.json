@@ -56,7 +56,9 @@
             "name": "Arcane Conclave",
             "delta": 3,
             "summary": "Mystic scholars trust your command of the ley.",
-            "tags": ["Mystic"]
+            "tags": [
+              "Mystic"
+            ]
           }
         ]
       }
@@ -117,7 +119,9 @@
             "name": "Stellar Vanguard",
             "delta": 2,
             "summary": "Frontier captains respect your steady hand on the helm.",
-            "tags": ["Frontier"]
+            "tags": [
+              "Frontier"
+            ]
           }
         ]
       }
@@ -178,7 +182,9 @@
             "name": "Investigators' Guild",
             "delta": 3,
             "summary": "Peers applaud the precision of your deductions.",
-            "tags": ["Society"]
+            "tags": [
+              "Society"
+            ]
           }
         ]
       }
@@ -239,7 +245,9 @@
             "name": "Survivors' Coalition",
             "delta": 3,
             "summary": "Caravans trust your knack for keeping them alive.",
-            "tags": ["Frontier"]
+            "tags": [
+              "Frontier"
+            ]
           }
         ]
       }
@@ -300,7 +308,9 @@
             "name": "Skyward Coalition",
             "delta": 2,
             "summary": "Skywrights applaud your mechanical mastery.",
-            "tags": ["Sky"]
+            "tags": [
+              "Sky"
+            ]
           }
         ]
       }
@@ -361,7 +371,9 @@
             "name": "Velvet Conservatory",
             "delta": 4,
             "summary": "Hosts celebrate the warmth you bring to every encounter.",
-            "tags": ["Society"]
+            "tags": [
+              "Society"
+            ]
           }
         ]
       }
@@ -408,7 +420,55 @@
                 "text": "Answer the envoy of the {{faction}}",
                 "next": "envoy"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Wayfinder Satchel"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "crossroads_command",
+                    "name": "Crossroads Command",
+                    "summary": "You marshal the Mistway's latent energy into decisive guidance for companions.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "crossroads_awakened",
+                    "name": "Crossroads Awakened",
+                    "summary": "Omens cling to you, heightening awareness of converging destinies.",
+                    "duration": "Until you depart the crossroads"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "crossroads_orientation",
+                    "title": "Orient Yourself",
+                    "summary": "Study the crossroads to understand how the Mistway responds to your call."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "crossroads_awakenings",
+                    "title": "Crossroads Awakenings",
+                    "summary": "Notes on those who rise at the crossroads and shape its paths through will alone."
+                  }
+                ]
+              }
+            }
           },
           "milestone": {
             "title": "The Milestone's Secret",
@@ -573,7 +633,55 @@
                 "text": "Find the elder storyteller first",
                 "next": "storyteller"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Shared Route Sketch"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "crossroads_command",
+                    "name": "Crossroads Command",
+                    "amount": 1,
+                    "summary": "Counsel with your companion refines your instincts for guiding hidden trails."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "companion_cadence",
+                    "name": "Companion Cadence",
+                    "summary": "You and your companion move in lockstep, ready to improvise together.",
+                    "duration": "Until your next major encounter"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "glade_omens",
+                    "title": "Seek the Moonlit Glade",
+                    "summary": "Follow your companion's clues to locate the Moonlit Glade within the Mistway."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "companion_counsel",
+                    "title": "Companion Counsel",
+                    "summary": "Shared intuition that lets bonded wanderers read each other's intentions instantly."
+                  }
+                ]
+              }
+            }
           },
           "storyteller": {
             "title": "Elder of Echoes",
@@ -709,13 +817,122 @@
             "text": "The pool reveals a path where {{motivation}} is fulfilled through shared {{focus_trait}}.",
             "flavor": "With {{companion}} at your side, you feel ready for the chapters ahead.",
             "log": "The mirror pool welcomes your offering.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1,
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Mist-Polished Lens"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "mistway_cartography",
+                    "name": "Mistway Cartography",
+                    "amount": 1,
+                    "summary": "The mirror reveals deeper layers of the Mistway for your charts."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "crossroads_awakened",
+                  "companion_cadence"
+                ],
+                "add": [
+                  {
+                    "id": "mirror_attuned",
+                    "name": "Mirror Attuned",
+                    "summary": "Visions from the Moonlit Glade echo in your thoughts, guiding future choices.",
+                    "duration": "Lingering inspiration"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "crossroads_orientation",
+                    "title": "Orient Yourself",
+                    "summary": "You mapped the crossroads' shifting omens to your satisfaction."
+                  },
+                  {
+                    "id": "glade_omens",
+                    "title": "Seek the Moonlit Glade",
+                    "summary": "You found the Moonlit Glade and deciphered its mirrored prophecies."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "mirror_prophecy",
+                    "title": "Mirror Prophecy",
+                    "summary": "Accounts of futures glimpsed within the Moonlit Glade's reflecting pool."
+                  }
+                ]
+              }
+            }
           },
           "end_oath": {
             "title": "Oathbound Companions",
             "text": "Your vow echoes across the glade, weaving {{playstyle_trait}} into a promise of protection.",
             "log": "You swear a binding oath with your companion.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 2
+              },
+              "inventory": {
+                "add": [
+                  "Oathwoven Band"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "oathbound_duet",
+                    "name": "Oathbound Duet",
+                    "summary": "Your sworn bond lets you channel power in tandem with your companion.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "companion_cadence"
+                ],
+                "add": [
+                  {
+                    "id": "oathbound_companions",
+                    "name": "Oathbound Companions",
+                    "summary": "A sacred promise ties your fate to your companion's.",
+                    "duration": "Until the oath is fulfilled"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "glade_omens",
+                    "title": "Seek the Moonlit Glade",
+                    "summary": "Together you pledged yourselves to defend the Mistway's heart."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "moonlit_oath",
+                    "title": "Moonlit Oath",
+                    "summary": "The vow you and your companion swore beneath the Moonlit Glade's light."
+                  }
+                ]
+              }
+            }
           },
           "end_faction": {
             "title": "Mistway Accord",
@@ -750,13 +967,104 @@
             "text": "The charm bursts into guiding lights, charting a {{tone}} road for other wanderers.",
             "flavor": "Your legend becomes a beacon powered by {{focus_trait}}.",
             "log": "The storyteller's charm ignites the path.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Guiding Ember Charm"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "guiding_lights",
+                    "name": "Guiding Lights",
+                    "summary": "You can project safe passages for other travelers following in your wake.",
+                    "rank": 1
+                  }
+                ],
+                "upgrade": [
+                  {
+                    "id": "mistway_cartography",
+                    "name": "Mistway Cartography",
+                    "amount": 1,
+                    "summary": "The charm's light enhances the clarity of your Mistway maps."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "crossroads_awakened"
+                ],
+                "add": [
+                  {
+                    "id": "beacon_guide",
+                    "name": "Beacon Guide",
+                    "summary": "Radiant motes drift around you, inviting others to share in your safe routes.",
+                    "duration": "While guiding other travelers"
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "guiding_charm",
+                    "title": "Guiding Charm",
+                    "summary": "A charm of stories that illuminates the Mistway for those who follow you."
+                  }
+                ]
+              }
+            }
           },
           "end_reflect": {
             "title": "Quiet Resolve",
             "text": "You preserve the memory of the glade, trusting {{playstyle_trait}} to lead you when the time is right.",
             "log": "You depart with quiet resolve.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Quiet Reflection Stone"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "companion_cadence"
+                ],
+                "add": [
+                  {
+                    "id": "quiet_resolve",
+                    "name": "Quiet Resolve",
+                    "summary": "You carry a calm focus that steadies you when choices become uncertain.",
+                    "duration": "Lingering calm"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "crossroads_orientation",
+                    "title": "Orient Yourself",
+                    "summary": "You committed the glade's wisdom to memory for the journeys ahead."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "glade_reflection",
+                    "title": "Glade Reflection",
+                    "summary": "Meditations recorded after contemplating the Moonlit Glade's still waters."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -796,7 +1104,56 @@
                 "next": "garden",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "influence": 1,
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Velvet Token"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "midnight_intrigue",
+                    "name": "Midnight Intrigue",
+                    "summary": "You read masked intentions with ease, gaining leverage in hushed exchanges.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "velvet_poise",
+                    "name": "Velvet Poise",
+                    "summary": "You radiate confidence that puts other guests instantly at ease.",
+                    "duration": "For the duration of the affair"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "velvet_entanglement",
+                    "title": "Trace the Entanglements",
+                    "summary": "Untangle the alliances and liaisons hidden within the conservatory's revels."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "velvet_conservatory",
+                    "title": "Velvet Conservatory",
+                    "summary": "A primer on the secret etiquette governing the conservatory's masked delights."
+                  }
+                ]
+              }
+            }
           },
           "mask": {
             "title": "Invitation Behind Silk",
@@ -1094,7 +1451,56 @@
                 "next": "wilds",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "influence": 1,
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Resonant Baton"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "harmonic_conductor",
+                    "name": "Harmonic Conductor",
+                    "summary": "You can weave disparate performers into a single focused performance.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "caravan_maestro",
+                    "name": "Caravan Maestro",
+                    "summary": "Caravan members look to you for tempo, security, and inspiration.",
+                    "duration": "Until the caravan reaches safety"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "secure_the_route",
+                    "title": "Secure the Route",
+                    "summary": "Guide the Harmonic Caravan through threats so trade and stories can continue."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "harmonic_manifest",
+                    "title": "Harmonic Manifest",
+                    "summary": "Charters detailing the caravan's performers, tinkerers, and allied outriders."
+                  }
+                ]
+              }
+            }
           },
           "caravan": {
             "title": "Voices in Rehearsal",
@@ -1413,44 +1819,415 @@
                   ]
                 }
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Council Ledger"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "harmonic_conductor",
+                    "name": "Harmonic Conductor",
+                    "amount": 1,
+                    "summary": "Directing the council sharpens your ability to orchestrate combined efforts."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "council_decree",
+                    "name": "Council Decree",
+                    "summary": "The caravan formally recognizes your strategy for the road ahead.",
+                    "duration": "Until the current route is resolved"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "defend_the_caravan",
+                    "title": "Defend the Caravan",
+                    "summary": "Implement your chosen strategy to keep every wagon safe."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "crossroads_council",
+                    "title": "Crossroads Council",
+                    "summary": "Minutes from the emergency session where you accepted command."
+                  }
+                ]
+              }
+            }
           },
           "finale_celebration": {
             "title": "Caravan Celebration",
             "text": "Your anthem rallies the caravan, fulfilling {{motivation}} while honoring {{focus_trait}}.",
             "flavor": "The road ahead feels safer beneath your guidance.",
             "log": "The caravan celebrates your leadership.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 2
+              },
+              "inventory": {
+                "add": [
+                  "Anthem of the Free Road"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "harmonic_conductor",
+                    "name": "Harmonic Conductor",
+                    "amount": 1,
+                    "summary": "The triumphant performance cements your mastery over resonant leadership."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "caravan_maestro",
+                  "council_decree"
+                ],
+                "add": [
+                  {
+                    "id": "celebrated_maestro",
+                    "name": "Celebrated Maestro",
+                    "summary": "Caravan legends now include the anthem you composed at the crossroads.",
+                    "duration": "As long as the anthem is sung"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_the_route",
+                    "title": "Secure the Route",
+                    "summary": "You safely guided the Harmonic Caravan to its next destination."
+                  },
+                  {
+                    "id": "defend_the_caravan",
+                    "title": "Defend the Caravan",
+                    "summary": "Your anthem kept morale unbroken until danger passed."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "caravan_celebration",
+                    "title": "Caravan Celebration",
+                    "summary": "A recounting of the night the Harmonic Caravan sang in your honor."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "free_road_coalition",
+                    "name": "Free Road Coalition",
+                    "delta": 4,
+                    "summary": "Travelers spread word of the anthem that saved their livelihoods."
+                  }
+                ]
+              }
+            }
           },
           "finale_guard": {
             "title": "Ward of Resonance",
             "text": "The ward pulses with {{tone}} energy, forming a barrier guided by {{playstyle_trait}}.",
             "log": "You raise a protective ward.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 2
+              },
+              "inventory": {
+                "add": [
+                  "Resonant Ward Core"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "ward_conductor",
+                    "name": "Ward Conductor",
+                    "summary": "You can sustain protective harmonics that deflect incoming harm.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "resonant_ward",
+                    "name": "Resonant Ward",
+                    "summary": "A humming barrier answers your gestures with instant protection.",
+                    "duration": "Until the ward is broken"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "defend_the_caravan",
+                    "title": "Defend the Caravan",
+                    "summary": "The ward you shaped shielded every wagon from harm."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "ward_of_resonance",
+                    "title": "Ward of Resonance",
+                    "summary": "Schematics for the sonic barrier you raised to guard the caravan."
+                  }
+                ]
+              }
+            }
           },
           "finale_clockwork": {
             "title": "Clockwork Overture",
             "text": "The amplifier projects melodies that confuse saboteurs and bolster trade.",
             "log": "Technology secures the caravan.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Clockwork Amplifier Core"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "clockwork_orchestration",
+                    "name": "Clockwork Orchestration",
+                    "summary": "You harmonize mechanical constructs with living performers for tactical gains.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "amplifier_synchronized",
+                    "name": "Amplifier Synchronized",
+                    "summary": "The mechanist's amplifier now resonates with your personal cadence.",
+                    "duration": "Until dismantled or re-tuned"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "defend_the_caravan",
+                    "title": "Defend the Caravan",
+                    "summary": "Clockwork melodies disrupted every hostile formation."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "clockwork_overture",
+                    "title": "Clockwork Overture",
+                    "summary": "Blueprints for the amplifier sequence that turned the tide."
+                  }
+                ]
+              }
+            }
           },
           "finale_duo": {
             "title": "Bonded Scouts",
             "text": "You and {{companion}} lead swift scouts, ensuring paths remain open for those who follow.",
             "log": "You and your companion safeguard the road.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1,
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Scout Duet Tokens"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "duet_recon",
+                    "name": "Duet Recon",
+                    "summary": "You and your companion coordinate scouting maneuvers effortlessly.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "bonded_scouts",
+                    "name": "Bonded Scouts",
+                    "summary": "Your shared rhythm lets you cover twice the ground without losing cohesion.",
+                    "duration": "For future scouting missions"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "defend_the_caravan",
+                    "title": "Defend the Caravan",
+                    "summary": "Swift recon runs ensured threats were met before they reached the caravan."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "bonded_scouts_log",
+                    "title": "Bonded Scout Tactics",
+                    "summary": "Field notes on the tandem maneuvers that kept the caravan safe."
+                  }
+                ]
+              }
+            }
           },
           "finale_alliance": {
             "title": "Alliance of Prism Lights",
             "text": "The prism key links distant allies, aligning their efforts with your {{motivation}}.",
             "log": "Allies answer your call.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Prism Covenant Token"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "alliance_broker",
+                    "name": "Alliance Broker",
+                    "summary": "You negotiate multi-faction accords that channel aid where it's needed most.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "alliance_thread",
+                    "name": "Alliance Thread",
+                    "summary": "Shared beacons keep every allied caravan tuned to your signal.",
+                    "duration": "While alliances remain in force"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_the_route",
+                    "title": "Secure the Route",
+                    "summary": "Allied caravans now coordinate under your prism pact."
+                  },
+                  {
+                    "id": "defend_the_caravan",
+                    "title": "Defend the Caravan",
+                    "summary": "Regional allies pledged resources to keep the Harmonic Caravan protected."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "prism_alliance_record",
+                    "title": "Prism Alliance Record",
+                    "summary": "Treaties forged to keep the trade roads unified under your watch."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "prism_alliance",
+                    "name": "Prism Alliance",
+                    "delta": 4,
+                    "summary": "Leaders credit you for weaving the coalition into a lasting pact."
+                  }
+                ]
+              }
+            }
           },
           "finale_fragment": {
             "title": "Starlit Guidance",
             "text": "Visions from the fragment reveal safe passages and hidden opportunities.",
             "log": "The starlit fragment charts the future.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Starlit Fragment Map"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "fragment_sight",
+                    "name": "Fragment Sight",
+                    "summary": "Visions of possible futures help you plan routes before danger forms.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "starlit_guidance",
+                    "name": "Starlit Guidance",
+                    "summary": "Star-born whispers warn you when choices might imperil the caravan.",
+                    "duration": "Until you next rest under open skies"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_the_route",
+                    "title": "Secure the Route",
+                    "summary": "The fragment's foresight keeps every journey one step ahead of danger."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "starlit_fragment_visions",
+                    "title": "Starlit Fragment Visions",
+                    "summary": "Records of the futures glimpsed when you consulted the ancient shard."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -1493,7 +2270,56 @@
                 "next": "crew",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "insight": 1,
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Relay Command Codes"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "relay_command",
+                    "name": "Relay Command",
+                    "summary": "You can coordinate station systems to keep traffic flowing through volatile tides.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "relay_overseer",
+                    "name": "Relay Overseer",
+                    "summary": "Crew defer to your judgment while the relay remains unstable.",
+                    "duration": "Until Relay 17 is stabilized"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "stabilize_relay",
+                    "title": "Stabilize Relay 17",
+                    "summary": "Rebalance the relay's systems before nebula tides tear it apart."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "relay_17_manifest",
+                    "title": "Relay 17 Manifest",
+                    "summary": "Engineering schematics and crew rosters for the embattled relay."
+                  }
+                ]
+              }
+            }
           },
           "arrays": {
             "title": "Pulse Array Alignment",
@@ -1698,31 +2524,284 @@
             "title": "Beacon of Clarity",
             "text": "Relay 17 now sings with steady light, aligning distant travelers to your {{focus_trait}} vision.",
             "log": "You stabilize the nebula lanes.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Clarity Beacon"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "relay_command",
+                    "name": "Relay Command",
+                    "amount": 1,
+                    "summary": "Synchronizing the beacon refined your grasp of relay harmonics."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "relay_overseer"
+                ],
+                "add": [
+                  {
+                    "id": "clarity_signal",
+                    "name": "Clarity Signal",
+                    "summary": "Your beacon continues to guide ships safely through the nebula tides.",
+                    "duration": "As long as Relay 17 remains active"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_relay",
+                    "title": "Stabilize Relay 17",
+                    "summary": "Relay 17 now sings with steady light under your supervision."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "clarity_beacon_protocol",
+                    "title": "Clarity Beacon Protocol",
+                    "summary": "Procedures for maintaining the synchronized beacon you established."
+                  }
+                ]
+              }
+            }
           },
           "finale_smugglers": {
             "title": "Shadow Accord",
             "text": "Former smugglers now reroute their stealth craft to scout threats before they strike.",
             "log": "The smugglers bend the knee to your command.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Shadow Accord Seal"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "nebula_infiltration",
+                    "name": "Nebula Infiltration",
+                    "summary": "Former smugglers teach you how to scout hostile lanes undetected.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "shadow_network",
+                    "name": "Shadow Network",
+                    "summary": "A covert web of scouts now reports threats directly to you.",
+                    "duration": "While the accord remains honored"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_relay",
+                    "title": "Stabilize Relay 17",
+                    "summary": "Reformed smugglers now shield the relay's blind spots at your request."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "shadow_accord",
+                    "title": "Shadow Accord",
+                    "summary": "Terms that bind your new scouts to defend the relay instead of raiding it."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "nebula_smugglers",
+                    "name": "Nebula Smuggler Clans",
+                    "delta": 3,
+                    "summary": "Your mercy forged a pact that keeps their families safe and fed."
+                  }
+                ]
+              }
+            }
           },
           "finale_convoy": {
             "title": "Purified Convoy",
             "text": "Healthy caravans depart with gratitude, spreading tales of your {{tone}} leadership.",
             "log": "The convoy carries your aid across the nebula.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "health": 2
+              },
+              "inventory": {
+                "add": [
+                  "Purified Cargo Crate"
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "convoy_guardian",
+                    "name": "Convoy Guardian",
+                    "summary": "Relief caravans consider you their sworn protector.",
+                    "duration": "For the current aid season"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_relay",
+                    "title": "Stabilize Relay 17",
+                    "summary": "Every convoy now departs with medical and nutritional stores intact."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "purified_convoy_logs",
+                    "title": "Purified Convoy Logs",
+                    "summary": "Reports on the revitalized convoys that now trust Relay 17's oversight."
+                  }
+                ]
+              }
+            }
           },
           "finale_alliance": {
             "title": "Merchant Vanguard",
             "text": "Allied captains coordinate patrols and keep the relay supplied for seasons to come.",
             "log": "Merchants stand ready at your call.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Merchant Vanguard Charter"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "convoy_coordination",
+                    "name": "Convoy Coordination",
+                    "summary": "You can synchronize merchant fleets across multiple relays without conflict.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "merchant_vanguard",
+                    "name": "Merchant Vanguard",
+                    "summary": "Captains pledge to answer your calls for aid across the relay network.",
+                    "duration": "Until the charter is dissolved"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_relay",
+                    "title": "Stabilize Relay 17",
+                    "summary": "The merchant vanguard keeps the relay stocked and defended."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "merchant_vanguard_charter",
+                    "title": "Merchant Vanguard Charter",
+                    "summary": "Agreements binding the captains who now coordinate through Relay 17."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "merchant_vanguard",
+                    "name": "Merchant Vanguard",
+                    "delta": 4,
+                    "summary": "Captains laud your leadership in keeping trade alive."
+                  }
+                ]
+              }
+            }
           },
           "finale_crew": {
             "title": "Crew Harmonization",
             "text": "Unified voices echo through the relay, each crew member sworn to uphold {{motivation}}.",
             "log": "Your crew rallies behind you.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Crew Harmonization Badge"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "relay_command",
+                    "name": "Relay Command",
+                    "amount": 1,
+                    "summary": "Uniting the crew taught you to blend talents into a cohesive whole."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "crew_harmonized",
+                    "name": "Crew Harmonized",
+                    "summary": "Relay 17's staff now share a unified cadence that echoes your leadership.",
+                    "duration": "While the crew remains together"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_relay",
+                    "title": "Stabilize Relay 17",
+                    "summary": "The unified crew can now respond to crises without hesitation."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "crew_harmonization",
+                    "title": "Crew Harmonization",
+                    "summary": "Guidelines for bringing disparate teams into sync under pressure."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -1766,7 +2845,56 @@
                 "next": "library",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "influence": 1,
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Mirror-Sigil Mask"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "masquerade_deception",
+                    "name": "Masquerade Deception",
+                    "summary": "You manipulate courtly gossip to reveal truths hidden behind veils.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "courtly_disguise",
+                    "name": "Courtly Disguise",
+                    "summary": "Your persona is flawless, granting you access to every lounge and salon.",
+                    "duration": "Until the masquerade ends"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "unravel_conspiracy",
+                    "title": "Unravel the Conspiracy",
+                    "summary": "Expose the intrigues threatening the Velvet Court's balance of power."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "velvet_court_codex",
+                    "title": "Velvet Court Etiquette",
+                    "summary": "Subtle tells and veiled courtesies observed among the masked elite."
+                  }
+                ]
+              }
+            }
           },
           "gallery": {
             "title": "Whispering Gallery",
@@ -1946,25 +3074,240 @@
             "title": "Unmasking the Mastermind",
             "text": "On the grand dais you reveal the saboteur, aligning passion with justice for {{motivation}}.",
             "log": "The mastermind is exposed.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Revealed Ledger"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "masquerade_deception",
+                    "name": "Masquerade Deception",
+                    "amount": 1,
+                    "summary": "Publicly unmasking the saboteur sharpens your command of intrigue."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "courtly_disguise"
+                ],
+                "add": [
+                  {
+                    "id": "justiciar_of_velvet",
+                    "name": "Justiciar of Velvet",
+                    "summary": "The court respects your authority to reveal truth from behind any mask.",
+                    "duration": "While you remain in the court's good graces"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "unravel_conspiracy",
+                    "title": "Unravel the Conspiracy",
+                    "summary": "You exposed the mastermind before their plot could erupt."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "unmasking_protocol",
+                    "title": "Unmasking Protocol",
+                    "summary": "Precedent set when you revealed the saboteur on the grand dais."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "velvet_justiciars",
+                    "name": "Velvet Justiciars",
+                    "delta": 4,
+                    "summary": "Arbiters acknowledge your righteous expose of the mastermind."
+                  }
+                ]
+              }
+            }
           },
           "finale_truce": {
             "title": "Garden Truce",
             "text": "With secrets laid bare, rival houses agree to guard {{focus_trait}} futures together.",
             "log": "A fragile truce blooms in the gardens.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Garden Pact Signet"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "courtly_disguise"
+                ],
+                "add": [
+                  {
+                    "id": "garden_truce",
+                    "name": "Garden Truce",
+                    "summary": "Rival houses honor the peace you brokered among the moonlit hedges.",
+                    "duration": "While the pact holds"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "unravel_conspiracy",
+                    "title": "Unravel the Conspiracy",
+                    "summary": "Diplomacy in the gardens prevented the intrigue from collapsing the court."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "garden_truce_record",
+                    "title": "Garden Truce Record",
+                    "summary": "A sworn account of the night rival houses pledged cooperation under your eye."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "velvet_houses",
+                    "name": "Velvet Houses",
+                    "delta": 3,
+                    "summary": "The great houses publicly praise your equitable solution."
+                  }
+                ]
+              }
+            }
           },
           "finale_pledge": {
             "title": "Pledge of the Masked Rival",
             "text": "Romance and allegiance entwine, giving you a devoted champion within the court.",
             "log": "Your rival pledges their heart and blade.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1,
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Masked Favor"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "rival_champion",
+                    "name": "Rival Champion",
+                    "summary": "Your paramour offers blades and whispers in equal measure to further your designs.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "courtly_disguise"
+                ],
+                "add": [
+                  {
+                    "id": "devoted_champion",
+                    "name": "Devoted Champion",
+                    "summary": "A masked rival now serves as your sworn agent within the court.",
+                    "duration": "Until the pledge is broken"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "unravel_conspiracy",
+                    "title": "Unravel the Conspiracy",
+                    "summary": "Your new partner keeps future intrigues aligned with your cause."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "velvet_pledge",
+                    "title": "Velvet Pledge",
+                    "summary": "Terms of the alliance forged between you and a once-rival suitor."
+                  }
+                ]
+              }
+            }
           },
           "finale_contract": {
             "title": "Rewritten Accord",
             "text": "The court accepts your clause, forever entwining leadership with compassionate {{playstyle_trait}}.",
             "log": "The Velvet Court renews its vows.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Velvet Contract"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "binding_negotiation",
+                    "name": "Binding Negotiation",
+                    "summary": "You wield legal and emotional leverage to secure lasting accords.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "courtly_disguise"
+                ],
+                "add": [
+                  {
+                    "id": "contract_guardian",
+                    "name": "Contract Guardian",
+                    "summary": "Signed agreements circulate with your sigil, granting you authority to enforce them.",
+                    "duration": "While the contracts remain in force"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "unravel_conspiracy",
+                    "title": "Unravel the Conspiracy",
+                    "summary": "Binding accords now prevent the plotters from reigniting conflict."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "velvet_contracts",
+                    "title": "Velvet Contracts",
+                    "summary": "Annotated clauses that ensure equity in future courtly dealings."
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -2010,7 +3353,55 @@
                 "next": "wilderness",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Siege Map Case"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "veiled_strategy",
+                    "name": "Veiled Strategy",
+                    "summary": "You blueprint coordinated assaults that bend the bastion's defenses to your will.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "war_council_command",
+                    "name": "War Council Command",
+                    "summary": "Commanders defer to your strategy while the bastion remains unconquered.",
+                    "duration": "Until the bastion is resolved"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "liberate_bastion",
+                    "title": "Liberate the Veiled Bastion",
+                    "summary": "Break the bastion's chokehold on the trade arteries and restore free passage."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "veiled_bastion_dossier",
+                    "title": "Veiled Bastion Dossier",
+                    "summary": "Intel gathered on the bastion's commanders, siegeworks, and hidden reliquaries."
+                  }
+                ]
+              }
+            }
           },
           "tavern": {
             "title": "Tavern of Prospects",
@@ -2571,67 +3962,595 @@
                 "next": "final_retreat",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Siegefield Reports"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "veiled_strategy",
+                    "name": "Veiled Strategy",
+                    "amount": 1,
+                    "summary": "Coordinating the assault reveals subtleties in the bastion's layered wards."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "siege_resonance",
+                    "name": "Siege Resonance",
+                    "summary": "Your commands echo through every front, synchronizing the siege engines.",
+                    "duration": "For the duration of the siege"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "coordinate_fronts",
+                    "title": "Coordinate the Fronts",
+                    "summary": "Balance the diverse tactics pressing against the bastion's walls."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "siege_briefing",
+                    "title": "Siege Briefing",
+                    "summary": "Dispatches outlining your synchronized assault on the bastion."
+                  }
+                ]
+              }
+            }
           },
           "final_command": {
             "title": "Coordinated Command",
             "text": "Your plan unfolds flawlessly, knitting {{focus_trait}} into victory and advancing {{motivation}}.",
             "log": "The siege succeeds under your command.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 2
+              },
+              "inventory": {
+                "add": [
+                  "Commander's Baton"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "veiled_strategy",
+                    "name": "Veiled Strategy",
+                    "amount": 1,
+                    "summary": "Victory proves your battle doctrine across every front."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance",
+                  "war_council_command"
+                ],
+                "add": [
+                  {
+                    "id": "bastion_liberator",
+                    "name": "Bastion Liberator",
+                    "summary": "The liberated populace hails you as the strategist who broke the bastion's grip.",
+                    "duration": "As long as the bastion stands free"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "liberate_bastion",
+                    "title": "Liberate the Veiled Bastion",
+                    "summary": "Your unified command shattered the bastion's defenses."
+                  },
+                  {
+                    "id": "coordinate_fronts",
+                    "title": "Coordinate the Fronts",
+                    "summary": "Every contingent executed your battle plan flawlessly."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "coordinated_command",
+                    "title": "Coordinated Command",
+                    "summary": "A detailed record of the maneuvers that won the siege."
+                  }
+                ]
+              }
+            }
           },
           "final_bridge": {
             "title": "Bridge of Light",
             "text": "Guardians race across the arcane bridge, opening the gates to those who dream of {{motivation}}.",
             "log": "Allied guardians storm the bastion.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Bridge Sigil"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance",
+                  "war_council_command"
+                ],
+                "add": [
+                  {
+                    "id": "bridgehead_vanguard",
+                    "name": "Bridgehead Vanguard",
+                    "summary": "The arcane bridge remains open under your heraldry.",
+                    "duration": "Until the bridge is relinquished"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "liberate_bastion",
+                    "title": "Liberate the Veiled Bastion",
+                    "summary": "The bridge charge opened the bastion to allied liberation."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "bridge_of_light",
+                    "title": "Bridge of Light",
+                    "summary": "Chronicles of the daring rush across the shimmering span."
+                  }
+                ]
+              }
+            }
           },
           "final_gate": {
             "title": "Gate of Echoing Steps",
             "text": "The ancient key opens a silent passage, allowing {{playstyle_trait}} to shine in precise strikes.",
             "log": "You slip through the secret gate.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Silent Step Token"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "silent_entry",
+                    "name": "Silent Entry",
+                    "summary": "You guide strike teams through hidden passages without alerting defenders.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance"
+                ],
+                "add": [
+                  {
+                    "id": "echo_step",
+                    "name": "Echo Step",
+                    "summary": "The secret gate answers to your footsteps, letting you come and go unseen.",
+                    "duration": "While the gate remains yours to command"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "coordinate_fronts",
+                    "title": "Coordinate the Fronts",
+                    "summary": "Precision strikes from the secret gate unraveled the bastion from within."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "gate_of_echoing_steps",
+                    "title": "Gate of Echoing Steps",
+                    "summary": "Directions to the silent passages you reopened beneath the bastion."
+                  }
+                ]
+              }
+            }
           },
           "final_diversion": {
             "title": "Explosive Diversions",
             "text": "Fireworks bloom, distracting defenders while your forces secure the walls.",
             "log": "Diversions tip the battle in your favor.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Diversion Satchel"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance"
+                ],
+                "add": [
+                  {
+                    "id": "diversion_master",
+                    "name": "Diversion Master",
+                    "summary": "Your pyrotechnic feints remain the gold standard for siege misdirection.",
+                    "duration": "For future assaults you oversee"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "coordinate_fronts",
+                    "title": "Coordinate the Fronts",
+                    "summary": "Explosive diversions fractured the defenders' cohesion."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "explosive_diversions",
+                    "title": "Explosive Diversions",
+                    "summary": "Step-by-step plans for the fireworks that broke the siege line."
+                  }
+                ]
+              }
+            }
           },
           "final_rift": {
             "title": "Rift Maneuver",
             "text": "You emerge behind enemy lines, fulfilling {{motivation}} with daring precision.",
             "log": "The rift strike collapses the bastion's command.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Rift Anchor Blade"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "rift_strike",
+                    "name": "Rift Strike",
+                    "summary": "You fold the battlefield around you, appearing where the enemy least expects.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance"
+                ],
+                "add": [
+                  {
+                    "id": "rift_attunement",
+                    "name": "Rift Attunement",
+                    "summary": "Spatial seams respond to your will, letting you redeploy in an instant.",
+                    "duration": "While the rift anchors remain charged"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "liberate_bastion",
+                    "title": "Liberate the Veiled Bastion",
+                    "summary": "Your daring strike broke the bastion's command from within."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "rift_maneuver_log",
+                    "title": "Rift Maneuver Log",
+                    "summary": "After-action reports from your teleporting vanguard."
+                  }
+                ]
+              }
+            }
           },
           "final_alliance": {
             "title": "Alliance Triumph",
             "text": "Guardians and allies unite, proving {{focus_trait}} can reshape power.",
             "log": "Allies secure the bastion together.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Alliance Standard"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance",
+                  "war_council_command"
+                ],
+                "add": [
+                  {
+                    "id": "guardian_alliance",
+                    "name": "Guardian Alliance",
+                    "summary": "Allied guardians continue to patrol the liberated bastion under your banner.",
+                    "duration": "As long as the alliance endures"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "liberate_bastion",
+                    "title": "Liberate the Veiled Bastion",
+                    "summary": "United guardians toppled the bastion by following your standards."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "alliance_triumph",
+                    "title": "Alliance Triumph",
+                    "summary": "The treaties that sealed the bastion's liberation."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "guardian_orders",
+                    "name": "Guardian Orders",
+                    "delta": 4,
+                    "summary": "Guardian chapters recognize your unifying command."
+                  }
+                ]
+              }
+            }
           },
           "final_supply": {
             "title": "Enduring Supply",
             "text": "Shielded wagons keep the assault relentless until the bastion yields.",
             "log": "Supplies sustain the siege to victory.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "health": 2
+              },
+              "inventory": {
+                "add": [
+                  "Enduring Supply Ledger"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance"
+                ],
+                "add": [
+                  {
+                    "id": "enduring_supply",
+                    "name": "Enduring Supply",
+                    "summary": "Every siege column trusts you to keep them provisioned.",
+                    "duration": "For future campaigns"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "coordinate_fronts",
+                    "title": "Coordinate the Fronts",
+                    "summary": "Your relentless logistics starved the bastion of options."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "enduring_supply_plan",
+                    "title": "Enduring Supply Plan",
+                    "summary": "Ledger notes detailing the caravans that kept the siege supplied."
+                  }
+                ]
+              }
+            }
           },
           "final_shadow": {
             "title": "Shadow Sabotage",
             "text": "Informants disrupt defenses, letting your forces sweep through.",
             "log": "Sabotage clears a path to triumph.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Saboteur's Coin"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "shadow_sabotage",
+                    "name": "Shadow Sabotage",
+                    "summary": "You coordinate informants to disable fortifications from within.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance"
+                ],
+                "add": [
+                  {
+                    "id": "sabotage_network",
+                    "name": "Sabotage Network",
+                    "summary": "Sleeper agents remain loyal to you long after the bastion falls.",
+                    "duration": "Until you release them"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "coordinate_fronts",
+                    "title": "Coordinate the Fronts",
+                    "summary": "Carefully placed strikes dismantled the bastion's infrastructure."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "shadow_sabotage_records",
+                    "title": "Shadow Sabotage Records",
+                    "summary": "Encrypted reports from your embedded agents."
+                  }
+                ]
+              }
+            }
           },
           "final_duel": {
             "title": "Champion's Duel",
             "text": "You and {{companion}} confront the bastion commander, proving {{motivation}} cannot be denied.",
             "log": "You win the duel at the bastion's heart.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1,
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Commander Relic"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "duelist_command",
+                    "name": "Duelist Command",
+                    "summary": "Personal victory on the battlefield inspires entire armies to rally.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance",
+                  "war_council_command"
+                ],
+                "add": [
+                  {
+                    "id": "champion_of_bastion",
+                    "name": "Champion of the Bastion",
+                    "summary": "Your duel with the commander has become a rallying legend.",
+                    "duration": "As long as your legend is retold"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "liberate_bastion",
+                    "title": "Liberate the Veiled Bastion",
+                    "summary": "Your personal clash decided the siege's outcome."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "champions_duel_record",
+                    "title": "Champion's Duel Record",
+                    "summary": "Ballads describing your duel atop the bastion walls."
+                  }
+                ]
+              }
+            }
           },
           "final_retreat": {
             "title": "Measured Retreat",
             "text": "You preserve your forces, knowing {{playstyle_trait}} will reveal another chance.",
             "log": "You withdraw to plan anew.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Strategic Withdrawal Map"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "siege_resonance"
+                ],
+                "add": [
+                  {
+                    "id": "measured_retreat",
+                    "name": "Measured Retreat",
+                    "summary": "Your forces regroup in good order, ready for the next campaign.",
+                    "duration": "Until the next assault begins"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "plan_second_assault",
+                    "title": "Plan the Second Assault",
+                    "summary": "Regroup and refine your tactics for the bastion's eventual fall."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "strategic_withdrawal",
+                    "title": "Strategic Withdrawal",
+                    "summary": "Lessons learned from preserving strength for another day."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -2676,7 +4595,55 @@
                 "next": "rivals",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Pressure-Sealed Journal"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "abyssal_navigation",
+                    "name": "Abyssal Navigation",
+                    "summary": "You plot safe routes through crushing depths and shifting currents.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "drowned_observer",
+                    "name": "Drowned Observer",
+                    "summary": "The observatory's resonant hum now answers to your commands.",
+                    "duration": "Until the lunar tide recedes"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "restore_observatory",
+                    "title": "Restore the Drowned Observatory",
+                    "summary": "Recover the knowledge and resources hidden within the resurfaced structure."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "drowned_observatory",
+                    "title": "Drowned Observatory",
+                    "summary": "Histories of the observatory's fall and the promise of its return."
+                  }
+                ]
+              }
+            }
           },
           "archives": {
             "title": "Sealed Archives",
@@ -2901,25 +4868,229 @@
             "title": "Network of Havens",
             "text": "Your broadcasts link submerged enclaves, sharing resources and {{focus_trait}} wisdom.",
             "log": "A haven network blossoms.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Haven Broadcast Relay"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "haven_networking",
+                    "name": "Haven Networking",
+                    "summary": "You coordinate submerged safehouses through encrypted signal patterns.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "drowned_observer"
+                ],
+                "add": [
+                  {
+                    "id": "haven_network",
+                    "name": "Haven Network",
+                    "summary": "Linked enclaves share sonar pings and supply routes under your direction.",
+                    "duration": "As long as the relay remains intact"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "restore_observatory",
+                    "title": "Restore the Drowned Observatory",
+                    "summary": "The observatory now broadcasts aid across the depths."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "haven_network_log",
+                    "title": "Haven Network Log",
+                    "summary": "Transmissions that keep the underwater enclaves aligned."
+                  }
+                ]
+              }
+            }
           },
           "finale_rebirth": {
             "title": "Surface Rebirth",
             "text": "Renewed crops and medicine bring relief to settlements that honor your {{motivation}}.",
             "log": "Surface settlements thrive again.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Rebirth Seed Cache"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "drowned_observer"
+                ],
+                "add": [
+                  {
+                    "id": "surface_steward",
+                    "name": "Surface Steward",
+                    "summary": "Coastal settlements credit you for revitalizing their crops and medicine.",
+                    "duration": "For the current season"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "restore_observatory",
+                    "title": "Restore the Drowned Observatory",
+                    "summary": "Supplies from the observatory now reach desperate shores."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "surface_rebirth_ledgers",
+                    "title": "Surface Rebirth Ledgers",
+                    "summary": "Distribution records of the observatory's first relief shipments."
+                  }
+                ]
+              }
+            }
           },
           "finale_foundation": {
             "title": "Restored Foundation",
             "text": "The observatory becomes a bastion of learning, maintained by your allied engineers.",
             "log": "The observatory is restored.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Foundation Blueprint"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "abyssal_navigation",
+                    "name": "Abyssal Navigation",
+                    "amount": 1,
+                    "summary": "Stabilizing the observatory hones your ability to guide deepwater crews."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "drowned_observer"
+                ],
+                "add": [
+                  {
+                    "id": "observatory_founder",
+                    "name": "Observatory Founder",
+                    "summary": "Engineers cite your plans for rebuilding knowledge beneath the waves.",
+                    "duration": "Until the next lunar tide"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "restore_observatory",
+                    "title": "Restore the Drowned Observatory",
+                    "summary": "The observatory stands ready to teach a new generation."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "restored_foundation_records",
+                    "title": "Restored Foundation Records",
+                    "summary": "Blueprints and staffing rosters for the reborn observatory."
+                  }
+                ]
+              }
+            }
           },
           "finale_guardians": {
             "title": "Guardians of the Deep",
             "text": "Your allied salvagers patrol the depths, deterring threats to your aquatic dominion.",
             "log": "Guardians defend the observatory.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "health": 1
+              },
+              "inventory": {
+                "add": [
+                  "Guardian Trident"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "deep_patrol",
+                    "name": "Deep Patrol",
+                    "summary": "You lead salvager patrols through trenches rife with predators and raiders.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "drowned_observer"
+                ],
+                "add": [
+                  {
+                    "id": "deep_patrol_network",
+                    "name": "Deep Patrol Network",
+                    "summary": "Allied salvagers coordinate to defend your aquatic dominion.",
+                    "duration": "While the network stands"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "restore_observatory",
+                    "title": "Restore the Drowned Observatory",
+                    "summary": "Guardians now keep threats away from the observatory's treasures."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "guardians_of_the_deep",
+                    "title": "Guardians of the Deep",
+                    "summary": "Patrol logs from the salvagers who now defend your reach."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "salvager_clans",
+                    "name": "Salvager Clans",
+                    "delta": 3,
+                    "summary": "Clans honor you for turning rivals into defenders."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -2964,7 +5135,55 @@
                 "next": "scout",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Stormproof Ledger"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "convoy_mastery",
+                    "name": "Convoy Mastery",
+                    "summary": "You choreograph supply trains through volatile ashlands.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "emberfall_command",
+                    "name": "Emberfall Command",
+                    "summary": "The frontier convoys await your call before braving the storms.",
+                    "duration": "Until the supply crisis ends"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "relieve_emberfall",
+                    "title": "Relieve Emberfall",
+                    "summary": "Deliver vital supplies through the stormfire-swept passes."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "emberfall_routes",
+                    "title": "Emberfall Routes",
+                    "summary": "Annotated charts of the ash-swept highways."
+                  }
+                ]
+              }
+            }
           },
           "carriages": {
             "title": "Auto-Carriage Hangar",
@@ -3191,31 +5410,286 @@
             "title": "Coalition Relay",
             "text": "Linked settlements share resources, each pledged to uphold your {{focus_trait}} vision.",
             "log": "A coalition relay strengthens the frontier.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Relay Charter"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "relay_overwatch",
+                    "name": "Relay Overwatch",
+                    "summary": "You coordinate settlement relays to keep caravans moving in rhythm.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "emberfall_command"
+                ],
+                "add": [
+                  {
+                    "id": "relay_network",
+                    "name": "Relay Network",
+                    "summary": "Linked settlements stand ready to move supplies at your signal.",
+                    "duration": "While the charter is honored"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "relieve_emberfall",
+                    "title": "Relieve Emberfall",
+                    "summary": "A reliable relay network now feeds Emberfall."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "coalition_relay",
+                    "title": "Coalition Relay",
+                    "summary": "Agreements linking the settlements you united."
+                  }
+                ]
+              }
+            }
           },
           "finale_arrival": {
             "title": "Triumphant Arrival",
             "text": "Supplies pour into Emberfall as grateful citizens cheer your {{tone}} heroism.",
             "log": "The caravan arrives in triumph.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Hero's Banner"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "emberfall_command"
+                ],
+                "add": [
+                  {
+                    "id": "emberfall_champion",
+                    "name": "Emberfall Champion",
+                    "summary": "Citizens celebrate you as the savior of the supply line.",
+                    "duration": "As long as gratitude endures"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "relieve_emberfall",
+                    "title": "Relieve Emberfall",
+                    "summary": "Your triumphant convoy brought salvation to Emberfall."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "triumphant_arrival",
+                    "title": "Triumphant Arrival",
+                    "summary": "Songs and testimonies from the grateful frontier."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "emberfall_civilians",
+                    "name": "Emberfall Civilians",
+                    "delta": 4,
+                    "summary": "Settlers vow to support your future endeavors."
+                  }
+                ]
+              }
+            }
           },
           "finale_drive": {
             "title": "Storm-Driven Vanguard",
             "text": "Harnessed winds push the caravan ahead of every threat.",
             "log": "You lead the vanguard through the storm.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Storm Vanguard Harness"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "storm_vanguard",
+                    "name": "Storm Vanguard",
+                    "summary": "You harness elemental gales to propel caravans beyond danger.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "emberfall_command"
+                ],
+                "add": [
+                  {
+                    "id": "storm_drive",
+                    "name": "Storm Drive",
+                    "summary": "Captured winds wait to surge the next convoy you lead.",
+                    "duration": "Until the stored gusts dissipate"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "relieve_emberfall",
+                    "title": "Relieve Emberfall",
+                    "summary": "Harnessed storms kept your convoy ahead of every threat."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "storm_driven_vanguard",
+                    "title": "Storm-Driven Vanguard",
+                    "summary": "Techniques for riding the stormfront to victory."
+                  }
+                ]
+              }
+            }
           },
           "finale_guard": {
             "title": "Ashguard Bulwark",
             "text": "Armored wagons form a shield wall, earning trust from every traveler under your care.",
             "log": "You safeguard the convoy.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "health": 2
+              },
+              "inventory": {
+                "add": [
+                  "Ashguard Bulwark"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "convoy_mastery",
+                    "name": "Convoy Mastery",
+                    "amount": 1,
+                    "summary": "Fortifying the wagons perfects your defensive logistics."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "emberfall_command"
+                ],
+                "add": [
+                  {
+                    "id": "ashguard_wall",
+                    "name": "Ashguard Wall",
+                    "summary": "Armored wagons form a living bulwark wherever you travel.",
+                    "duration": "Until dismantled"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "relieve_emberfall",
+                    "title": "Relieve Emberfall",
+                    "summary": "Your bulwark guarded every traveler under your care."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "ashguard_bulwark",
+                    "title": "Ashguard Bulwark",
+                    "summary": "Construction schematics for your armored wagon wall."
+                  }
+                ]
+              }
+            }
           },
           "finale_watch": {
             "title": "Skywatch Scouts",
             "text": "Rescued scouts patrol the routes, ensuring relief continues for generations.",
             "log": "Your scouts guard the supply lines.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Skywatch Charter"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "skywatch_coordination",
+                    "name": "Skywatch Coordination",
+                    "summary": "You choreograph scout patrols that keep the horizon clear of threats.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "emberfall_command"
+                ],
+                "add": [
+                  {
+                    "id": "scout_network",
+                    "name": "Scout Network",
+                    "summary": "Reclaimed scouts report every development along the supply lines.",
+                    "duration": "While the charter stands"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "relieve_emberfall",
+                    "title": "Relieve Emberfall",
+                    "summary": "Your scout network guarantees relief continues for generations."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "skywatch_scouts",
+                    "title": "Skywatch Scouts",
+                    "summary": "Logs from the patrols safeguarding Emberfall's future."
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -3262,7 +5736,55 @@
                 "next": "worldroot",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Celestial Loom Chart"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "skyloom_attunement",
+                    "name": "Skyloom Attunement",
+                    "summary": "You feel the threads of destiny tug whenever the sky loom shifts.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "summit_mandate",
+                    "name": "Summit Mandate",
+                    "summary": "The observatory recognizes you as the loom's chosen warden.",
+                    "duration": "Until the loom is secured"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "stabilize_skyloom",
+                    "title": "Stabilize the Sky Loom",
+                    "summary": "Gather the threads needed to keep the aerial realms in harmony."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "skyloom_prophecy",
+                    "title": "Sky Loom Prophecy",
+                    "summary": "The omens that heralded your call to the summit."
+                  }
+                ]
+              }
+            }
           },
           "archives": {
             "title": "Star Archives",
@@ -3456,7 +5978,55 @@
                 "text": "Deploy to the storm front",
                 "next": "tempest"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Summit Concord Record"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "skyloom_attunement",
+                    "name": "Skyloom Attunement",
+                    "amount": 1,
+                    "summary": "Gathering your allies deepens your understanding of the loom's cadence."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "summit_coordination",
+                    "name": "Summit Coordination",
+                    "summary": "Allies hold position, ready for you to weave them into the loom.",
+                    "duration": "Until the weaving is complete"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Collect resonant strands from your allies, relics, and bonds."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "summit_return_briefing",
+                    "title": "Summit Return Briefing",
+                    "summary": "Minutes from the gathering before the final weaving."
+                  }
+                ]
+              }
+            }
           },
           "companion_sync": {
             "title": "Shared Resonance",
@@ -3546,7 +6116,55 @@
                 "next": "loom_future",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Threadcaller's Spool"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "skyloom_attunement",
+                    "name": "Skyloom Attunement",
+                    "amount": 1,
+                    "summary": "Working the loom sharpens your feel for every strand."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "loom_initiate",
+                    "name": "Loom Initiate",
+                    "summary": "The loom hums in sync with your pulse, awaiting your commands.",
+                    "duration": "Until the weaving resolves"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "weave_destiny",
+                    "title": "Weave Destiny",
+                    "summary": "Bind the gathered threads into a resilient future for the skies."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "skyloom_station",
+                    "title": "Sky Loom Station",
+                    "summary": "Schematics of the loom station prepared for your weaving."
+                  }
+                ]
+              }
+            }
           },
           "stormward": {
             "title": "Storm Ward",
@@ -3609,49 +6227,452 @@
             "title": "Prismatic Weave",
             "text": "Prismatic light amplifies {{focus_trait}}, stabilizing the loom's resonance.",
             "log": "You weave with harmonic prisms.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Prismatic Filament"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "prism_weaving",
+                    "name": "Prism Weaving",
+                    "summary": "You channel light into protective constellations.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "prismatic_resonance",
+                    "name": "Prismatic Resonance",
+                    "summary": "Radiant threads continue to amplify your loom.",
+                    "duration": "While the loom remains intact"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Prismatic harmonics now reinforce the loom's structure."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "prismatic_weave_record",
+                    "title": "Prismatic Weave Record",
+                    "summary": "A log of the light patterns you wove into the loom."
+                  }
+                ]
+              }
+            }
           },
           "loom_worldroot": {
             "title": "Worldroot Threads",
             "text": "Earthbound energy anchors the loom, honoring {{motivation}}.",
             "log": "Worldroot power steadies the loom.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Worldroot Spindle"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "worldroot_binding",
+                    "name": "Worldroot Binding",
+                    "summary": "You anchor skyborne magic with the strength of earthbound roots.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "earthbound_thread",
+                    "name": "Earthbound Thread",
+                    "summary": "Grounded energy now stabilizes the loom against future shocks.",
+                    "duration": "Until severed"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Worldroot power now courses through the loom's frame."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "worldroot_threads",
+                    "title": "Worldroot Threads",
+                    "summary": "Treatises on binding earth and sky into one weave."
+                  }
+                ]
+              }
+            }
           },
           "loom_alliance": {
             "title": "Alliance Weave",
             "text": "United banners form new constellations reflecting {{focus_trait}}.",
             "log": "Allies leave their mark on the loom.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Alliance Pennant"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "constellation_diplomacy",
+                    "name": "Constellation Diplomacy",
+                    "summary": "You align banners across the realms into mutual defense.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "constellation_pact",
+                    "name": "Constellation Pact",
+                    "summary": "Allied constellations continue to share power with the loom.",
+                    "duration": "While the pact stands"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Alliance standards now shine within the loom."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "alliance_weave",
+                    "title": "Alliance Weave",
+                    "summary": "Accords recorded as constellations around the loom."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "sky_alliance",
+                    "name": "Sky Alliance",
+                    "delta": 4,
+                    "summary": "Banners across the realms pledge continued support to your loom."
+                  }
+                ]
+              }
+            }
           },
           "loom_diagram": {
             "title": "Diagrammatic Symphony",
             "text": "Mathematics guides each thread, blending {{playstyle_trait}} with precision.",
             "log": "The loom responds to your calculations.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Loom Diagram Codex"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "diagrammatic_symphony",
+                    "name": "Diagrammatic Symphony",
+                    "summary": "You inscribe mathematical harmonies that tune the loom precisely.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "calculated_pattern",
+                    "name": "Calculated Pattern",
+                    "summary": "Geometric sigils continue to regulate the loom's output.",
+                    "duration": "Until overwritten"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Mathematical precision now governs the weaving."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "diagrammatic_weave",
+                    "title": "Diagrammatic Weave",
+                    "summary": "Formulae used to keep the sky loom balanced."
+                  }
+                ]
+              }
+            }
           },
           "loom_storm": {
             "title": "Storm Threading",
             "text": "Storm energy crackles through the loom, fortifying the skies.",
             "log": "Storm power fortifies the loom.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Stormthread Coil"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "storm_channeling",
+                    "name": "Storm Channeling",
+                    "summary": "You tame storm surges and braid them into the loom's lattice.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "stormthread_charge",
+                    "name": "Stormthread Charge",
+                    "summary": "Bottled lightning stands ready to defend the skies.",
+                    "duration": "Until discharged"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Storm energy now fortifies the loom's defenses."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "storm_threading",
+                    "title": "Storm Threading",
+                    "summary": "Notes on channeling tempest power into the loom."
+                  }
+                ]
+              }
+            }
           },
           "loom_companion": {
             "title": "Bonded Thread",
             "text": "{{companion}} adds heart to the weave, ensuring {{motivation}} serves all.",
             "log": "Your bond shapes the loom.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Bonded Thread Charm"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "skyloom_attunement",
+                    "name": "Skyloom Attunement",
+                    "amount": 1,
+                    "summary": "Weaving alongside your companion intertwines your destinies."
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "bonded_thread",
+                    "name": "Bonded Thread",
+                    "summary": "Your shared thread keeps the loom attuned to compassion.",
+                    "duration": "As long as the bond remains true"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Your bond adds heart to the loom's destiny."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "bonded_thread_record",
+                    "title": "Bonded Thread Record",
+                    "summary": "Testimonies of companions who wove their hearts into the loom."
+                  }
+                ]
+              }
+            }
           },
           "loom_captains": {
             "title": "Captain's Accord",
             "text": "Sky captains pledge ongoing patrols to protect the loom.",
             "log": "Captains commit to your cause.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Captain's Accord"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "sky_patrol_coordination",
+                    "name": "Sky Patrol Coordination",
+                    "summary": "You dispatch sky captains to guard the loom's horizons.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "captain_patrols",
+                    "name": "Captain Patrols",
+                    "summary": "Skyships remain on-call to defend your weaving.",
+                    "duration": "While the accord lasts"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "gather_threads",
+                    "title": "Gather the Threads",
+                    "summary": "Sky captains now anchor the loom's vigilance."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "captains_accord",
+                    "title": "Captain's Accord",
+                    "summary": "The oath sworn by skyship captains to guard the loom."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "sky_captains",
+                    "name": "Sky Captains",
+                    "delta": 3,
+                    "summary": "Skyship crews treat you as the loom's admiral."
+                  }
+                ]
+              }
+            }
           },
           "loom_future": {
             "title": "Future Horizons",
             "text": "You leave parts of the loom unwoven, inviting future adventurers guided by {{playstyle_trait}}.",
             "log": "You open the loom to new legends.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 2
+              },
+              "inventory": {
+                "add": [
+                  "Future Loom Key"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "summit_mandate",
+                  "loom_initiate"
+                ],
+                "add": [
+                  {
+                    "id": "future_horizons",
+                    "name": "Future Horizons",
+                    "summary": "You leave room for future wanderers to weave their own destinies.",
+                    "duration": "Until another answers the loom"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "weave_destiny",
+                    "title": "Weave Destiny",
+                    "summary": "The loom is primed for future heroes to continue the weave."
+                  },
+                  {
+                    "id": "stabilize_skyloom",
+                    "title": "Stabilize the Sky Loom",
+                    "summary": "Your weaving secures the skies without closing them to others."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "future_horizons_record",
+                    "title": "Future Horizons Record",
+                    "summary": "Guidelines for those who will weave after you."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -3696,7 +6717,56 @@
                 "next": "songlines",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "insight": 1,
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Harmonic Focus"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "astral_conductor",
+                    "name": "Astral Conductor",
+                    "summary": "You command cosmic harmonies to steady fraying songlines.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "choir_attunement",
+                    "name": "Choir Attunement",
+                    "summary": "Resonant chords surround you, eager to answer your direction.",
+                    "duration": "Until the convergence ends"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "stabilize_songlines",
+                    "title": "Stabilize the Songlines",
+                    "summary": "Restore the astral harmonies before they tear the realms apart."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "astral_convergence",
+                    "title": "Astral Convergence",
+                    "summary": "Charts of the planetary alignment threatening the choir."
+                  }
+                ]
+              }
+            }
           },
           "sages": {
             "title": "Harmonic Sages",
@@ -3887,19 +6957,172 @@
             "title": "Unified Chorus",
             "text": "Voices from a hundred worlds align, swearing to defend {{motivation}} with harmony and light.",
             "log": "The astral chorus answers your call.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Unified Score"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "astral_conductor",
+                    "name": "Astral Conductor",
+                    "amount": 1,
+                    "summary": "Directing the grand chorus sharpens your mastery of harmony."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "choir_attunement"
+                ],
+                "add": [
+                  {
+                    "id": "unified_chorus",
+                    "name": "Unified Chorus",
+                    "summary": "Voices across worlds now answer your signal in perfect unity.",
+                    "duration": "As long as the pact is sung"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_songlines",
+                    "title": "Stabilize the Songlines",
+                    "summary": "A unified chorus now safeguards the astral harmonies."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "unified_chorus_record",
+                    "title": "Unified Chorus Record",
+                    "summary": "Scores and testimonies from the choir you conducted."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "astral_choirs",
+                    "name": "Astral Choirs",
+                    "delta": 4,
+                    "summary": "Songline guardians herald your leadership across the planes."
+                  }
+                ]
+              }
+            }
           },
           "finale_resonance": {
             "title": "Resonant Bastion",
             "text": "The choir becomes a bulwark, merging technology and myth beneath your guidance.",
             "log": "A resonant bastion safeguards the realms.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Resonant Bulwark Core"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "resonant_engineering",
+                    "name": "Resonant Engineering",
+                    "summary": "You fuse technology and myth to defend songlines from collapse.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "choir_attunement"
+                ],
+                "add": [
+                  {
+                    "id": "resonant_bastion",
+                    "name": "Resonant Bastion",
+                    "summary": "The choir's fortress resonates with your guiding tone.",
+                    "duration": "While the bastion stands"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_songlines",
+                    "title": "Stabilize the Songlines",
+                    "summary": "The resonant bastion shields every fragile harmony."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "resonant_bastion_log",
+                    "title": "Resonant Bastion Log",
+                    "summary": "Blueprints for the fortress that protects the choir."
+                  }
+                ]
+              }
+            }
           },
           "finale_bloom": {
             "title": "Cosmic Bloom",
             "text": "Astral gardens weave between worlds, inviting future heroes to follow your {{focus_trait}} example.",
             "log": "Cosmic blooms heal the songlines.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Cosmic Seedling"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "choir_attunement"
+                ],
+                "add": [
+                  {
+                    "id": "cosmic_garden",
+                    "name": "Cosmic Garden",
+                    "summary": "Astral blooms flourish wherever your melodies linger.",
+                    "duration": "Until the blooms choose a new caretaker"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "stabilize_songlines",
+                    "title": "Stabilize the Songlines",
+                    "summary": "Cosmic gardens now thread harmony between worlds."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "cosmic_bloom_chronicle",
+                    "title": "Cosmic Bloom Chronicle",
+                    "summary": "Accounts of the astral gardens nurtured by your choir."
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -3944,7 +7167,56 @@
                 "next": "catacombs",
                 "style": "secondary"
               }
-            ]
+            ],
+            "effects": {
+              "stats": {
+                "influence": 1,
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Obsidian Signet"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "bloom_sovereignty",
+                    "name": "Bloom Sovereignty",
+                    "summary": "You command passion and justice in equal measure to sway the court.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "midnight_coronation",
+                    "name": "Midnight Coronation",
+                    "summary": "The Obsidian Bloom acknowledges your claim to its throne.",
+                    "duration": "Until your rule is sealed"
+                  }
+                ]
+              },
+              "quests": {
+                "add": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "Balance devotion and law to bind the bloom to your reign."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "obsidian_bloom_rituals",
+                    "title": "Obsidian Bloom Rituals",
+                    "summary": "Ceremonies required to claim the bloom's allegiance."
+                  }
+                ]
+              }
+            }
           },
           "knights": {
             "title": "Heartbound Knights",
@@ -4167,37 +7439,323 @@
             "title": "Knightly Vigil",
             "text": "Heartbound knights patrol every border, their devotion echoing your own.",
             "log": "The knights guard your dominion.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 2
+              },
+              "inventory": {
+                "add": [
+                  "Knightly Vow Ledger"
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "bloom_sovereignty",
+                    "name": "Bloom Sovereignty",
+                    "amount": 1,
+                    "summary": "Commanding the heartbound knights deepens your regal authority."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "midnight_coronation"
+                ],
+                "add": [
+                  {
+                    "id": "knightly_vigil",
+                    "name": "Knightly Vigil",
+                    "summary": "Heartbound knights patrol every border in your name.",
+                    "duration": "As long as the vows hold"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "The knightly orders now defend your throne."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "knightly_vigil_record",
+                    "title": "Knightly Vigil Record",
+                    "summary": "Oaths sworn by the heartbound knights to guard your dominion."
+                  }
+                ]
+              }
+            }
           },
           "finale_dawn": {
             "title": "Laurels of Dawn",
             "text": "Victorious champions swear to defend both love and law under your guidance.",
             "log": "Your laurels inspire the realm.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Dawn Laurel Circlet"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "midnight_coronation"
+                ],
+                "add": [
+                  {
+                    "id": "dawn_champions",
+                    "name": "Dawn Champions",
+                    "summary": "Victorious champions spread the light of your reign across the land.",
+                    "duration": "Until the laurels fade"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "Champions now uphold both love and law under your guidance."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "laurels_of_dawn",
+                    "title": "Laurels of Dawn",
+                    "summary": "Names of the champions who swore to defend your ideals."
+                  }
+                ]
+              }
+            }
           },
           "finale_covenant": {
             "title": "Covenant Throne",
             "text": "Nobles accept the new covenant, promising loyalty to {{focus_trait}} ideals.",
             "log": "The covenant reshapes the realm.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Covenant Decree"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "midnight_coronation"
+                ],
+                "add": [
+                  {
+                    "id": "covenant_blessing",
+                    "name": "Covenant Blessing",
+                    "summary": "Nobles pledge loyalty to your balanced ideals.",
+                    "duration": "While the covenant stands"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "The new covenant binds every courtier to your cause."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "covenant_throne_record",
+                    "title": "Covenant Throne Record",
+                    "summary": "Decrees signed as nobles accepted your rule."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "velvet_court",
+                    "name": "Velvet Court",
+                    "delta": 4,
+                    "summary": "Courtiers honor the covenant forged under your gaze."
+                  }
+                ]
+              }
+            }
           },
           "finale_revel": {
             "title": "Guardians of Devotion",
             "text": "Revelers become your eyes and ears, ensuring intrigues serve your {{motivation}}.",
             "log": "Devotion fuels your rule.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Devotion Ledger"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "revel_network",
+                    "name": "Revel Network",
+                    "summary": "Revelers whisper secrets that keep intrigues serving your aims.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "midnight_coronation"
+                ],
+                "add": [
+                  {
+                    "id": "devotion_network",
+                    "name": "Devotion Network",
+                    "summary": "Eyes and ears across the realm report to you from every celebration.",
+                    "duration": "Until revelers forget your tune"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "Every revel now echoes your motivation."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "guardians_of_devotion",
+                    "title": "Guardians of Devotion",
+                    "summary": "Ledgers of the revelers sworn to your service."
+                  }
+                ]
+              }
+            }
           },
           "finale_bloom": {
             "title": "Bloom Ascendant",
             "text": "The Obsidian Bloom radiates balanced passion across the land.",
             "log": "The bloom flourishes under your care.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Bloom Heartstone"
+                ]
+              },
+              "status": {
+                "remove": [
+                  "midnight_coronation"
+                ],
+                "add": [
+                  {
+                    "id": "bloom_ascendant",
+                    "name": "Bloom Ascendant",
+                    "summary": "The Obsidian Bloom radiates your balanced passion across the land.",
+                    "duration": "As long as the bloom thrives"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "The bloom now pulses in rhythm with your reign."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "bloom_ascendant_record",
+                    "title": "Bloom Ascendant Record",
+                    "summary": "Chronicles of the bloom under your stewardship."
+                  }
+                ]
+              }
+            }
           },
           "finale_vows": {
             "title": "Vows Eternal",
             "text": "Feast-goers swear everlasting fealty, intertwining affection with duty.",
             "log": "Vows echo through the court.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Eternal Vow Scroll"
+                ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "eternal_vows",
+                    "name": "Eternal Vows",
+                    "summary": "You bind hearts and duty together so promises can never fray.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "midnight_coronation"
+                ],
+                "add": [
+                  {
+                    "id": "oathbound_court",
+                    "name": "Oathbound Court",
+                    "summary": "Feast-goers swear everlasting fealty to your balanced reign.",
+                    "duration": "Until their vows are broken"
+                  }
+                ]
+              },
+              "quests": {
+                "complete": [
+                  {
+                    "id": "secure_dominion",
+                    "title": "Secure the Obsidian Bloom",
+                    "summary": "Eternal vows now entwine affection with duty under your rule."
+                  }
+                ]
+              },
+              "codex": {
+                "add": [
+                  {
+                    "id": "vows_eternal_record",
+                    "title": "Vows Eternal Record",
+                    "summary": "Transcripts of the vows sworn at your coronation feast."
+                  }
+                ]
+              }
+            }
           }
         }
       }
