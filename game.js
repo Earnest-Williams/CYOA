@@ -8,8 +8,8 @@ let prefs = typeof localStorage !== 'undefined' ? (JSON.parse(localStorage.getIt
 let qIndex = typeof localStorage !== 'undefined' ? (Number(localStorage.getItem('qIndex')) || 0) : 0;
 let currentNode = typeof localStorage !== 'undefined' ? (localStorage.getItem('currentNode') || null) : null;
 let gameState = typeof localStorage !== 'undefined'
-  ? (JSON.parse(localStorage.getItem('gameState')) || { stats: {}, inventory: [] })
-  : { stats: {}, inventory: [] };
+  ? (JSON.parse(localStorage.getItem('gameState')) || { stats: {}, inventory: [], log: [] })
+  : { stats: {}, inventory: [], log: [] };
 
 const app = typeof document !== 'undefined' ? document.getElementById('app') : null;
 if (app) {
@@ -28,62 +28,179 @@ function saveState() {
   }
 }
 
+function logEvent(message) {
+  if (!message) return;
+  if (!Array.isArray(gameState.log)) gameState.log = [];
+  gameState.log.push(message);
+  if (gameState.log.length > 12) {
+    gameState.log.shift();
+  }
+}
+
+function formatLabel(key) {
+  if (!key) return '';
+  const label = key
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+  return label;
+}
+
 // Select a random story seed based on desired length
 function selectRandomStorySeed(templates, length) {
-  const seeds = templates[length];
-  if (!seeds) return { nodes: {} };
-  // If multiple seeds provided, pick one at random
-  if (Array.isArray(seeds)) {
-    const idx = Math.floor(Math.random() * seeds.length);
-    return JSON.parse(JSON.stringify(seeds[idx]));
+  if (!templates || !Object.keys(templates).length) {
+    return { nodes: {} };
   }
-  // Otherwise clone the single seed
-  return { nodes: JSON.parse(JSON.stringify(seeds)) };
+  const target = templates[length] || templates[length?.toLowerCase()] || templates.Medium || templates.medium;
+  if (!target) {
+    const firstKey = Object.keys(templates)[0];
+    return JSON.parse(JSON.stringify(Array.isArray(templates[firstKey]) ? templates[firstKey][0] : templates[firstKey]));
+  }
+  const pool = Array.isArray(target) ? target : [target];
+  if (!pool.length) return { nodes: {} };
+  const idx = Math.floor(Math.random() * pool.length);
+  return JSON.parse(JSON.stringify(pool[idx]));
 }
 
 // Update the visible stats and inventory
 function renderGameState(state = gameState) {
-  const statsText = Object.entries(state.stats)
-    .map(([k, v]) => `${k}: ${v}`)
-    .join(', ');
-  const invText = state.inventory.join(', ');
+  const statsEntries = Object.entries(state.stats || {});
+  const inventoryItems = Array.isArray(state.inventory) ? state.inventory : [];
+  const statsText = statsEntries.map(([k, v]) => `${k}: ${v}`).join(', ');
+  const invText = inventoryItems.join(', ');
 
-  if (app && typeof document !== 'undefined') {
-    let statsDiv = document.getElementById('stats');
-    let invDiv = document.getElementById('inventory');
-    if (!statsDiv) {
-      statsDiv = document.createElement('div');
-      statsDiv.id = 'stats';
-      app.prepend(statsDiv);
+  if (typeof document !== 'undefined') {
+    const profile = document.getElementById('profile');
+    if (profile) {
+      profile.textContent = '';
+
+      const section = document.createDocumentFragment();
+
+      const addHeading = (label) => {
+        const heading = document.createElement('p');
+        heading.className = 'section-heading';
+        heading.textContent = label;
+        section.appendChild(heading);
+      };
+
+      addHeading('Attributes');
+      if (statsEntries.length) {
+        const list = document.createElement('ul');
+        list.className = 'stats-list';
+        statsEntries.forEach(([k, v]) => {
+          const item = document.createElement('li');
+          const label = document.createElement('span');
+          label.textContent = formatLabel(k);
+          const value = document.createElement('strong');
+          value.textContent = v;
+          item.append(label, value);
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      } else {
+        const empty = document.createElement('p');
+        empty.className = 'muted-text';
+        empty.textContent = 'Answer the prompts to forge your hero\'s abilities.';
+        section.appendChild(empty);
+      }
+
+      addHeading('Inventory');
+      if (inventoryItems.length) {
+        const list = document.createElement('ul');
+        list.className = 'inventory-list';
+        inventoryItems.forEach((itemText) => {
+          const item = document.createElement('li');
+          item.textContent = itemText;
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      } else {
+        const empty = document.createElement('p');
+        empty.className = 'muted-text';
+        empty.textContent = 'You have yet to gather any notable gear.';
+        section.appendChild(empty);
+      }
+
+      const prefEntries = Object.entries(prefs || {});
+      if (prefEntries.length) {
+        addHeading('Traits');
+        const list = document.createElement('ul');
+        list.className = 'profile-list';
+        prefEntries.forEach(([k, v]) => {
+          const item = document.createElement('li');
+          item.className = 'profile-item';
+          const label = document.createElement('span');
+          label.className = 'profile-label';
+          label.textContent = formatLabel(k);
+          const value = document.createElement('span');
+          value.textContent = v;
+          item.append(label, value);
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      }
+
+      profile.appendChild(section);
     }
-    if (!invDiv) {
-      invDiv = document.createElement('div');
-      invDiv.id = 'inventory';
-      app.prepend(invDiv);
+
+    const logContainer = document.getElementById('log');
+    if (logContainer) {
+      logContainer.textContent = '';
+      const logEntries = Array.isArray(state.log) ? state.log.slice(-10).reverse() : [];
+      if (logEntries.length) {
+        const list = document.createElement('ul');
+        list.className = 'log-list';
+        logEntries.forEach((entry) => {
+          const item = document.createElement('li');
+          item.textContent = entry;
+          list.appendChild(item);
+        });
+        logContainer.appendChild(list);
+      } else {
+        const empty = document.createElement('p');
+        empty.className = 'muted-text';
+        empty.textContent = 'Your journey log will fill as your legend grows.';
+        logContainer.appendChild(empty);
+      }
     }
-    statsDiv.textContent = statsText ? `Stats - ${statsText}` : 'Stats';
-    invDiv.textContent = invText ? `Inventory - ${invText}` : 'Inventory';
   }
+
   return { statsText, invText };
 }
 
 // Apply effects from a choice to the current game state
 function applyChoiceEffects(choice, state = gameState) {
   if (!choice || !choice.effects) return;
-  const { stats = {}, inventory = {} } = choice.effects;
+  const { stats = {}, inventory = {}, log } = choice.effects;
   for (const [k, v] of Object.entries(stats)) {
     state.stats[k] = (state.stats[k] || 0) + v;
+    if (v !== 0) {
+      const direction = v >= 0 ? 'increases' : 'decreases';
+      logEvent(`Your ${formatLabel(k)} ${direction} by ${Math.abs(v)}.`);
+    }
   }
   if (inventory.add) {
     inventory.add.forEach(item => {
-      if (!state.inventory.includes(item)) state.inventory.push(item);
+      if (!state.inventory.includes(item)) {
+        state.inventory.push(item);
+        logEvent(`You gain ${item}.`);
+      }
     });
   }
   if (inventory.remove) {
     inventory.remove.forEach(item => {
       const idx = state.inventory.indexOf(item);
-      if (idx !== -1) state.inventory.splice(idx, 1);
+      if (idx !== -1) {
+        state.inventory.splice(idx, 1);
+        logEvent(`You part with ${item}.`);
+      }
     });
+  }
+  if (log) {
+    logEvent(log);
   }
 }
 
@@ -111,51 +228,184 @@ function checkRequirements(reqs = {}, state = gameState) {
 function renderQuestion() {
   currentNode = null;
   saveState();
+  renderGameState();
   const q = questions[qIndex];
   const step = qIndex + 1;
   const total = questions.length;
   if (!app) return;
   app.textContent = '';
+  const container = document.createElement('div');
+  container.className = 'question-card';
+
   const progress = document.createElement('p');
   progress.className = 'question-progress';
-  progress.setAttribute('aria-live', 'polite');
   progress.textContent = `Question ${step} of ${total}`;
-  app.append(progress);
+  container.append(progress);
+
+  const progressBar = document.createElement('div');
+  progressBar.className = 'progress-bar';
+  const progressValue = document.createElement('span');
+  progressValue.style.width = `${Math.round(((step - 1) / total) * 100)}%`;
+  progressBar.append(progressValue);
+  container.append(progressBar);
 
   const heading = document.createElement('h2');
-  heading.setAttribute('aria-live', 'polite');
   heading.textContent = q.text;
-  app.append(heading);
+  container.append(heading);
 
-  const buttons = q.answers.map(a => {
+  const choices = document.createElement('div');
+  choices.className = 'choice-grid';
+  const buttons = q.answers.map((answer, idx) => {
     const btn = document.createElement('button');
-    btn.textContent = a;
+    btn.className = idx === 0 ? 'primary' : 'secondary';
+    btn.textContent = answer;
     btn.addEventListener('click', () => {
-      prefs[q.id] = btn.textContent;
+      prefs[q.id] = answer;
       qIndex++;
       saveState();
+      renderGameState();
       qIndex < questions.length ? renderQuestion() : startStory();
     });
-    app.append(btn);
+    choices.append(btn);
     return btn;
   });
+
+  container.append(choices);
+  app.append(container);
 
   if (buttons.length) buttons[0].focus();
 }
 
 function startStory() {
-  const story = buildStory(prefs);
+  const story = buildStory(prefs, { resetState: true });
+  logEvent('A new chapter begins.');
+  renderGameState();
   renderNode('start', story);
 }
 
-function buildStory(prefs) {
-  const seed = selectRandomStorySeed(storyTemplates, prefs.length);
-  Object.values(seed.nodes).forEach(node => {
-    node.text = node.text
-      .replace(/{{tone}}/g, prefs.tone.toLowerCase())
-      .replace(/{{genre}}/g, prefs.genre.toLowerCase());
-  });
-  return seed;
+function buildStory(prefs, { resetState = true } = {}) {
+  const lengthPref = prefs.length || 'Medium';
+  const seed = selectRandomStorySeed(storyTemplates, lengthPref);
+  if (!seed || !seed.nodes) {
+    return { nodes: {} };
+  }
+
+  const story = {
+    meta: seed.meta || {},
+    nodes: seed.nodes || {},
+  };
+
+  if (resetState) {
+    gameState.stats = { ...(story.meta.stats || {}) };
+    gameState.inventory = Array.isArray(story.meta.inventory)
+      ? [...story.meta.inventory]
+      : [];
+    gameState.log = [];
+  } else {
+    gameState.stats = gameState.stats && typeof gameState.stats === 'object'
+      ? gameState.stats
+      : {};
+    gameState.inventory = Array.isArray(gameState.inventory)
+      ? gameState.inventory
+      : [];
+    gameState.log = Array.isArray(gameState.log) ? gameState.log : [];
+  }
+
+  const preferenceBonuses = {
+    casual: { health: 4 },
+    strategic: { insight: 3 },
+    narrative: { influence: 2 },
+    'risk-taker': { daring: 3 },
+  };
+
+  const focusBonuses = {
+    character: { influence: 2 },
+    plot: { resolve: 2 },
+    world: { lore: 3 },
+    discovery: { insight: 2 },
+  };
+
+  const motivationBonuses = {
+    redemption: { resolve: 2 },
+    wealth: { fortune: 3 },
+    knowledge: { lore: 3 },
+    legacy: { influence: 2 },
+  };
+
+  const applyBonuses = (bonusMap, key) => {
+    if (!key) return;
+    const bonus = bonusMap[key.toLowerCase()];
+    if (!bonus) return;
+    for (const [stat, value] of Object.entries(bonus)) {
+      gameState.stats[stat] = (gameState.stats[stat] || 0) + value;
+    }
+  };
+
+  if (resetState) {
+    applyBonuses(preferenceBonuses, prefs.playstyle);
+    applyBonuses(focusBonuses, prefs.focus);
+    applyBonuses(motivationBonuses, prefs.motivation);
+
+    if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
+      gameState.inventory.push(prefs.companion);
+    }
+    if (prefs.signature && !gameState.inventory.includes(prefs.signature)) {
+      gameState.inventory.push(prefs.signature);
+    }
+  } else {
+    if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
+      gameState.inventory.push(prefs.companion);
+    }
+    if (prefs.signature && !gameState.inventory.includes(prefs.signature)) {
+      gameState.inventory.push(prefs.signature);
+    }
+  }
+
+  const replacements = Object.fromEntries(
+    Object.entries(prefs).map(([k, v]) => [k.toLowerCase(), v])
+  );
+  replacements.focus_trait = {
+    character: 'relationships',
+    plot: 'twists',
+    world: 'lore',
+    discovery: 'mysteries',
+  }[(prefs.focus || '').toLowerCase()] || 'possibilities';
+  replacements.playstyle_trait = {
+    casual: 'steady intuition',
+    strategic: 'methodical planning',
+    narrative: 'empathic storytelling',
+    'risk-taker': 'audacious gambits',
+  }[(prefs.playstyle || '').toLowerCase()] || 'adaptability';
+  replacements.motivation = prefs.motivation || 'curiosity';
+  replacements.genre = prefs.genre || 'story';
+  replacements.tone = (prefs.tone || '').toLowerCase();
+  replacements.companion = prefs.companion || 'no companion';
+  replacements.signature = prefs.signature || 'wits';
+
+  const applyPlaceholders = (value) => {
+    if (typeof value === 'string') {
+      return value.replace(/{{(\w+)}}/g, (_, key) => {
+        const replacement = replacements[key.toLowerCase()];
+        return replacement !== undefined ? replacement : '';
+      });
+    }
+    if (Array.isArray(value)) {
+      return value.map(applyPlaceholders);
+    }
+    if (value && typeof value === 'object') {
+      const result = {};
+      Object.entries(value).forEach(([k, v]) => {
+        result[k] = applyPlaceholders(v);
+      });
+      return result;
+    }
+    return value;
+  };
+
+  story.meta = applyPlaceholders(story.meta);
+  story.nodes = applyPlaceholders(story.nodes);
+
+  return story;
 }
 
 function renderNode(nodeId, story) {
@@ -164,34 +414,98 @@ function renderNode(nodeId, story) {
   const node = story.nodes[nodeId];
   if (!node) return;
   applyNodeEffects(node);
+  const summary = node.log || node.title || (node.text ? node.text.split(/[.!?]/)[0] : 'A turning point');
+  const lastLog = Array.isArray(gameState.log) ? gameState.log[gameState.log.length - 1] : null;
+  if (summary && summary !== lastLog) {
+    logEvent(summary);
+  }
   renderGameState();
+  saveState();
   if (!app) return;
 
   app.textContent = '';
-  const para = document.createElement('p');
-  para.setAttribute('aria-live', 'polite');
-  para.textContent = node.text;
-  app.append(para);
+  const storyContainer = document.createElement('div');
+  storyContainer.className = 'story-content';
+
+  if (story.meta && story.meta.title) {
+    const title = document.createElement(nodeId === 'start' ? 'h2' : 'h3');
+    title.className = nodeId === 'start' ? 'story-title' : 'chapter-title';
+    title.textContent = nodeId === 'start' ? story.meta.title : node.title || story.meta.title;
+    storyContainer.append(title);
+    if (nodeId === 'start' && story.meta.subtitle) {
+      const subtitle = document.createElement('p');
+      subtitle.className = 'muted-text';
+      subtitle.textContent = story.meta.subtitle;
+      storyContainer.append(subtitle);
+    }
+  } else if (node.title) {
+    const title = document.createElement('h3');
+    title.className = 'chapter-title';
+    title.textContent = node.title;
+    storyContainer.append(title);
+  }
+
+  const paragraph = document.createElement('p');
+  paragraph.textContent = node.text;
+  storyContainer.append(paragraph);
+
+  if (node.flavor) {
+    const flavor = document.createElement('p');
+    flavor.className = 'muted-text';
+    flavor.textContent = node.flavor;
+    storyContainer.append(flavor);
+  }
 
   const choices = node.choices && node.choices.length
     ? node.choices
-    : [{ text: 'Restart', next: null }];
+    : [{ text: 'Restart your tale', next: null, style: 'secondary' }];
+  const choiceGrid = document.createElement('div');
+  choiceGrid.className = 'choice-grid';
   const buttons = [];
   choices.forEach(c => {
     if (c.requirements && !checkRequirements(c.requirements)) return;
     const btn = document.createElement('button');
+    btn.className = c.style || 'primary';
     btn.textContent = c.text;
+    if (c.hint) {
+      btn.title = c.hint;
+    }
     btn.addEventListener('click', () => {
       applyChoiceEffects(c);
+      saveState();
       if (c.next) {
         renderNode(c.next, story);
       } else {
         resetGame();
       }
     });
-    app.append(btn);
+    choiceGrid.append(btn);
     buttons.push(btn);
   });
+
+  if (!buttons.length) {
+    const fallback = document.createElement('button');
+    fallback.className = 'secondary';
+    fallback.textContent = 'Return to the beginning';
+    fallback.addEventListener('click', resetGame);
+    choiceGrid.append(fallback);
+    buttons.push(fallback);
+  }
+
+  storyContainer.append(choiceGrid);
+
+  const footer = document.createElement('div');
+  footer.className = 'story-footer';
+  const focusTag = document.createElement('p');
+  focusTag.textContent = `Focus: ${prefs.focus || 'Balanced'}`;
+  const playstyleTag = document.createElement('p');
+  playstyleTag.textContent = `Approach: ${prefs.playstyle || 'Adaptive'}`;
+  const motivationTag = document.createElement('p');
+  motivationTag.textContent = `Motivation: ${prefs.motivation || 'Curiosity'}`;
+  footer.append(focusTag, playstyleTag, motivationTag);
+  storyContainer.append(footer);
+
+  app.append(storyContainer);
   if (buttons.length) buttons[0].focus();
 }
 
@@ -199,8 +513,9 @@ function resetGame() {
   prefs = {};
   qIndex = 0;
   currentNode = null;
-  gameState = { stats: {}, inventory: [] };
+  gameState = { stats: {}, inventory: [], log: [] };
   saveState();
+  renderGameState();
   renderQuestion();
 }
 
@@ -237,7 +552,7 @@ async function loadData() {
     const qData = await qRes.json();
     const sData = await sRes.json();
     questions = qData.questions;
-    storyTemplates = sData;
+    storyTemplates = sData.templates || sData;
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('questionsData', JSON.stringify(qData));
       localStorage.setItem('storyTemplatesData', JSON.stringify(sData));
@@ -251,7 +566,7 @@ async function loadData() {
           const qData = JSON.parse(qCache);
           const sData = JSON.parse(sCache);
           questions = qData.questions;
-          storyTemplates = sData;
+          storyTemplates = sData.templates || sData;
           return;
         } catch (_) {}
       }
@@ -274,8 +589,9 @@ async function init() {
     console.error(e);
     return;
   }
+  renderGameState();
   if (qIndex >= questions.length) {
-    const story = buildStory(prefs);
+    const story = buildStory(prefs, { resetState: false });
     const start = currentNode || 'start';
     renderNode(start, story);
   } else {
