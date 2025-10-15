@@ -725,6 +725,260 @@ function formatLabel(key) {
   return label;
 }
 
+function formatList(items = []) {
+  if (!Array.isArray(items)) return '';
+  const filtered = items.map(item => (typeof item === 'string' ? item.trim() : item)).filter(Boolean);
+  if (!filtered.length) return '';
+  if (filtered.length === 1) return `${filtered[0]}`;
+  if (filtered.length === 2) return `${filtered[0]} and ${filtered[1]}`;
+  return `${filtered.slice(0, -1).join(', ')}, and ${filtered[filtered.length - 1]}`;
+}
+
+function describeQuestEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') return entry;
+  return entry.title || (entry.id ? formatLabel(entry.id) : null);
+}
+
+function describeCodexEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') return entry;
+  return entry.title || (entry.id ? formatLabel(entry.id) : null);
+}
+
+function describeSkillEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') return formatLabel(entry);
+  return entry.name || (entry.id ? formatLabel(entry.id) : null);
+}
+
+function describeStatusEntry(entry) {
+  if (!entry) return null;
+  if (typeof entry === 'string') return formatLabel(entry);
+  return entry.name || (entry.id ? formatLabel(entry.id) : null);
+}
+
+function describeReputationEntry(entry) {
+  if (!entry || typeof entry !== 'object') return null;
+  const name = entry.name || (entry.id ? formatLabel(entry.id) : 'a faction');
+  if (entry.delta !== undefined && entry.delta !== null && entry.delta !== 0) {
+    const direction = entry.delta > 0 ? 'Increase' : 'Decrease';
+    return `${direction} standing with ${name} by ${Math.abs(entry.delta)}`;
+  }
+  const targetScore = entry.set ?? entry.score;
+  if (targetScore !== undefined && targetScore !== null && !Number.isNaN(Number(targetScore))) {
+    return `Set standing with ${name} to ${targetScore}`;
+  }
+  return `Update standing with ${name}`;
+}
+
+function collectEffectDescriptions(effects) {
+  if (!effects || typeof effects !== 'object') return [];
+  const {
+    stats,
+    inventory,
+    quests,
+    codex,
+    skills,
+    status,
+    reputation,
+    log,
+  } = effects;
+
+  const descriptions = [];
+
+  if (stats && typeof stats === 'object') {
+    const statChanges = Object.entries(stats)
+      .filter(([, value]) => Number(value) !== 0)
+      .map(([key, value]) => `${value >= 0 ? '+' : '-'}${Math.abs(value)} ${formatLabel(key)}`);
+    if (statChanges.length) {
+      descriptions.push(`Adjust stats: ${statChanges.join(', ')}`);
+    }
+  }
+
+  const inventoryEffects = Array.isArray(inventory) ? { add: inventory } : inventory || {};
+  if (Array.isArray(inventoryEffects.add) && inventoryEffects.add.length) {
+    descriptions.push(`Gain items: ${formatList(inventoryEffects.add)}`);
+  }
+  if (Array.isArray(inventoryEffects.remove) && inventoryEffects.remove.length) {
+    descriptions.push(`Lose items: ${formatList(inventoryEffects.remove)}`);
+  }
+  if (Array.isArray(inventoryEffects.consume) && inventoryEffects.consume.length) {
+    descriptions.push(`Consume items: ${formatList(inventoryEffects.consume)}`);
+  }
+
+  const questEffects = Array.isArray(quests) ? { add: quests } : quests || {};
+  if (Array.isArray(questEffects.add) && questEffects.add.length) {
+    const questNames = questEffects.add.map(describeQuestEntry).filter(Boolean);
+    if (questNames.length) {
+      descriptions.push(`Begin quest: ${formatList(questNames)}`);
+    }
+  }
+  if (Array.isArray(questEffects.complete) && questEffects.complete.length) {
+    const questNames = questEffects.complete.map(describeQuestEntry).filter(Boolean);
+    if (questNames.length) {
+      descriptions.push(`Complete quest: ${formatList(questNames)}`);
+    }
+  }
+
+  const codexEffects = Array.isArray(codex) ? { add: codex } : codex || {};
+  if (Array.isArray(codexEffects.add) && codexEffects.add.length) {
+    const codexNames = codexEffects.add.map(describeCodexEntry).filter(Boolean);
+    if (codexNames.length) {
+      descriptions.push(`Unlock codex: ${formatList(codexNames)}`);
+    }
+  }
+
+  const skillEffects = Array.isArray(skills) ? { learn: skills } : skills || {};
+  if (Array.isArray(skillEffects.learn) && skillEffects.learn.length) {
+    const skillNames = skillEffects.learn.map(describeSkillEntry).filter(Boolean);
+    if (skillNames.length) {
+      descriptions.push(`Learn skill: ${formatList(skillNames)}`);
+    }
+  }
+  if (Array.isArray(skillEffects.upgrade) && skillEffects.upgrade.length) {
+    const skillNames = skillEffects.upgrade.map(describeSkillEntry).filter(Boolean);
+    if (skillNames.length) {
+      descriptions.push(`Improve skill: ${formatList(skillNames)}`);
+    }
+  }
+  const removedSkills = [];
+  if (Array.isArray(skillEffects.remove)) {
+    removedSkills.push(...skillEffects.remove.map(describeSkillEntry).filter(Boolean));
+  }
+  if (Array.isArray(skillEffects.forget)) {
+    removedSkills.push(...skillEffects.forget.map(describeSkillEntry).filter(Boolean));
+  }
+  if (removedSkills.length) {
+    descriptions.push(`Lose skill: ${formatList(removedSkills)}`);
+  }
+
+  const statusEffects = Array.isArray(status) ? { add: status } : status || {};
+  if (Array.isArray(statusEffects.add) && statusEffects.add.length) {
+    const statusNames = statusEffects.add.map(describeStatusEntry).filter(Boolean);
+    if (statusNames.length) {
+      descriptions.push(`Gain status effect: ${formatList(statusNames)}`);
+    }
+  }
+  if (Array.isArray(statusEffects.remove) && statusEffects.remove.length) {
+    const statusNames = statusEffects.remove.map(describeStatusEntry).filter(Boolean);
+    if (statusNames.length) {
+      descriptions.push(`Remove status effect: ${formatList(statusNames)}`);
+    }
+  }
+  if (statusEffects.clear) {
+    descriptions.push('Clear all status effects');
+  }
+
+  let reputationEntries = [];
+  if (Array.isArray(reputation)) {
+    reputationEntries = reputation;
+  } else if (reputation && Array.isArray(reputation.factions)) {
+    reputationEntries = reputation.factions;
+  }
+  const reputationDescriptions = reputationEntries
+    .map(describeReputationEntry)
+    .filter(Boolean);
+  if (reputationDescriptions.length) {
+    descriptions.push(`Reputation change: ${formatList(reputationDescriptions)}`);
+  }
+
+  if (log) {
+    descriptions.push(log);
+  }
+
+  return descriptions;
+}
+
+function describeRequirements(requirements) {
+  if (!requirements || typeof requirements !== 'object') return [];
+  const parts = [];
+  if (requirements.stats && typeof requirements.stats === 'object') {
+    const statReqs = Object.entries(requirements.stats)
+      .map(([key, value]) => `${formatLabel(key)} ${value}+`)
+      .filter(Boolean);
+    if (statReqs.length) {
+      parts.push(`Requires ${formatList(statReqs)}`);
+    }
+  }
+  if (Array.isArray(requirements.inventory) && requirements.inventory.length) {
+    parts.push(`Requires ${formatList(requirements.inventory)} in your pack`);
+  }
+  return parts;
+}
+
+function generateChoiceHint(choice, story) {
+  if (!choice) return '';
+  if (choice.hint) return choice.hint;
+  const hintParts = [];
+  hintParts.push(...collectEffectDescriptions(choice.effects));
+  hintParts.push(...describeRequirements(choice.requirements));
+  if (choice.log) {
+    hintParts.push(choice.log);
+  }
+  if (choice.next) {
+    const nextNode = story?.nodes?.[choice.next];
+    if (nextNode?.title) {
+      hintParts.push(`Leads to ${nextNode.title}`);
+    }
+  } else if (choice.next === null || choice.next === undefined) {
+    hintParts.push('Ends this adventure');
+  }
+
+  const unique = [];
+  const seen = new Set();
+  hintParts.forEach(part => {
+    if (!part) return;
+    const normalized = part.trim().replace(/\s+/g, ' ');
+    if (!normalized) return;
+    if (seen.has(normalized)) return;
+    seen.add(normalized);
+    unique.push(normalized);
+  });
+
+  if (!unique.length) {
+    return 'Continues the story.';
+  }
+
+  return `${unique.map(text => text.replace(/[.?!]+$/, '')).join('. ')}.`;
+}
+
+function buildNodeClarityPoints(node, availableChoices, totalChoices) {
+  const points = [];
+  const seen = new Set();
+  const addPoint = text => {
+    if (!text) return;
+    const normalized = text.trim().replace(/\s+/g, ' ');
+    if (!normalized) return;
+    if (seen.has(normalized)) return;
+    seen.add(normalized);
+    points.push(normalized);
+  };
+
+  if (node?.log) {
+    addPoint(node.log);
+  }
+
+  collectEffectDescriptions(node?.effects).forEach(addPoint);
+
+  const choiceTexts = Array.isArray(availableChoices)
+    ? availableChoices.map(choice => choice.text).filter(Boolean)
+    : [];
+  if (choiceTexts.length) {
+    addPoint(`Next decisions: ${formatList(choiceTexts)}`);
+  }
+
+  if (totalChoices > (availableChoices?.length || 0)) {
+    addPoint('Some options are locked until you meet their requirements.');
+  }
+
+  if (!choiceTexts.length && totalChoices) {
+    addPoint('No choices are currently available.');
+  }
+
+  return points;
+}
+
 function ensureQuestContainers(state = gameState) {
   if (!state.quests || typeof state.quests !== 'object') {
     state.quests = { active: [], completed: [] };
@@ -2330,19 +2584,42 @@ function renderNode(nodeId, story) {
     storyContainer.append(echo);
   }
 
-  const choices = node.choices && node.choices.length
+  const rawChoices = node.choices && node.choices.length
     ? node.choices
     : [{ text: 'Restart your tale', next: null, style: 'secondary' }];
+  const availableChoices = rawChoices.filter(choice => !choice.requirements || checkRequirements(choice.requirements));
+  const clarityPoints = buildNodeClarityPoints(node, availableChoices, rawChoices.length);
+
+  if (clarityPoints.length) {
+    const clarity = document.createElement('div');
+    clarity.className = 'clarity-panel';
+    const clarityTitle = document.createElement('h4');
+    clarityTitle.className = 'clarity-title';
+    clarityTitle.textContent = 'In plain terms';
+    clarity.append(clarityTitle);
+    const clarityList = document.createElement('ul');
+    clarityList.className = 'clarity-points';
+    clarityPoints.forEach(point => {
+      const item = document.createElement('li');
+      const normalized = point.replace(/[.?!]+$/, '');
+      item.textContent = `${normalized}.`;
+      clarityList.append(item);
+    });
+    clarity.append(clarityList);
+    storyContainer.append(clarity);
+  }
+
   const choiceGrid = document.createElement('div');
   choiceGrid.className = 'choice-grid';
   const buttons = [];
-  choices.forEach(c => {
-    if (c.requirements && !checkRequirements(c.requirements)) return;
+  availableChoices.forEach(c => {
     const btn = document.createElement('button');
     btn.className = c.style || 'primary';
     btn.textContent = c.text;
-    if (c.hint) {
-      btn.title = c.hint;
+    const hint = generateChoiceHint(c, story);
+    if (hint) {
+      btn.title = hint;
+      btn.setAttribute('aria-label', `${c.text}. ${hint}`);
     }
     btn.addEventListener('click', () => {
       appendHistoryEntry({
@@ -2368,6 +2645,9 @@ function renderNode(nodeId, story) {
     const fallback = document.createElement('button');
     fallback.className = 'secondary';
     fallback.textContent = 'Return to the beginning';
+    const fallbackHint = 'Start over from the first question set.';
+    fallback.title = fallbackHint;
+    fallback.setAttribute('aria-label', `${fallback.textContent}. ${fallbackHint}`);
     fallback.addEventListener('click', resetGame);
     choiceGrid.append(fallback);
     buttons.push(fallback);
