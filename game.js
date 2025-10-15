@@ -3,13 +3,65 @@
 let questions = [];
 let storyTemplates = {};
 
+function loadStoredJson(key, fallback) {
+  if (typeof localStorage === 'undefined') return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return parsed !== null ? parsed : fallback;
+  } catch (error) {
+    console.warn(`Failed to parse stored ${key}:`, error);
+    return fallback;
+  }
+}
+
+function createDefaultGameState() {
+  return {
+    stats: {},
+    inventory: [],
+    log: [],
+    appliedNodeEffects: {},
+  };
+}
+
+function normalizeGameState(state) {
+  const base = createDefaultGameState();
+  if (!state || typeof state !== 'object') {
+    return base;
+  }
+
+  if (state.stats && typeof state.stats === 'object') {
+    base.stats = { ...state.stats };
+  }
+
+  if (Array.isArray(state.inventory)) {
+    base.inventory = [...state.inventory];
+  }
+
+  if (Array.isArray(state.log)) {
+    base.log = [...state.log];
+  }
+
+  if (state.appliedNodeEffects && typeof state.appliedNodeEffects === 'object') {
+    base.appliedNodeEffects = { ...state.appliedNodeEffects };
+  }
+
+  return base;
+}
+
 // Load saved state if running in browser
-let prefs = typeof localStorage !== 'undefined' ? (JSON.parse(localStorage.getItem('prefs')) || {}) : {};
+let prefs = loadStoredJson('prefs', {});
 let qIndex = typeof localStorage !== 'undefined' ? (Number(localStorage.getItem('qIndex')) || 0) : 0;
 let currentNode = typeof localStorage !== 'undefined' ? (localStorage.getItem('currentNode') || null) : null;
-let gameState = typeof localStorage !== 'undefined'
-  ? (JSON.parse(localStorage.getItem('gameState')) || { stats: {}, inventory: [], log: [] })
-  : { stats: {}, inventory: [], log: [] };
+if (currentNode === 'undefined' || currentNode === 'null') {
+  currentNode = null;
+}
+let gameState = normalizeGameState(loadStoredJson('gameState', null));
+
+if (!prefs || typeof prefs !== 'object') {
+  prefs = {};
+}
 
 const app = typeof document !== 'undefined' ? document.getElementById('app') : null;
 if (app) {
@@ -205,9 +257,36 @@ function applyChoiceEffects(choice, state = gameState) {
 }
 
 // Apply effects defined on a node when the node is entered
-function applyNodeEffects(node, state = gameState) {
+function applyNodeEffects(nodeOrId, maybeNode, maybeState = gameState) {
+  let nodeId = null;
+  let node = nodeOrId;
+  let state = maybeState;
+
+  if (typeof nodeOrId === 'string' || typeof nodeOrId === 'number') {
+    nodeId = nodeOrId;
+    node = maybeNode;
+  } else {
+    state = maybeNode || gameState;
+  }
+
   if (!node || !node.effects) return;
+  if (!state || typeof state !== 'object') return;
+
+  const repeatable = Boolean(node.repeatableEffects);
+  if (!repeatable) {
+    if (!state.appliedNodeEffects || typeof state.appliedNodeEffects !== 'object') {
+      state.appliedNodeEffects = {};
+    }
+    if (nodeId && state.appliedNodeEffects[nodeId]) {
+      return;
+    }
+  }
+
   applyChoiceEffects({ effects: node.effects }, state);
+
+  if (!repeatable && nodeId) {
+    state.appliedNodeEffects[nodeId] = true;
+  }
 }
 
 // Check whether the player meets specified requirements
@@ -296,19 +375,16 @@ function buildStory(prefs, { resetState = true } = {}) {
   };
 
   if (resetState) {
-    gameState.stats = { ...(story.meta.stats || {}) };
-    gameState.inventory = Array.isArray(story.meta.inventory)
-      ? [...story.meta.inventory]
-      : [];
-    gameState.log = [];
+    gameState = normalizeGameState({
+      stats: { ...(story.meta.stats || {}) },
+      inventory: Array.isArray(story.meta.inventory)
+        ? [...story.meta.inventory]
+        : [],
+      log: [],
+      appliedNodeEffects: {},
+    });
   } else {
-    gameState.stats = gameState.stats && typeof gameState.stats === 'object'
-      ? gameState.stats
-      : {};
-    gameState.inventory = Array.isArray(gameState.inventory)
-      ? gameState.inventory
-      : [];
-    gameState.log = Array.isArray(gameState.log) ? gameState.log : [];
+    gameState = normalizeGameState(gameState);
   }
 
   const preferenceBonuses = {
@@ -413,7 +489,7 @@ function renderNode(nodeId, story) {
   saveState();
   const node = story.nodes[nodeId];
   if (!node) return;
-  applyNodeEffects(node);
+  applyNodeEffects(nodeId, node);
   const summary = node.log || node.title || (node.text ? node.text.split(/[.!?]/)[0] : 'A turning point');
   const lastLog = Array.isArray(gameState.log) ? gameState.log[gameState.log.length - 1] : null;
   if (summary && summary !== lastLog) {
@@ -513,7 +589,7 @@ function resetGame() {
   prefs = {};
   qIndex = 0;
   currentNode = null;
-  gameState = { stats: {}, inventory: [], log: [] };
+  gameState = createDefaultGameState();
   saveState();
   renderGameState();
   renderQuestion();
@@ -559,16 +635,12 @@ async function loadData() {
     }
   } catch (error) {
     if (typeof localStorage !== 'undefined') {
-      const qCache = localStorage.getItem('questionsData');
-      const sCache = localStorage.getItem('storyTemplatesData');
+      const qCache = loadStoredJson('questionsData', null);
+      const sCache = loadStoredJson('storyTemplatesData', null);
       if (qCache && sCache) {
-        try {
-          const qData = JSON.parse(qCache);
-          const sData = JSON.parse(sCache);
-          questions = qData.questions;
-          storyTemplates = sData.templates || sData;
-          return;
-        } catch (_) {}
+        questions = qCache.questions;
+        storyTemplates = sCache.templates || sCache;
+        return;
       }
     }
     if (app) {
