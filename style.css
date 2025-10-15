@@ -238,6 +238,48 @@ button:disabled {
   gap: 0.35rem;
 }
 
+.persona-block {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.persona-epithet {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.persona-summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.persona-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.persona-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(104, 243, 197, 0.15);
+  color: var(--fg);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
 .profile-item {
   display: flex;
   justify-content: space-between;
@@ -312,6 +354,13 @@ button:disabled {
 .story-footer p {
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.identity-echo {
+  border-left: 3px solid rgba(104, 243, 197, 0.6);
+  padding-left: 0.75rem;
+  font-style: italic;
+  color: rgba(245, 246, 250, 0.82);
 }
 
 @media (min-width: 900px) {

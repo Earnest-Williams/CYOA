@@ -31,6 +31,16 @@
       "answers": ["Redemption", "Wealth", "Knowledge", "Legacy"]
     },
     {
+      "id": "origin",
+      "text": "Where did your hero begin their journey?",
+      "answers": ["Noble lineage", "Frontier wilds", "Arcane academy", "Hidden enclave"]
+    },
+    {
+      "id": "temperament",
+      "text": "How would allies describe your temperament?",
+      "answers": ["Bold", "Calm", "Cunning", "Compassionate"]
+    },
+    {
       "id": "companion",
       "text": "Who accompanies you on this quest?",
       "answers": ["A stalwart guardian", "An insightful sage", "A cunning rogue", "A loyal beast"]
