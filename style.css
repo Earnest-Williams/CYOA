@@ -305,6 +305,61 @@ button:disabled {
   background: rgba(255, 255, 255, 0.06);
 }
 
+.skill-list,
+.status-list,
+.reputation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.skill-item,
+.status-item,
+.reputation-item {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.7rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.skill-header,
+.status-header,
+.reputation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.skill-name,
+.status-name,
+.reputation-name {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.skill-rank,
+.status-duration,
+.reputation-score {
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.skill-summary,
+.status-summary,
+.reputation-summary {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .log-list > li {
   padding: 0.6rem;
   border-radius: var(--radius-md);

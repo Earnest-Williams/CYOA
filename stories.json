@@ -4,7 +4,7 @@
       {
         "meta": {
           "title": "Echoes at the Crossroads",
-          "subtitle": "A {{tone}} {{genre}} vignette guided by {{playstyle_trait}}.",
+          "subtitle": "A {{tone}} {{genre}} vignette guided by {{playstyle_trait}} and {{archetype_trait}}.",
           "genreTags": [
             "Fantasy",
             "Mystery"
@@ -22,8 +22,8 @@
         "nodes": {
           "start": {
             "title": "Crossroads Dawn",
-            "text": "You awaken at the crossroads, the air thick with {{tone}} promises of {{genre}} adventures.",
-            "flavor": "Your companion {{companion}} waits patiently while you steady your {{signature}}.",
+            "text": "You awaken at the crossroads, the air thick with {{tone}} promises of {{genre}} adventures as your {{archetype}} discipline thrums beneath the surface.",
+            "flavor": "Your companion {{companion}} waits patiently while you steady your {{signature}} and recall {{archetype_trait}} lessons.",
             "log": "You arrive at the crossroads.",
             "choices": [
               {
@@ -67,6 +67,26 @@
                     "summary": "A rune-carved marker that unveils the Mistway when touched with intent."
                   }
                 ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "mistway_cartography",
+                    "name": "Mistway Cartography",
+                    "summary": "You can chart living fog as though it were ink upon vellum, revealing hidden crossings.",
+                    "rank": 1
+                  }
+                ]
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "mist_touched",
+                    "name": "Mist-Touched",
+                    "summary": "Living vapor clings to you, heightening your senses toward concealed pathways.",
+                    "duration": "Until you depart the Mistway"
+                  }
+                ]
               }
             },
             "choices": [
@@ -100,6 +120,16 @@
                     "id": "flickering_market",
                     "title": "Flickering Market",
                     "summary": "A bazaar where merchants exchange memories and curios tied to the Mistway."
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "verdant_circle",
+                    "name": "Verdant Circle",
+                    "delta": 2,
+                    "summary": "The Verdant Circle hears of the fair bargains you strike with its grove merchants."
                   }
                 ]
               }
@@ -138,6 +168,16 @@
                     "summary": "Envoys rely on the Moonlit Glade to move unseen supplies for {{faction_trait}}."
                   }
                 ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "{{faction}}",
+                    "name": "{{faction}}",
+                    "delta": 3,
+                    "summary": "Word spreads that you answered the envoy's plea without hesitation."
+                  }
+                ]
               }
             },
             "choices": [
@@ -169,7 +209,7 @@
           },
           "storyteller": {
             "title": "Elder of Echoes",
-            "text": "An elder recounts a legend about {{focus_trait}} binding kindred spirits across distance.",
+            "text": "An elder recounts a legend about {{focus_trait}} binding kindred spirits across distance, praising {{archetype_trait}} champions who once safeguarded the Mistway.",
             "log": "An elder shares a guiding tale.",
             "effects": {
               "stats": {
@@ -225,6 +265,21 @@
                     "title": "Moonlit Glade",
                     "summary": "A sanctuary where oaths echo through mirrored water and guide the Mistway."
                   }
+                ]
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "mistway_cartography",
+                    "name": "Mistway Cartography",
+                    "amount": 1,
+                    "summary": "The mirrored waters refine your sense for charting the shifting Mistway."
+                  }
+                ]
+              },
+              "status": {
+                "remove": [
+                  "mist_touched"
                 ]
               }
             },
@@ -308,6 +363,16 @@
                     "summary": "An oath binding the Moonlit Glade to the {{faction}}'s cause."
                   }
                 ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "{{faction}}",
+                    "name": "{{faction}}",
+                    "delta": 5,
+                    "summary": "Your vow binds the Mistway to {{faction}} stewards, elevating your renown among them."
+                  }
+                ]
               }
             },
             "choices": []
@@ -330,7 +395,7 @@
       {
         "meta": {
           "title": "Velvet Midnight Affair",
-          "subtitle": "An intimate {{tone}} {{genre}} escape embracing {{focus_trait}} and {{playstyle_trait}}.",
+          "subtitle": "An intimate {{tone}} {{genre}} escape embracing {{focus_trait}}, {{playstyle_trait}}, and {{archetype_trait}}.",
           "genreTags": [
             "erotic romance",
             "romance"
@@ -349,8 +414,8 @@
         "nodes": {
           "start": {
             "title": "Velvet Conservatory",
-            "text": "Candlelight and soft music welcome you to the Velvet Conservatory, a refuge where hearts explore {{genre}} delights without shame.",
-            "flavor": "{{companion}} traces the edge of your {{signature}}, inviting you to choose how boldly you'll indulge.",
+            "text": "Candlelight and soft music welcome you to the Velvet Conservatory, a refuge where hearts explore {{genre}} delights without shame and your {{archetype}} poise shines.",
+            "flavor": "{{companion}} traces the edge of your {{signature}}, inviting you to choose how boldly you'll indulge with {{archetype_trait}} grace.",
             "log": "You enter the Velvet Conservatory.",
             "choices": [
               {
@@ -377,6 +442,16 @@
                 "add": [
                   "Silken Mask"
                 ]
+              },
+              "skills": {
+                "learn": [
+                  {
+                    "id": "velvet_diplomacy",
+                    "name": "Velvet Diplomacy",
+                    "summary": "You read masked body language and answer with alluring assurances.",
+                    "rank": 1
+                  }
+                ]
               }
             },
             "choices": [
@@ -399,6 +474,26 @@
               "stats": {
                 "empathy": 1,
                 "resolve": 1
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "moonlit_poise",
+                    "name": "Moonlit Poise",
+                    "summary": "Jasmine-scented confidence keeps your movements effortless and kind.",
+                    "duration": "Until dawn"
+                  }
+                ]
+              },
+              "reputation": {
+                "factions": [
+                  {
+                    "id": "velvet_conservatory",
+                    "name": "Velvet Conservatory",
+                    "delta": 2,
+                    "summary": "Garden hosts admire the gentle way you honor shared boundaries."
+                  }
+                ]
               }
             },
             "choices": [
@@ -422,6 +517,16 @@
               "stats": {
                 "influence": 1,
                 "empathy": 1
+              },
+              "skills": {
+                "upgrade": [
+                  {
+                    "id": "velvet_diplomacy",
+                    "name": "Velvet Diplomacy",
+                    "amount": 1,
+                    "summary": "The circle hones your talent for guiding tender confessions."
+                  }
+                ]
               }
             },
             "choices": [
@@ -444,6 +549,16 @@
             "effects": {
               "stats": {
                 "resolve": 1
+              },
+              "status": {
+                "add": [
+                  {
+                    "id": "soothed_heart",
+                    "name": "Soothed Heart",
+                    "summary": "Breathing in rhythm with the host leaves you grounded and open.",
+                    "duration": "Next major choice"
+                  }
+                ]
               }
             },
             "choices": [
@@ -512,28 +627,60 @@
             "text": "Together with the salon circle, you script a night of sensual storytelling, taking turns offering gentle caresses and affirmations.",
             "flavor": "You exchange boundaries before inviting each new touch, weaving safety into every gasp and sigh.",
             "log": "You design a sensual celebration in the salon.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "status": {
+                "remove": [
+                  "moonlit_poise",
+                  "soothed_heart"
+                ]
+              }
+            }
           },
           "tryst_host": {
             "title": "Host's Devoted Focus",
             "text": "In a chamber draped with velvet, the host traces constellations over your skin, promising evenings of attentive exploration whenever you desire them.",
             "flavor": "Playful touches and heartfelt words carry you through the night until dawn blushes through the curtains.",
             "log": "You commit to an intimate night with the host.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "status": {
+                "remove": [
+                  "moonlit_poise",
+                  "soothed_heart"
+                ]
+              }
+            }
           },
           "tryst_companion": {
             "title": "Companion's Tender Promise",
             "text": "{{companion}} guides you somewhere secluded, exploring each other's boundaries with consent and patient curiosity until your hearts slow in unison.",
             "flavor": "You share lingering kisses and soft laughter, trusting {{focus_trait}} to keep the connection bright.",
             "log": "You share an intimate evening with your companion.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "status": {
+                "remove": [
+                  "moonlit_poise",
+                  "soothed_heart"
+                ]
+              }
+            }
           },
           "tryst_circle": {
             "title": "Circle of Trust",
             "text": "You join a circle of lovers who honor boundaries before delighting in aromatic oils, whispered compliments, and the thrill of being seen.",
             "flavor": "Mutual consent shapes every caress, and the night becomes a celebration of shared pleasure and respect.",
             "log": "You bask in a consensual celebration among new friends.",
-            "choices": []
+            "choices": [],
+            "effects": {
+              "status": {
+                "remove": [
+                  "moonlit_poise",
+                  "soothed_heart"
+                ]
+              }
+            }
           }
         }
       }

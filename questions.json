@@ -58,6 +58,16 @@
       "answers": ["Bold", "Calm", "Cunning", "Compassionate"]
     },
     {
+      "id": "archetype",
+      "text": "Select your combat archetype:",
+      "answers": [
+        "Blade Dancer",
+        "Spellbinder",
+        "Wayfinder",
+        "Silver Tongue"
+      ]
+    },
+    {
       "id": "companion",
       "text": "Who accompanies you on this quest?",
       "answers": ["A stalwart guardian", "An insightful sage", "A cunning rogue", "A loyal beast"]
