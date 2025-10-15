@@ -22,6 +22,7 @@ function createDefaultGameState() {
     inventory: [],
     log: [],
     appliedNodeEffects: {},
+    identity: {},
   };
 }
 
@@ -45,6 +46,10 @@ function normalizeGameState(state) {
 
   if (state.appliedNodeEffects && typeof state.appliedNodeEffects === 'object') {
     base.appliedNodeEffects = { ...state.appliedNodeEffects };
+  }
+
+  if (state.identity && typeof state.identity === 'object') {
+    base.identity = { ...state.identity };
   }
 
   return base;
@@ -101,6 +106,176 @@ function formatLabel(key) {
   return label;
 }
 
+function canonicalKey(value) {
+  return typeof value === 'string' ? value.trim().toLowerCase() : '';
+}
+
+function resolveKey(value, aliases = {}) {
+  const key = canonicalKey(value);
+  return aliases[key] || key;
+}
+
+function deriveIdentity(state = gameState, preferences = prefs) {
+  const statsEntries = Object.entries(state?.stats || {})
+    .filter(([, v]) => typeof v === 'number')
+    .sort((a, b) => b[1] - a[1]);
+
+  const [primaryEntry, secondaryEntry] = statsEntries;
+  const primaryStat = primaryEntry ? primaryEntry[0] : '';
+  const secondaryStat = secondaryEntry ? secondaryEntry[0] : '';
+  const primaryValue = primaryEntry ? primaryEntry[1] : 0;
+
+  const originKey = resolveKey(preferences?.origin, {
+    'noble lineage': 'noble',
+    'frontier wilds': 'frontier',
+    'arcane academy': 'scholar',
+    'hidden enclave': 'outcast',
+  });
+
+  const temperamentKey = resolveKey(preferences?.temperament);
+  const motivationKey = resolveKey(preferences?.motivation);
+
+  const temperamentTitles = {
+    bold: 'Firebrand',
+    calm: 'Serene',
+    cunning: 'Shadowed',
+    compassionate: 'Heartbound',
+  };
+
+  const originTitles = {
+    noble: 'Scion',
+    frontier: 'Pathfinder',
+    scholar: 'Archivist',
+    outcast: 'Wanderer',
+  };
+
+  const temperamentInsights = {
+    bold: 'Your decisive nature craves swift momentum.',
+    calm: 'You weigh each move with tranquil assurance.',
+    cunning: 'You instinctively search for hidden leverage.',
+    compassionate: 'You look for ways to uplift those around you.',
+  };
+
+  const motivationInsights = {
+    redemption: 'Every choice is measured against the promise of redemption.',
+    wealth: 'Prosperity glitters at the edge of every opportunity.',
+    knowledge: 'Curiosity urges you to uncover every secret.',
+    legacy: 'You assess how each step shapes the legend you leave behind.',
+  };
+
+  const epithetParts = [];
+  if (temperamentTitles[temperamentKey]) epithetParts.push(temperamentTitles[temperamentKey]);
+  if (originTitles[originKey]) epithetParts.push(originTitles[originKey]);
+
+  const epithet = epithetParts.length ? `the ${epithetParts.join(' ')}` : 'the Adventurer';
+  const primaryStatLabel = primaryStat ? formatLabel(primaryStat) : 'Potential';
+  const secondaryStatLabel = secondaryStat ? formatLabel(secondaryStat) : '';
+
+  const summaryPieces = [];
+  if (primaryStat) {
+    summaryPieces.push(`Renowned for ${primaryStatLabel.toLowerCase()} (${primaryValue}).`);
+  }
+  if (secondaryStat) {
+    summaryPieces.push(`Backed by ${secondaryStatLabel.toLowerCase()}.`);
+  }
+  if (temperamentInsights[temperamentKey]) {
+    summaryPieces.push(temperamentInsights[temperamentKey]);
+  }
+  if (motivationInsights[motivationKey]) {
+    summaryPieces.push(motivationInsights[motivationKey]);
+  }
+
+  const summary = summaryPieces.join(' ');
+
+  return {
+    epithet,
+    primaryStat,
+    primaryStatLabel,
+    primaryStatValue: primaryValue,
+    secondaryStat,
+    secondaryStatLabel,
+    origin: preferences?.origin || '',
+    temperament: preferences?.temperament || '',
+    motivation: preferences?.motivation || '',
+    summary,
+  };
+}
+
+function updateIdentity(state = gameState, preferences = prefs) {
+  const previous = state?.identity || {};
+  const identity = deriveIdentity(state, preferences);
+  state.identity = identity;
+  if (previous.epithet && identity.epithet && previous.epithet !== identity.epithet) {
+    logEvent(`You now bear the mantle of ${identity.epithet}.`);
+  }
+  return identity;
+}
+
+function generateIdentityReaction(identity, node) {
+  if (!identity) return '';
+  const insights = [];
+
+  if (identity.primaryStat) {
+    const score = identity.primaryStatValue || 0;
+    const label = identity.primaryStatLabel.toLowerCase();
+    if (score >= 12) {
+      insights.push(`Your mastery of ${label} can turn this moment in your favor.`);
+    } else if (score >= 8) {
+      insights.push(`You weigh how your ${label} might guide the outcome.`);
+    } else if (score) {
+      insights.push(`You consider whether nurturing your ${label} will help here.`);
+    }
+  }
+
+  const temperamentKey = resolveKey(identity.temperament);
+  const temperamentGuidance = {
+    bold: 'Bold instincts urge decisive action.',
+    calm: 'Your calm outlook favors patience.',
+    cunning: 'Cunning whispers that a clever angle exists.',
+    compassionate: 'Compassion draws your attention to who might need aid.',
+  };
+  if (temperamentGuidance[temperamentKey]) {
+    insights.push(temperamentGuidance[temperamentKey]);
+  }
+
+  const motivationKey = resolveKey(identity.motivation);
+  const motivationGuidance = {
+    redemption: 'You test each option against the path to redemption.',
+    wealth: 'You evaluate which choice promises the greatest reward.',
+    knowledge: 'You are hungry to learn what secrets lie ahead.',
+    legacy: 'You envision how this decision echoes through history.',
+  };
+  if (motivationGuidance[motivationKey]) {
+    insights.push(motivationGuidance[motivationKey]);
+  }
+
+  const statImpact = node?.effects?.stats || null;
+  if (statImpact) {
+    const [statKey] = Object.keys(statImpact);
+    if (statKey) {
+      const statLabel = formatLabel(statKey).toLowerCase();
+      if (resolveKey(statKey) === resolveKey(identity.primaryStat)) {
+        insights.push(`This encounter resonates with your honed ${statLabel}.`);
+      } else {
+        insights.push(`You anticipate how your ${statLabel} might shift if you press on.`);
+      }
+    }
+  } else {
+    const requirementChoice = Array.isArray(node?.choices)
+      ? node.choices.find(choice => choice.requirements?.stats)
+      : null;
+    if (requirementChoice && requirementChoice.requirements.stats) {
+      const [reqStat] = Object.keys(requirementChoice.requirements.stats);
+      if (reqStat) {
+        const statLabel = formatLabel(reqStat).toLowerCase();
+        insights.push(`One path demands notable ${statLabel}.`);
+      }
+    }
+  }
+
+  return insights.join(' ');
+}
+
 // Select a random story seed based on desired length
 function selectRandomStorySeed(templates, length) {
   if (!templates || !Object.keys(templates).length) {
@@ -137,6 +312,73 @@ function renderGameState(state = gameState) {
         heading.textContent = label;
         section.appendChild(heading);
       };
+
+      const prefEntries = Object.entries(prefs || {});
+      const identity = (state.identity && Object.keys(state.identity).length)
+        ? state.identity
+        : deriveIdentity(state, prefs);
+      const hasPersonaDetails = identity && (identity.summary || prefEntries.length || statsEntries.length);
+      addHeading('Persona');
+      if (hasPersonaDetails) {
+        const persona = document.createElement('div');
+        persona.className = 'persona-block';
+
+        if (identity.epithet) {
+          const epithet = document.createElement('p');
+          epithet.className = 'persona-epithet';
+          epithet.textContent = `You are ${identity.epithet}.`;
+          persona.appendChild(epithet);
+        }
+
+        if (identity.summary) {
+          const summary = document.createElement('p');
+          summary.className = 'persona-summary';
+          summary.textContent = identity.summary;
+          persona.appendChild(summary);
+        }
+
+        const tags = document.createElement('div');
+        tags.className = 'persona-tags';
+
+        if (identity.primaryStatLabel) {
+          const statTag = document.createElement('span');
+          statTag.className = 'persona-pill';
+          statTag.textContent = `${identity.primaryStatLabel}: ${identity.primaryStatValue}`;
+          tags.appendChild(statTag);
+        }
+
+        if (identity.origin) {
+          const originTag = document.createElement('span');
+          originTag.className = 'persona-pill';
+          originTag.textContent = `Origin: ${identity.origin}`;
+          tags.appendChild(originTag);
+        }
+
+        if (identity.temperament) {
+          const temperamentTag = document.createElement('span');
+          temperamentTag.className = 'persona-pill';
+          temperamentTag.textContent = `Temperament: ${identity.temperament}`;
+          tags.appendChild(temperamentTag);
+        }
+
+        if (identity.motivation) {
+          const motivationTag = document.createElement('span');
+          motivationTag.className = 'persona-pill';
+          motivationTag.textContent = `Driven by ${identity.motivation}`;
+          tags.appendChild(motivationTag);
+        }
+
+        if (tags.childElementCount) {
+          persona.appendChild(tags);
+        }
+
+        section.appendChild(persona);
+      } else {
+        const emptyPersona = document.createElement('p');
+        emptyPersona.className = 'muted-text';
+        emptyPersona.textContent = 'Answer the prompts to define your legend.';
+        section.appendChild(emptyPersona);
+      }
 
       addHeading('Attributes');
       if (statsEntries.length) {
@@ -176,7 +418,6 @@ function renderGameState(state = gameState) {
         section.appendChild(empty);
       }
 
-      const prefEntries = Object.entries(prefs || {});
       if (prefEntries.length) {
         addHeading('Traits');
         const list = document.createElement('ul');
@@ -254,6 +495,8 @@ function applyChoiceEffects(choice, state = gameState) {
   if (log) {
     logEvent(log);
   }
+
+  updateIdentity(state, prefs);
 }
 
 // Apply effects defined on a node when the node is entered
@@ -287,6 +530,8 @@ function applyNodeEffects(nodeOrId, maybeNode, maybeState = gameState) {
   if (!repeatable && nodeId) {
     state.appliedNodeEffects[nodeId] = true;
   }
+
+  updateIdentity(state, prefs);
 }
 
 // Check whether the player meets specified requirements
@@ -408,19 +653,93 @@ function buildStory(prefs, { resetState = true } = {}) {
     legacy: { influence: 2 },
   };
 
+  const originPackages = {
+    noble: {
+      stats: { influence: 2, fortune: 2 },
+      inventory: ["Crested Signet"],
+      log: 'Your noble lineage lends resources and sway.',
+    },
+    frontier: {
+      stats: { health: 2, daring: 2 },
+      inventory: ["Weathered Compass"],
+      log: 'Frontier grit steels you for hardship.',
+    },
+    scholar: {
+      stats: { insight: 3, lore: 2 },
+      inventory: ["Annotated Map"],
+      log: 'Years of study sharpen your understanding.',
+    },
+    outcast: {
+      stats: { resolve: 2, stealth: 2 },
+      inventory: ["Hidden Cache Key"],
+      log: 'Life on the fringes has taught you how to endure unseen.',
+    },
+  };
+
+  const temperamentPackages = {
+    bold: {
+      stats: { daring: 3, resolve: 1 },
+      log: 'Bold instincts push you toward daring action.',
+    },
+    calm: {
+      stats: { resolve: 2, health: 1 },
+      log: 'Your calm heart steadies you when storms rise.',
+    },
+    cunning: {
+      stats: { insight: 2, stealth: 1 },
+      inventory: ["Glass Dagger"],
+      log: 'Cunning senses reveal hidden advantages.',
+    },
+    compassionate: {
+      stats: { influence: 1, empathy: 2 },
+      inventory: ["Healer's Cord"],
+      log: 'Compassion binds allies to your cause.',
+    },
+  };
+
   const applyBonuses = (bonusMap, key) => {
     if (!key) return;
-    const bonus = bonusMap[key.toLowerCase()];
+    const canonical = resolveKey(key);
+    const bonus = bonusMap[canonical];
     if (!bonus) return;
     for (const [stat, value] of Object.entries(bonus)) {
       gameState.stats[stat] = (gameState.stats[stat] || 0) + value;
     }
   };
 
+  const applyPackage = (pkg, { includeStats = true } = {}) => {
+    if (!pkg) return;
+    if (includeStats && pkg.stats) {
+      for (const [stat, value] of Object.entries(pkg.stats)) {
+        gameState.stats[stat] = (gameState.stats[stat] || 0) + value;
+      }
+    }
+    if (Array.isArray(pkg.inventory)) {
+      pkg.inventory.forEach(item => {
+        if (!gameState.inventory.includes(item)) {
+          gameState.inventory.push(item);
+        }
+      });
+    }
+    if (includeStats && pkg.log) {
+      logEvent(pkg.log);
+    }
+  };
+
+  const originKey = resolveKey(prefs.origin, {
+    'noble lineage': 'noble',
+    'frontier wilds': 'frontier',
+    'arcane academy': 'scholar',
+    'hidden enclave': 'outcast',
+  });
+  const temperamentKey = resolveKey(prefs.temperament);
+
   if (resetState) {
     applyBonuses(preferenceBonuses, prefs.playstyle);
     applyBonuses(focusBonuses, prefs.focus);
     applyBonuses(motivationBonuses, prefs.motivation);
+    applyPackage(originPackages[originKey], { includeStats: true });
+    applyPackage(temperamentPackages[temperamentKey], { includeStats: true });
 
     if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
       gameState.inventory.push(prefs.companion);
@@ -429,6 +748,8 @@ function buildStory(prefs, { resetState = true } = {}) {
       gameState.inventory.push(prefs.signature);
     }
   } else {
+    applyPackage(originPackages[originKey], { includeStats: false });
+    applyPackage(temperamentPackages[temperamentKey], { includeStats: false });
     if (prefs.companion && !gameState.inventory.includes(prefs.companion)) {
       gameState.inventory.push(prefs.companion);
     }
@@ -436,6 +757,8 @@ function buildStory(prefs, { resetState = true } = {}) {
       gameState.inventory.push(prefs.signature);
     }
   }
+
+  const identity = updateIdentity(gameState, prefs);
 
   const replacements = Object.fromEntries(
     Object.entries(prefs).map(([k, v]) => [k.toLowerCase(), v])
@@ -457,6 +780,28 @@ function buildStory(prefs, { resetState = true } = {}) {
   replacements.tone = (prefs.tone || '').toLowerCase();
   replacements.companion = prefs.companion || 'no companion';
   replacements.signature = prefs.signature || 'wits';
+  replacements.origin = prefs.origin || 'an unknown past';
+  replacements.temperament = prefs.temperament || 'balanced instincts';
+  replacements.hero_epithet = identity?.epithet || 'the Adventurer';
+  replacements.primary_stat = identity?.primaryStatLabel || 'Potential';
+  replacements.primary_stat_value = String(identity?.primaryStatValue ?? '0');
+  replacements.identity_summary = identity?.summary || '';
+
+  if (story.meta) {
+    const personaLineParts = [];
+    if (identity?.epithet) {
+      personaLineParts.push(`You are ${identity.epithet}`);
+    }
+    if (identity?.summary) {
+      personaLineParts.push(identity.summary);
+    }
+    const personaLine = personaLineParts.join(' — ');
+    if (personaLine) {
+      story.meta.subtitle = story.meta.subtitle
+        ? `${story.meta.subtitle} ${personaLine}`
+        : personaLine;
+    }
+  }
 
   const applyPlaceholders = (value) => {
     if (typeof value === 'string') {
@@ -530,6 +875,14 @@ function renderNode(nodeId, story) {
     flavor.className = 'muted-text';
     flavor.textContent = node.flavor;
     storyContainer.append(flavor);
+  }
+
+  const identityEcho = generateIdentityReaction(gameState.identity, node);
+  if (identityEcho) {
+    const echo = document.createElement('p');
+    echo.className = 'identity-echo';
+    echo.textContent = identityEcho;
+    storyContainer.append(echo);
   }
 
   const choices = node.choices && node.choices.length
