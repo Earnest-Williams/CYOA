@@ -158,6 +158,37 @@ body::before {
   line-height: 1.7;
 }
 
+.clarity-panel {
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  color: var(--muted);
+}
+
+.clarity-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.clarity-points {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.clarity-points li {
+  margin-bottom: 0.35rem;
+}
+
+.clarity-points li:last-child {
+  margin-bottom: 0;
+}
+
 .choice-grid {
   display: grid;
   gap: 0.75rem;
