@@ -5,6 +5,10 @@
         "meta": {
           "title": "Echoes at the Crossroads",
           "subtitle": "A {{tone}} {{genre}} vignette guided by {{playstyle_trait}}.",
+          "genreTags": [
+            "Fantasy",
+            "Mystery"
+          ],
           "stats": {
             "health": 10,
             "insight": 4,
@@ -415,6 +419,10 @@
         "meta": {
           "title": "The Harmonic Caravan",
           "subtitle": "A {{tone}} {{genre}} journey balancing {{focus_trait}} with {{playstyle_trait}}.",
+          "genreTags": [
+            "Fantasy",
+            "Steampunk"
+          ],
           "stats": {
             "health": 14,
             "insight": 5,
@@ -806,6 +814,520 @@
             "choices": []
           }
         }
+      },
+      {
+        "meta": {
+          "title": "Nebula Relay Run",
+          "subtitle": "A {{tone}} {{genre}} jaunt keeping the nebula lanes loyal to {{motivation}}.",
+          "genreTags": [
+            "Sci-Fi"
+          ],
+          "stats": {
+            "health": 15,
+            "insight": 6,
+            "resolve": 4,
+            "influence": 4,
+            "fortune": 3
+          },
+          "inventory": [
+            "Relay Access Codes"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Docking at Relay 17",
+            "text": "Nebula tides buffet Relay 17 while smugglers and surveyors await your decision.",
+            "flavor": "{{companion}} steadies the docking clamps while your {{signature}} flickers with residual static.",
+            "log": "You arrive at Relay 17.",
+            "choices": [
+              {
+                "text": "Calibrate the pulse arrays",
+                "next": "arrays",
+                "style": "primary"
+              },
+              {
+                "text": "Audit the contraband cargo",
+                "next": "cargo"
+              },
+              {
+                "text": "Hold council with the assembled crew",
+                "next": "crew",
+                "style": "secondary"
+              }
+            ]
+          },
+          "arrays": {
+            "title": "Pulse Array Alignment",
+            "text": "You tune the relay's emitters to resonate with {{focus_trait}}, coaxing clarity from the nebula static.",
+            "log": "You align the pulse arrays.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Project a warning pulse to nearby lanes",
+                "next": "pulse"
+              },
+              {
+                "text": "Trace the interference to hidden transmitters",
+                "next": "scrambler"
+              }
+            ]
+          },
+          "pulse": {
+            "title": "Warning Pulse",
+            "text": "Your broadcast exposes pirate ambushes and guides caravans faithful to {{motivation}}.",
+            "log": "You project a warning pulse.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Pulse Blueprint"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Coordinate rescue routes",
+                "next": "finale_signal"
+              }
+            ]
+          },
+          "scrambler": {
+            "title": "Signal Scrambler",
+            "text": "A hidden transmitter attempts to jam the relay, but your {{playstyle_trait}} reflexes pinpoint its frequency.",
+            "log": "You capture a signal scrambler.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Signal Scrambler"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Shadow the smugglers using the device",
+                "next": "smugglers"
+              }
+            ]
+          },
+          "smugglers": {
+            "title": "Nebula Smuggler Trail",
+            "text": "You follow the jammers to a hidden flotilla willing to bargain for safe passage.",
+            "log": "You confront the nebula smugglers.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Smuggler Codes"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Fold the smugglers into your command",
+                "next": "finale_smugglers"
+              }
+            ]
+          },
+          "cargo": {
+            "title": "Contraband Audit",
+            "text": "Containers of volatile spores pulse in rhythm with {{focus_trait}}, hinting at illicit experiments.",
+            "log": "You inspect the contraband.",
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Contraband Cache"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Neutralize the unstable spores",
+                "next": "hazard"
+              },
+              {
+                "text": "Trade favors with honest merchants",
+                "next": "trade"
+              }
+            ]
+          },
+          "hazard": {
+            "title": "Hazard Containment",
+            "text": "You vent the spores through a purifier circuit, shielding the relay from catastrophe.",
+            "log": "You contain the hazard.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Distribute the purified cargo to the convoy",
+                "next": "finale_convoy"
+              }
+            ]
+          },
+          "trade": {
+            "title": "Merchant Alliance",
+            "text": "Captains pledge resources to your cause, impressed by your deft balance of {{playstyle_trait}} and duty.",
+            "log": "You forge a merchant alliance.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Alliance Marker"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Secure long-term trade escorts",
+                "next": "finale_alliance"
+              }
+            ]
+          },
+          "crew": {
+            "title": "Crew Council",
+            "text": "Technicians, couriers, and wardens debate how best to honor {{motivation}} on the next run.",
+            "log": "You meet with the crew.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Lead a bonding exercise with {{companion}}",
+                "next": "bond"
+              },
+              {
+                "text": "Simulate new relay defense scenarios",
+                "next": "simulate"
+              }
+            ]
+          },
+          "bond": {
+            "title": "Crew Bonding",
+            "text": "Shared stories kindle loyalty, and the crew entrusts you with their hopes for {{motivation}}.",
+            "log": "You forge stronger bonds with the crew.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Crew Pact"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Launch together into the next sequence",
+                "next": "finale_crew"
+              }
+            ]
+          },
+          "simulate": {
+            "title": "Defense Simulations",
+            "text": "Strategic overlays test your {{playstyle_trait}}, revealing countermeasures for the relay.",
+            "log": "You refine defense protocols.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Deploy the new protocols",
+                "next": "finale_signal"
+              }
+            ]
+          },
+          "finale_signal": {
+            "title": "Beacon of Clarity",
+            "text": "Relay 17 now sings with steady light, aligning distant travelers to your {{focus_trait}} vision.",
+            "log": "You stabilize the nebula lanes.",
+            "choices": []
+          },
+          "finale_smugglers": {
+            "title": "Shadow Accord",
+            "text": "Former smugglers now reroute their stealth craft to scout threats before they strike.",
+            "log": "The smugglers bend the knee to your command.",
+            "choices": []
+          },
+          "finale_convoy": {
+            "title": "Purified Convoy",
+            "text": "Healthy caravans depart with gratitude, spreading tales of your {{tone}} leadership.",
+            "log": "The convoy carries your aid across the nebula.",
+            "choices": []
+          },
+          "finale_alliance": {
+            "title": "Merchant Vanguard",
+            "text": "Allied captains coordinate patrols and keep the relay supplied for seasons to come.",
+            "log": "Merchants stand ready at your call.",
+            "choices": []
+          },
+          "finale_crew": {
+            "title": "Crew Harmonization",
+            "text": "Unified voices echo through the relay, each crew member sworn to uphold {{motivation}}.",
+            "log": "Your crew rallies behind you.",
+            "choices": []
+          }
+        }
+      },
+      {
+        "meta": {
+          "title": "Secrets of the Velvet Court",
+          "subtitle": "A {{tone}} {{genre}} intrigue where veils and vows test {{playstyle_trait}}.",
+          "genreTags": [
+            "Mystery",
+            "Erotic Romance"
+          ],
+          "stats": {
+            "health": 13,
+            "insight": 6,
+            "resolve": 5,
+            "influence": 5,
+            "fortune": 3
+          },
+          "inventory": [
+            "Velvet Invitation"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Masquerade Arrival",
+            "text": "The Velvet Court opens its mirrored halls to settle disputes entwined with {{motivation}}.",
+            "flavor": "{{companion}} adjusts your disguise while your {{signature}} gleams beneath silk.",
+            "log": "You enter the Velvet Court.",
+            "choices": [
+              {
+                "text": "Survey the whispering gallery",
+                "next": "gallery",
+                "style": "primary"
+              },
+              {
+                "text": "Stroll the moonlit gardens",
+                "next": "garden"
+              },
+              {
+                "text": "Consult the court archivist",
+                "next": "library",
+                "style": "secondary"
+              }
+            ]
+          },
+          "gallery": {
+            "title": "Whispering Gallery",
+            "text": "Masked nobles trade rumors that sparkle with {{focus_trait}} clues.",
+            "log": "You listen within the gallery.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Cipher Fan"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Shadow the suspicious maestro",
+                "next": "maestro"
+              },
+              {
+                "text": "Charm the envoy from the outer courts",
+                "next": "envoy"
+              }
+            ]
+          },
+          "maestro": {
+            "title": "Secret Score",
+            "text": "The maestro's sheet music hides coded threats aimed at the court heir.",
+            "log": "You uncover the maestro's plot.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Expose the plot on the grand dais",
+                "next": "finale_unmask"
+              }
+            ]
+          },
+          "envoy": {
+            "title": "Outer Court Envoy",
+            "text": "Your diplomacy earns a pledge to aid {{motivation}} if you can prove the court is compromised.",
+            "log": "You sway the envoy.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Envoy Seal"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Secure proof from the archives",
+                "next": "library"
+              }
+            ]
+          },
+          "garden": {
+            "title": "Moonlit Garden",
+            "text": "Perfumed air reveals hidden passages and lovers hiding forbidden messages.",
+            "log": "You explore the moonlit garden.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Pursue the fleeing informant",
+                "next": "informant"
+              },
+              {
+                "text": "Share a candid moment with your masked rival",
+                "next": "rival"
+              }
+            ]
+          },
+          "informant": {
+            "title": "Captured Informant",
+            "text": "Caught amid the hedges, the informant offers intel for safe escort from the court.",
+            "log": "You seize vital intel.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Court Secrets"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Trade the intel to secure peace",
+                "next": "finale_truce"
+              }
+            ]
+          },
+          "rival": {
+            "title": "Masked Rival",
+            "text": "Beneath the mask is someone whose loyalty could sway the succession.",
+            "log": "You confront your rival.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Rival's Token"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Invite them to champion your cause",
+                "next": "finale_pledge"
+              }
+            ]
+          },
+          "library": {
+            "title": "Velvet Archives",
+            "text": "Silken shelves hold contracts sealed in riddles. {{playstyle_trait}} patience reveals hidden amendments.",
+            "log": "You delve into the archives.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Decode the heirloom contract",
+                "next": "contract"
+              },
+              {
+                "text": "Seek the archivist's blessing",
+                "next": "archivist"
+              }
+            ]
+          },
+          "contract": {
+            "title": "Heirloom Contract",
+            "text": "The contract binds the court to whoever restores harmony between love and duty.",
+            "log": "You decode the heirloom contract.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Heirloom Contract"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Present the clause during the final dance",
+                "next": "finale_contract"
+              }
+            ]
+          },
+          "archivist": {
+            "title": "Archivist Blessing",
+            "text": "The archivist entrusts you with a mirrored locket that records true intentions.",
+            "log": "You earn the archivist's blessing.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Mirrored Locket"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Confront the mastermind at the masquerade",
+                "next": "finale_unmask"
+              }
+            ]
+          },
+          "finale_unmask": {
+            "title": "Unmasking the Mastermind",
+            "text": "On the grand dais you reveal the saboteur, aligning passion with justice for {{motivation}}.",
+            "log": "The mastermind is exposed.",
+            "choices": []
+          },
+          "finale_truce": {
+            "title": "Garden Truce",
+            "text": "With secrets laid bare, rival houses agree to guard {{focus_trait}} futures together.",
+            "log": "A fragile truce blooms in the gardens.",
+            "choices": []
+          },
+          "finale_pledge": {
+            "title": "Pledge of the Masked Rival",
+            "text": "Romance and allegiance entwine, giving you a devoted champion within the court.",
+            "log": "Your rival pledges their heart and blade.",
+            "choices": []
+          },
+          "finale_contract": {
+            "title": "Rewritten Accord",
+            "text": "The court accepts your clause, forever entwining leadership with compassionate {{playstyle_trait}}.",
+            "log": "The Velvet Court renews its vows.",
+            "choices": []
+          }
+        }
       }
     ],
     "Long": [
@@ -813,6 +1335,9 @@
         "meta": {
           "title": "Siege of the Veiled Bastion",
           "subtitle": "A {{tone}} {{genre}} saga pursuing {{motivation}} across perilous fronts.",
+          "genreTags": [
+            "Fantasy"
+          ],
           "stats": {
             "health": 18,
             "insight": 6,
@@ -1470,6 +1995,590 @@
             "choices": []
           }
         }
+      },
+      {
+        "meta": {
+          "title": "Echoes of the Drowned Observatory",
+          "subtitle": "A {{tone}} {{genre}} campaign salvaging truths for {{motivation}}.",
+          "genreTags": [
+            "Mystery",
+            "Sci-Fi"
+          ],
+          "stats": {
+            "health": 19,
+            "insight": 7,
+            "resolve": 6,
+            "influence": 4,
+            "fortune": 4
+          },
+          "inventory": [
+            "Pressure-Sealed Journal",
+            "Sonar Beacon"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Sunken Deployment",
+            "text": "The drowned observatory rises during a rare lunar tide, beckoning explorers and raiders alike.",
+            "flavor": "Your submersible hums while {{companion}} syncs the {{signature}} to deepwater frequencies.",
+            "log": "You descend toward the observatory.",
+            "choices": [
+              {
+                "text": "Approach the sealed archives",
+                "next": "archives",
+                "style": "primary"
+              },
+              {
+                "text": "Survey the fractured habitat ring",
+                "next": "habitat"
+              },
+              {
+                "text": "Track the rival salvage crews",
+                "next": "rivals",
+                "style": "secondary"
+              }
+            ]
+          },
+          "archives": {
+            "title": "Sealed Archives",
+            "text": "Ancient data cores pulse with secrets that could reshape {{focus_trait}} across the currents.",
+            "log": "You enter the archive vault.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Decode the data lattice",
+                "next": "lattice"
+              },
+              {
+                "text": "Stabilize the leaking coolant",
+                "next": "coolant"
+              }
+            ]
+          },
+          "lattice": {
+            "title": "Data Lattice",
+            "text": "Patterns reveal a predictive engine charting storms that threaten every coastal refuge.",
+            "log": "You unlock the lattice predictions.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Storm Prognosis"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Broadcast the predictions to allied havens",
+                "next": "finale_network"
+              }
+            ]
+          },
+          "coolant": {
+            "title": "Coolant Stabilization",
+            "text": "You reroute pressure valves, preventing a meltdown that would erase the observatory forever.",
+            "log": "You stabilize the coolant system.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Guide refugees into the secure archives",
+                "next": "refugees"
+              }
+            ]
+          },
+          "refugees": {
+            "title": "Archive Refugees",
+            "text": "Survivors of past floods emerge, ready to repay your rescue with specialized knowledge.",
+            "log": "You rescue archive survivors.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Refugee Crew"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Redeploy them to repair the habitat ring",
+                "next": "habitat"
+              }
+            ]
+          },
+          "habitat": {
+            "title": "Fractured Habitat",
+            "text": "Cracked biodomes release glowing spores that might renew surface crops or poison them.",
+            "log": "You inspect the habitat ring.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Harvest and cleanse the spores",
+                "next": "spores"
+              },
+              {
+                "text": "Seal the breaches with improvised braces",
+                "next": "braces"
+              }
+            ]
+          },
+          "spores": {
+            "title": "Spore Harvest",
+            "text": "Purified spores become catalysts capable of rejuvenating devastated settlements.",
+            "log": "You harvest potent spores.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Renewal Spores"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Send the spores to the surface enclaves",
+                "next": "finale_rebirth"
+              }
+            ]
+          },
+          "braces": {
+            "title": "Improvised Braces",
+            "text": "Your team stabilizes the biodomes, granting future explorers safe passage.",
+            "log": "You reinforce the habitat.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Invite allied engineers to expand the work",
+                "next": "engineers"
+              }
+            ]
+          },
+          "engineers": {
+            "title": "Allied Engineers",
+            "text": "Engineers respond to your call, eager to embed themselves in your {{motivation}}.",
+            "log": "Engineers join your restoration.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Engineer Detachment"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Coordinate long-term reconstruction",
+                "next": "finale_foundation"
+              }
+            ]
+          },
+          "rivals": {
+            "title": "Rival Salvagers",
+            "text": "Competing crews scavenge without regard for the observatory's delicate history.",
+            "log": "You confront rival salvagers.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Challenge them to a relic wager",
+                "next": "wager"
+              },
+              {
+                "text": "Offer them a place under your banner",
+                "next": "alliance"
+              }
+            ]
+          },
+          "wager": {
+            "title": "Relic Wager",
+            "text": "You pit your {{playstyle_trait}} cunning against their greed and win a priceless artifact.",
+            "log": "You win the relic wager.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Observatory Relic"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Install the relic within the sonar beacon",
+                "next": "sonar"
+              }
+            ]
+          },
+          "alliance": {
+            "title": "Salvager Alliance",
+            "text": "Their loyalty secured, the salvagers agree to protect the observatory in exchange for leadership.",
+            "log": "You recruit the rival salvagers.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Salvager Pact"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Deploy them to guard the perimeter",
+                "next": "finale_guardians"
+              }
+            ]
+          },
+          "sonar": {
+            "title": "Resonant Sonar",
+            "text": "The beacon now charts safe passages for fleets seeking refuge beneath the waves.",
+            "log": "You upgrade the sonar beacon.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Guide humanitarian fleets to safety",
+                "next": "finale_network"
+              }
+            ]
+          },
+          "finale_network": {
+            "title": "Network of Havens",
+            "text": "Your broadcasts link submerged enclaves, sharing resources and {{focus_trait}} wisdom.",
+            "log": "A haven network blossoms.",
+            "choices": []
+          },
+          "finale_rebirth": {
+            "title": "Surface Rebirth",
+            "text": "Renewed crops and medicine bring relief to settlements that honor your {{motivation}}.",
+            "log": "Surface settlements thrive again.",
+            "choices": []
+          },
+          "finale_foundation": {
+            "title": "Restored Foundation",
+            "text": "The observatory becomes a bastion of learning, maintained by your allied engineers.",
+            "log": "The observatory is restored.",
+            "choices": []
+          },
+          "finale_guardians": {
+            "title": "Guardians of the Deep",
+            "text": "Your allied salvagers patrol the depths, deterring threats to your aquatic dominion.",
+            "log": "Guardians defend the observatory.",
+            "choices": []
+          }
+        }
+      },
+      {
+        "meta": {
+          "title": "Emberfall Supply Line",
+          "subtitle": "A {{tone}} {{genre}} odyssey forging hope amid ruined frontiers.",
+          "genreTags": [
+            "Post-Apocalyptic",
+            "Steampunk"
+          ],
+          "stats": {
+            "health": 20,
+            "insight": 5,
+            "resolve": 7,
+            "influence": 5,
+            "fortune": 4
+          },
+          "inventory": [
+            "Coalition Banner",
+            "Steam-Caravan Kit"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Caravan Mustering",
+            "text": "The Emberfall frontier crackles with stormfire as settlements plead for supplies.",
+            "flavor": "Steam whistles echo while {{companion}} inspects your {{signature}} for the road ahead.",
+            "log": "You assemble the supply caravan.",
+            "choices": [
+              {
+                "text": "Inspect the auto-carriages",
+                "next": "carriages",
+                "style": "primary"
+              },
+              {
+                "text": "Negotiate with the enclave elders",
+                "next": "elders"
+              },
+              {
+                "text": "Scout the ash-swept highways",
+                "next": "scout",
+                "style": "secondary"
+              }
+            ]
+          },
+          "carriages": {
+            "title": "Auto-Carriage Hangar",
+            "text": "Soot-covered engineers fine-tune engines that could fail without decisive leadership.",
+            "log": "You review the auto-carriages.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Install reinforced plating",
+                "next": "plating"
+              },
+              {
+                "text": "Test experimental wind turbines",
+                "next": "turbines"
+              }
+            ]
+          },
+          "plating": {
+            "title": "Reinforced Plating",
+            "text": "Layered armor will shield civilians traveling beneath your banner.",
+            "log": "You reinforce the carriages.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Armored Convoy"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Lead the convoy through the ember gale",
+                "next": "gale"
+              }
+            ]
+          },
+          "turbines": {
+            "title": "Wind Turbine Trials",
+            "text": "Prototype turbines channel storm winds, powering relief engines.",
+            "log": "You harness the storm winds.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Storm Turbine"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Use the turbines to outpace raiders",
+                "next": "raiders"
+              }
+            ]
+          },
+          "elders": {
+            "title": "Enclave Elders",
+            "text": "Leaders demand proof you can deliver justice that honors {{motivation}}.",
+            "log": "You negotiate with the elders.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Broker aid with distant enclaves",
+                "next": "allies"
+              },
+              {
+                "text": "Promise protection for refugee lines",
+                "next": "refuge_line"
+              }
+            ]
+          },
+          "allies": {
+            "title": "Distant Allies",
+            "text": "Signal towers flash responses from settlements eager to rejoin your coalition.",
+            "log": "You secure distant allies.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Signal Charter"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Coordinate a relay of supply drops",
+                "next": "finale_relay"
+              }
+            ]
+          },
+          "refuge_line": {
+            "title": "Refugee Line",
+            "text": "Families clutch heirlooms while watching the horizon for your convoy.",
+            "log": "You safeguard the refugee line.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Escort them aboard the caravan",
+                "next": "gale"
+              }
+            ]
+          },
+          "scout": {
+            "title": "Ash Highway Recon",
+            "text": "Scorched bridges and ambush zones threaten any who dare the Emberfall roads.",
+            "log": "You scout the ash highways.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Clear the bridges of debris",
+                "next": "bridges"
+              },
+              {
+                "text": "Set decoy beacons for raiders",
+                "next": "decoys"
+              }
+            ]
+          },
+          "bridges": {
+            "title": "Bridgeworks",
+            "text": "Repaired bridges let hope roll forward on iron wheels.",
+            "log": "You repair critical bridges.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Bridge Maps"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Guide the caravan safely across",
+                "next": "finale_arrival"
+              }
+            ]
+          },
+          "decoys": {
+            "title": "Decoy Beacons",
+            "text": "False signals lure raiders away while your people advance.",
+            "log": "You deploy decoy beacons.",
+            "effects": {
+              "stats": {
+                "fortune": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Spring an ambush with {{companion}}",
+                "next": "ambush"
+              }
+            ]
+          },
+          "raiders": {
+            "title": "Skysteel Raiders",
+            "text": "Raiders descend on storm wings, testing your convictions.",
+            "log": "You clash with skysteel raiders.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Drive them back with turbine thrust",
+                "next": "finale_drive"
+              }
+            ]
+          },
+          "gale": {
+            "title": "Ember Gale Crossing",
+            "text": "Flames dance across the road, daring you to abandon {{motivation}}.",
+            "log": "You guide the caravan through the gale.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Shield civilians with armored carriages",
+                "next": "finale_guard"
+              },
+              {
+                "text": "Use storm turbines to carve a safe corridor",
+                "next": "finale_drive"
+              }
+            ]
+          },
+          "ambush": {
+            "title": "Decoy Ambush",
+            "text": "Your trap springs, scattering raiders and freeing captives.",
+            "log": "You turn the tables on the raiders.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Rescued Scouts"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Assign scouts to watch the supply line",
+                "next": "finale_watch"
+              }
+            ]
+          },
+          "finale_relay": {
+            "title": "Coalition Relay",
+            "text": "Linked settlements share resources, each pledged to uphold your {{focus_trait}} vision.",
+            "log": "A coalition relay strengthens the frontier.",
+            "choices": []
+          },
+          "finale_arrival": {
+            "title": "Triumphant Arrival",
+            "text": "Supplies pour into Emberfall as grateful citizens cheer your {{tone}} heroism.",
+            "log": "The caravan arrives in triumph.",
+            "choices": []
+          },
+          "finale_drive": {
+            "title": "Storm-Driven Vanguard",
+            "text": "Harnessed winds push the caravan ahead of every threat.",
+            "log": "You lead the vanguard through the storm.",
+            "choices": []
+          },
+          "finale_guard": {
+            "title": "Ashguard Bulwark",
+            "text": "Armored wagons form a shield wall, earning trust from every traveler under your care.",
+            "log": "You safeguard the convoy.",
+            "choices": []
+          },
+          "finale_watch": {
+            "title": "Skywatch Scouts",
+            "text": "Rescued scouts patrol the routes, ensuring relief continues for generations.",
+            "log": "Your scouts guard the supply lines.",
+            "choices": []
+          }
+        }
       }
     ],
     "Epic": [
@@ -1477,6 +2586,10 @@
         "meta": {
           "title": "Chronicle of the Sky Loom",
           "subtitle": "An epic {{tone}} {{genre}} odyssey weaving {{focus_trait}} into the fate of the skies.",
+          "genreTags": [
+            "Fantasy",
+            "Sci-Fi"
+          ],
           "stats": {
             "health": 22,
             "insight": 7,
@@ -1899,6 +3012,552 @@
             "title": "Future Horizons",
             "text": "You leave parts of the loom unwoven, inviting future adventurers guided by {{playstyle_trait}}.",
             "log": "You open the loom to new legends.",
+            "choices": []
+          }
+        }
+      },
+      {
+        "meta": {
+          "title": "Requiem of the Astral Choir",
+          "subtitle": "An epic {{tone}} {{genre}} crusade harmonizing realms for {{motivation}}.",
+          "genreTags": [
+            "Fantasy",
+            "Sci-Fi"
+          ],
+          "stats": {
+            "health": 23,
+            "insight": 8,
+            "resolve": 8,
+            "influence": 6,
+            "fortune": 6
+          },
+          "inventory": [
+            "Choir Baton",
+            "Astral Wayfinder"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Celestial Convergence",
+            "text": "Planets align above the Astral Choir, threatening to tear songlines that bind the realms.",
+            "flavor": "{{companion}} steadies the harmonic focus while your {{signature}} thrums with cosmic chords.",
+            "log": "You stand before the Astral Choir.",
+            "choices": [
+              {
+                "text": "Consult the harmonic sages",
+                "next": "sages",
+                "style": "primary"
+              },
+              {
+                "text": "Rally the interplanar fleets",
+                "next": "fleets"
+              },
+              {
+                "text": "Descend to mend broken songlines",
+                "next": "songlines",
+                "style": "secondary"
+              }
+            ]
+          },
+          "sages": {
+            "title": "Harmonic Sages",
+            "text": "Sages reveal that discordant echoes originate from realms that abandoned {{focus_trait}}.",
+            "log": "You heed the harmonic sages.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Compose a counter-melody",
+                "next": "counter"
+              },
+              {
+                "text": "Seek forgotten verses in the archive strata",
+                "next": "verses"
+              }
+            ]
+          },
+          "counter": {
+            "title": "Counter-Melody",
+            "text": "Your melody stabilizes the choir, but requires champions to sustain it.",
+            "log": "You craft a counter-melody.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Resonant Score"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Teach the melody to allied realms",
+                "next": "finale_chorus"
+              }
+            ]
+          },
+          "verses": {
+            "title": "Archive Strata",
+            "text": "Buried verses recount heroes who fused technology with myth to defend {{motivation}}.",
+            "log": "You reclaim the forgotten verses.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Forgotten Verse"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Empower the choir with ancient harmonics",
+                "next": "finale_resonance"
+              }
+            ]
+          },
+          "fleets": {
+            "title": "Interplanar Fleet Council",
+            "text": "Captains of starborne galleons await your orders to safeguard the cosmic crossroads.",
+            "log": "You rally the interplanar fleets.",
+            "effects": {
+              "stats": {
+                "influence": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Launch a preemptive strike on discordant nexuses",
+                "next": "strike"
+              },
+              {
+                "text": "Escort refugees between singing worlds",
+                "next": "refuge"
+              }
+            ]
+          },
+          "strike": {
+            "title": "Discordant Nexus Strike",
+            "text": "Your fleets silence the nexus cannons that shattered harmony.",
+            "log": "You lead a decisive strike.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Nexus Shard"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Bind the shards into the astral loom",
+                "next": "loom"
+              }
+            ]
+          },
+          "refuge": {
+            "title": "Sung Refuge",
+            "text": "Fleets ferry entire choirs to safety, granting you loyal voices across the stars.",
+            "log": "You protect the displaced choirs.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Choir Fleet"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Unite the choirs in a single anthem",
+                "next": "finale_chorus"
+              }
+            ]
+          },
+          "songlines": {
+            "title": "Broken Songlines",
+            "text": "Fractured ley-lines lash out where realms collided in ancient wars.",
+            "log": "You descend to mend the songlines.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Heal the wounds with astral flora",
+                "next": "flora"
+              },
+              {
+                "text": "Anchor the lines with chromatic pylons",
+                "next": "pylons"
+              }
+            ]
+          },
+          "flora": {
+            "title": "Astral Flora",
+            "text": "You seed the void with luminous blossoms that resonate with {{playstyle_trait}} grace.",
+            "log": "Astral flora bloom under your care.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Luminous Seeds"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Plant the seeds within the choir sanctum",
+                "next": "finale_bloom"
+              }
+            ]
+          },
+          "pylons": {
+            "title": "Chromatic Pylons",
+            "text": "Pylons root the songlines, channeling cosmic energy toward your cause.",
+            "log": "You erect chromatic pylons.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Bind the pylons to the astral loom",
+                "next": "loom"
+              }
+            ]
+          },
+          "loom": {
+            "title": "Astral Loom Binding",
+            "text": "The loom hums as you weave shards and pylons into a unified defense.",
+            "log": "You reinforce the astral loom.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Stabilize the loom with the choir's anthem",
+                "next": "finale_resonance"
+              }
+            ]
+          },
+          "finale_chorus": {
+            "title": "Unified Chorus",
+            "text": "Voices from a hundred worlds align, swearing to defend {{motivation}} with harmony and light.",
+            "log": "The astral chorus answers your call.",
+            "choices": []
+          },
+          "finale_resonance": {
+            "title": "Resonant Bastion",
+            "text": "The choir becomes a bulwark, merging technology and myth beneath your guidance.",
+            "log": "A resonant bastion safeguards the realms.",
+            "choices": []
+          },
+          "finale_bloom": {
+            "title": "Cosmic Bloom",
+            "text": "Astral gardens weave between worlds, inviting future heroes to follow your {{focus_trait}} example.",
+            "log": "Cosmic blooms heal the songlines.",
+            "choices": []
+          }
+        }
+      },
+      {
+        "meta": {
+          "title": "Dominion of the Obsidian Bloom",
+          "subtitle": "An epic {{tone}} {{genre}} saga where devotion and intrigue sculpt {{motivation}}.",
+          "genreTags": [
+            "Fantasy",
+            "Erotic Romance"
+          ],
+          "stats": {
+            "health": 24,
+            "insight": 7,
+            "resolve": 8,
+            "influence": 7,
+            "fortune": 5
+          },
+          "inventory": [
+            "Obsidian Bloom",
+            "Courtship Sigil"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Midnight Coronation",
+            "text": "The Obsidian Bloom unfurls only for rulers who can balance passion with justice.",
+            "flavor": "Velvet-clad nobles watch as {{companion}} announces your {{tone}} intentions.",
+            "log": "You claim the obsidian dais.",
+            "choices": [
+              {
+                "text": "Swear oaths with the heartbound knights",
+                "next": "knights",
+                "style": "primary"
+              },
+              {
+                "text": "Negotiate with the veiled magistrates",
+                "next": "magistrates"
+              },
+              {
+                "text": "Descend into the bloom catacombs",
+                "next": "catacombs",
+                "style": "secondary"
+              }
+            ]
+          },
+          "knights": {
+            "title": "Heartbound Knights",
+            "text": "Knights bind their blades to those who prove sincerity toward {{motivation}}.",
+            "log": "You meet the heartbound knights.",
+            "effects": {
+              "stats": {
+                "resolve": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Invite the knights into a sacred pact",
+                "next": "pact"
+              },
+              {
+                "text": "Train with them beneath the obsidian blooms",
+                "next": "training"
+              }
+            ]
+          },
+          "pact": {
+            "title": "Sacred Pact",
+            "text": "The knights offer their sigils, vowing to guard your reign and desires.",
+            "log": "You seal a sacred pact.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Knightly Sigils"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Deploy the knights to patrol the realm",
+                "next": "finale_guard"
+              }
+            ]
+          },
+          "training": {
+            "title": "Obsidian Training Grounds",
+            "text": "Shared drills kindle respect and whispered confessions of loyalty.",
+            "log": "You train with the knights.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Champion them in the tournament of dawn",
+                "next": "tournament"
+              }
+            ]
+          },
+          "tournament": {
+            "title": "Tournament of Dawn",
+            "text": "Victories win you admirers eager to entwine their futures with yours.",
+            "log": "You triumph in the tournament.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Dawn Laurels"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Dedicate the laurels to the realm",
+                "next": "finale_dawn"
+              }
+            ]
+          },
+          "magistrates": {
+            "title": "Veiled Magistrates",
+            "text": "Magistrates test your resolve with labyrinthine contracts.",
+            "log": "You parley with the magistrates.",
+            "effects": {
+              "stats": {
+                "insight": 1,
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Rewrite the covenant of inheritance",
+                "next": "covenant"
+              },
+              {
+                "text": "Broker amnesty for star-crossed lovers",
+                "next": "amnesty"
+              }
+            ]
+          },
+          "covenant": {
+            "title": "Covenant of Inheritance",
+            "text": "Your edits ensure leaders must champion {{focus_trait}} to sit upon the throne.",
+            "log": "You reshape the covenant.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Rewritten Covenant"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Proclaim the covenant to assembled nobles",
+                "next": "finale_covenant"
+              }
+            ]
+          },
+          "amnesty": {
+            "title": "Lovers' Amnesty",
+            "text": "Forbidden couples kneel, promising their loyalty in exchange for sanctuary.",
+            "log": "You grant a lovers' amnesty.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Amnesty Petition"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Host a revel to seal their devotion",
+                "next": "revel"
+              }
+            ]
+          },
+          "revel": {
+            "title": "Devotion Revel",
+            "text": "Music and confession intertwine, weaving allies who would die for your vision.",
+            "log": "You preside over a revel of devotion.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Bind the revelers to guard the bloom",
+                "next": "finale_revel"
+              }
+            ]
+          },
+          "catacombs": {
+            "title": "Obsidian Catacombs",
+            "text": "Beneath the palace, roots of the bloom drink memories from forgotten rulers.",
+            "log": "You explore the catacombs.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Commune with ancestral echoes",
+                "next": "echoes"
+              },
+              {
+                "text": "Harvest obsidian nectar",
+                "next": "nectar"
+              }
+            ]
+          },
+          "echoes": {
+            "title": "Ancestral Echoes",
+            "text": "Phantoms reveal the sacrifices required to keep desire aligned with justice.",
+            "log": "You commune with ancestral echoes.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Ancestral Counsel"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Infuse the counsel into the bloom",
+                "next": "finale_bloom"
+              }
+            ]
+          },
+          "nectar": {
+            "title": "Obsidian Nectar",
+            "text": "The nectar heightens empathy, letting you sense the hearts of your court.",
+            "log": "You harvest obsidian nectar.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Share the nectar during the coronation feast",
+                "next": "feast"
+              }
+            ]
+          },
+          "feast": {
+            "title": "Coronation Feast",
+            "text": "Guests reveal their truths, binding themselves willingly to your {{motivation}}.",
+            "log": "You host the coronation feast.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Feast Vows"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Seal the vows beneath the bloom",
+                "next": "finale_vows"
+              }
+            ]
+          },
+          "finale_guard": {
+            "title": "Knightly Vigil",
+            "text": "Heartbound knights patrol every border, their devotion echoing your own.",
+            "log": "The knights guard your dominion.",
+            "choices": []
+          },
+          "finale_dawn": {
+            "title": "Laurels of Dawn",
+            "text": "Victorious champions swear to defend both love and law under your guidance.",
+            "log": "Your laurels inspire the realm.",
+            "choices": []
+          },
+          "finale_covenant": {
+            "title": "Covenant Throne",
+            "text": "Nobles accept the new covenant, promising loyalty to {{focus_trait}} ideals.",
+            "log": "The covenant reshapes the realm.",
+            "choices": []
+          },
+          "finale_revel": {
+            "title": "Guardians of Devotion",
+            "text": "Revelers become your eyes and ears, ensuring intrigues serve your {{motivation}}.",
+            "log": "Devotion fuels your rule.",
+            "choices": []
+          },
+          "finale_bloom": {
+            "title": "Bloom Ascendant",
+            "text": "The Obsidian Bloom radiates balanced passion across the land.",
+            "log": "The bloom flourishes under your care.",
+            "choices": []
+          },
+          "finale_vows": {
+            "title": "Vows Eternal",
+            "text": "Feast-goers swear everlasting fealty, intertwining affection with duty.",
+            "log": "Vows echo through the court.",
             "choices": []
           }
         }
