@@ -1921,6 +1921,8 @@ function renderGameState(state = gameState) {
 function applyChoiceEffects(choice, state = gameState) {
   if (!choice || !choice.effects) return;
   const { stats = {}, inventory = {}, log, quests, codex, skills, status, reputation } = choice.effects;
+  const toArray = value => (Array.isArray(value) ? value : value !== undefined && value !== null ? [value] : []);
+  const inventoryEffects = Array.isArray(inventory) ? { add: inventory } : (inventory || {});
   for (const [k, v] of Object.entries(stats)) {
     state.stats[k] = (state.stats[k] || 0) + v;
     if (v !== 0) {
@@ -1928,16 +1930,18 @@ function applyChoiceEffects(choice, state = gameState) {
       logEvent(`Your ${formatLabel(k)} ${direction} by ${Math.abs(v)}.`);
     }
   }
-  if (inventory.add) {
-    inventory.add.forEach(item => {
+  const inventoryAdd = toArray(inventoryEffects.add);
+  if (inventoryAdd.length) {
+    inventoryAdd.forEach(item => {
       if (!state.inventory.includes(item)) {
         state.inventory.push(item);
         logEvent(`You gain ${item}.`);
       }
     });
   }
-  if (inventory.remove) {
-    inventory.remove.forEach(item => {
+  const inventoryRemove = toArray(inventoryEffects.remove);
+  if (inventoryRemove.length) {
+    inventoryRemove.forEach(item => {
       const idx = state.inventory.indexOf(item);
       if (idx !== -1) {
         state.inventory.splice(idx, 1);
@@ -1945,24 +1949,48 @@ function applyChoiceEffects(choice, state = gameState) {
       }
     });
   }
+  const inventoryConsume = toArray(inventoryEffects.consume);
+  if (inventoryConsume.length) {
+    inventoryConsume.forEach(item => {
+      const idx = state.inventory.indexOf(item);
+      if (idx !== -1) {
+        state.inventory.splice(idx, 1);
+        logEvent(`You consume ${item}.`);
+      }
+    });
+  }
   if (log) {
     logEvent(log);
   }
 
-  if (quests) {
-    if (Array.isArray(quests.add)) {
-      quests.add.forEach(entry => addQuest(entry, state));
-    }
-    if (Array.isArray(quests.complete)) {
-      quests.complete.forEach(entry => completeQuest(entry, state));
-    }
-  }
+  const questEffects = Array.isArray(quests) ? { add: quests } : (quests || {});
+  toArray(questEffects.add).forEach(entry => addQuest(entry, state));
+  toArray(questEffects.complete).forEach(entry => completeQuest(entry, state));
 
-  if (codex) {
-    const entries = Array.isArray(codex) ? codex : codex.add;
-    if (Array.isArray(entries)) {
-      entries.forEach(entry => addCodexEntry(entry, state));
+  const codexEffects = Array.isArray(codex) ? { add: codex } : (codex || {});
+  toArray(codexEffects.add).forEach(entry => addCodexEntry(entry, state));
+  const codexRemovals = toArray(codexEffects.remove);
+  if (codexRemovals.length) {
+    if (!Array.isArray(state.codex)) {
+      state.codex = [];
     }
+    const codexList = state.codex;
+    codexRemovals.forEach(entry => {
+      const id = canonicalKey(entry.id || entry);
+      if (!id) return;
+      const index = codexList.findIndex(item => item.id === id);
+      if (index === -1) return;
+      const [removed] = codexList.splice(index, 1);
+      const title = removed?.title || formatLabel(id);
+      logEvent(`Codex entry removed: ${title}.`);
+      appendHistoryEntry({
+        type: 'codex',
+        codexId: id,
+        nodeTitle: title,
+        text: `Codex entry removed: ${title}`,
+        body: removed?.summary || '',
+      });
+    });
   }
 
   if (skills) {
@@ -1974,7 +2002,8 @@ function applyChoiceEffects(choice, state = gameState) {
   }
 
   if (reputation) {
-    applyReputationEffects(reputation, state);
+    const reputationEffects = Array.isArray(reputation) ? { factions: reputation } : reputation;
+    applyReputationEffects(reputationEffects, state);
   }
 
   updateIdentity(state, prefs);
