@@ -7,11 +7,34 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="controls">
-    <div id="app"></div>
-    <button id="clear-save">Clear save</button>
-    <label for="theme-select">Theme:</label>
-    <select id="theme-select"></select>
+  <div class="page">
+    <header class="game-header">
+      <h1>Legends at the Crossroads</h1>
+      <p>Answer a few questions to shape your hero, then guide them through a branching adventure filled with unique encounters.</p>
+    </header>
+    <main class="game-layout">
+      <aside class="sidebar">
+        <section class="card info-card" aria-live="polite">
+          <h2 class="card-title">Adventurer Profile</h2>
+          <div id="profile" class="card-content"></div>
+        </section>
+        <section class="card info-card" aria-live="polite">
+          <h2 class="card-title">Journey Log</h2>
+          <div id="log" class="card-content"></div>
+        </section>
+        <section class="card control-card">
+          <h2 class="card-title">Game Options</h2>
+          <div class="control-group">
+            <label for="theme-select">Theme</label>
+            <select id="theme-select"></select>
+          </div>
+          <button id="clear-save" class="danger">Clear Save</button>
+        </section>
+      </aside>
+      <section class="play-area">
+        <div id="app" class="card story-card" role="region" aria-live="polite"></div>
+      </section>
+    </main>
   </div>
   <script src="game.js"></script>
   <script src="theme.js"></script>

@@ -1,220 +1,1698 @@
 {
-  "storySeeds": {
-    "fantasy": {
-      "serious": [
-        "A dragon terrorizes the kingdom.",
-        "A prophecy foretells a hero's return."
-      ],
-      "humorous": [
-        "A wizard's spells keep backfiring.",
-        "A dragon wants to open a bakery."
-      ]
-    },
-    "sci-fi": {
-      "serious": [
-        "A colonist is stranded on Mars.",
-        "An AI uprising begins."
-      ],
-      "humorous": [
-        "Aliens misplace their invasion plans.",
-        "A robot stand-up comic tours the galaxy."
-      ]
-    }
-  },
   "templates": {
-    "Short": {
-      "stats": { "health": 10, "gold": 0 },
-      "inventory": [],
-      "start": {
-        "text": "You awaken in a {{tone}} {{genre}} world at a crossroads.",
-        "choices": [
-          { "text": "Take the left path", "next": "left" },
-          { "text": "Take the right path", "next": "right" }
-        ]
-      },
-      "left": {
-        "text": "A mysterious figure offers you a quest.",
-        "choices": [
-          { "text": "Accept", "next": "quest" },
-          { "text": "Decline", "next": "decline" }
-        ]
-      },
-      "right": {
-        "text": "You stumble upon a hidden cache of supplies.",
-        "inventory": ["mysterious key"],
-        "choices": [
-          { "text": "Take them and continue", "next": "quest" }
-        ]
-      },
-      "quest": {
-        "text": "Your adventure concludes swiftly.",
-        "choices": []
-      },
-      "decline": {
-        "text": "You return home without incident.",
-        "choices": []
+    "Short": [
+      {
+        "meta": {
+          "title": "Echoes at the Crossroads",
+          "subtitle": "A {{tone}} {{genre}} vignette guided by {{playstyle_trait}}.",
+          "stats": {
+            "health": 10,
+            "insight": 4,
+            "resolve": 3,
+            "fortune": 2
+          },
+          "inventory": [
+            "Traveler's Satchel"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Crossroads Dawn",
+            "text": "You awaken at the crossroads, the air thick with {{tone}} promises of {{genre}} adventures.",
+            "flavor": "Your companion {{companion}} waits patiently while you steady your {{signature}}.",
+            "log": "You arrive at the crossroads.",
+            "choices": [
+              {
+                "text": "Investigate the whispering milestone",
+                "next": "milestone",
+                "style": "primary"
+              },
+              {
+                "text": "Explore the flickering market stall",
+                "next": "market",
+                "style": "secondary"
+              }
+            ]
+          },
+          "milestone": {
+            "title": "The Milestone's Secret",
+            "text": "The stone hums with stories of {{focus_trait}}. Tracing the runes reveals a path veiled in shimmering mist.",
+            "log": "The milestone reveals a hidden route.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Follow the revealed path",
+                "next": "glade",
+                "hint": "Trust your {{playstyle_trait}}."
+              },
+              {
+                "text": "Consult your companion about the omen",
+                "next": "return"
+              }
+            ]
+          },
+          "market": {
+            "title": "Flickering Market",
+            "text": "An itinerant vendor offers curios attuned to {{tone}} wanderers, bartering tales for trinkets.",
+            "log": "You bargain at the flickering market.",
+            "effects": {
+              "stats": {
+                "fortune": 1
+              },
+              "inventory": {
+                "add": [
+                  "Runed Token"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Head toward the storyteller's fire",
+                "next": "storyteller",
+                "style": "secondary"
+              },
+              {
+                "text": "Inspect the milestone after all",
+                "next": "milestone"
+              }
+            ]
+          },
+          "return": {
+            "title": "Companion's Counsel",
+            "text": "{{companion}} studies the rune and suggests a moonlit glade said to answer earnest hearts.",
+            "log": "You consult with your companion.",
+            "choices": [
+              {
+                "text": "Heed the advice and seek the glade",
+                "next": "glade"
+              },
+              {
+                "text": "Find the elder storyteller first",
+                "next": "storyteller"
+              }
+            ]
+          },
+          "storyteller": {
+            "title": "Elder of Echoes",
+            "text": "An elder recounts a legend about {{focus_trait}} binding kindred spirits across distance.",
+            "log": "An elder shares a guiding tale.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Story Charm"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Carry the charm to the glade",
+                "next": "glade",
+                "hint": "Legends favor the prepared."
+              },
+              {
+                "text": "Reflect on the tale and head home",
+                "next": "end_reflect",
+                "style": "secondary"
+              }
+            ]
+          },
+          "glade": {
+            "title": "Moonlit Glade",
+            "text": "Moonlight collects into a mirrorlike pool, reflecting futures shaped by {{motivation}}.",
+            "flavor": "The air carries music reminiscent of {{focus_trait}}, resonating with your {{signature}}.",
+            "log": "You reach the moonlit glade.",
+            "choices": [
+              {
+                "text": "Offer the runed token to the waters",
+                "next": "end_mirror",
+                "requirements": {
+                  "inventory": [
+                    "Runed Token"
+                  ]
+                },
+                "hint": "Tokens earned through fortune may unlock hidden paths."
+              },
+              {
+                "text": "Swear an oath with your companion",
+                "next": "end_oath",
+                "requirements": {
+                  "inventory": [
+                    "{{companion}}"
+                  ]
+                },
+                "effects": {
+                  "stats": {
+                    "resolve": 1
+                  }
+                },
+                "hint": "Stand together with {{companion}}."
+              },
+              {
+                "text": "Release the storyteller's charm",
+                "next": "end_charm",
+                "requirements": {
+                  "inventory": [
+                    "Story Charm"
+                  ]
+                },
+                "style": "primary"
+              },
+              {
+                "text": "Gaze quietly and carry the moment",
+                "next": "end_reflect",
+                "style": "secondary"
+              }
+            ]
+          },
+          "end_mirror": {
+            "title": "Reflection of Potential",
+            "text": "The pool reveals a path where {{motivation}} is fulfilled through shared {{focus_trait}}.",
+            "flavor": "With {{companion}} at your side, you feel ready for the chapters ahead.",
+            "log": "The mirror pool welcomes your offering.",
+            "choices": []
+          },
+          "end_oath": {
+            "title": "Oathbound Companions",
+            "text": "Your vow echoes across the glade, weaving {{playstyle_trait}} into a promise of protection.",
+            "log": "You swear a binding oath with your companion.",
+            "choices": []
+          },
+          "end_charm": {
+            "title": "Charm of Guiding Stories",
+            "text": "The charm bursts into guiding lights, charting a {{tone}} road for other wanderers.",
+            "flavor": "Your legend becomes a beacon powered by {{focus_trait}}.",
+            "log": "The storyteller's charm ignites the path.",
+            "choices": []
+          },
+          "end_reflect": {
+            "title": "Quiet Resolve",
+            "text": "You preserve the memory of the glade, trusting {{playstyle_trait}} to lead you when the time is right.",
+            "log": "You depart with quiet resolve.",
+            "choices": []
+          }
+        }
       }
-    },
-    "Medium": {
-      "stats": { "health": 15, "gold": 5 },
-      "inventory": ["map"],
-      "start": {
-        "text": "You set out on a {{tone}} {{genre}} journey.",
-        "choices": [
-          { "text": "Follow the river", "next": "river" },
-          { "text": "Climb the hill", "next": "hill" }
-        ]
-      },
-      "river": {
-        "text": "The river leads to an abandoned camp.",
-        "choices": [
-          { "text": "Search the camp", "next": "camp" },
-          { "text": "Move on", "next": "crossroads" }
-        ]
-      },
-      "hill": {
-        "text": "From the hill, you spot a distant tower.",
-        "choices": [
-          { "text": "Head to the tower", "next": "tower" },
-          { "text": "Return to the path", "next": "crossroads" }
-        ]
-      },
-      "camp": {
-        "text": "You find supplies and gain gold.",
-        "stats": { "gold": 10 },
-        "choices": [
-          { "text": "Continue", "next": "crossroads" }
-        ]
-      },
-      "tower": {
-        "text": "The tower hides an ancient relic.",
-        "inventory": ["relic"],
-        "choices": [
-          { "text": "Take the relic and leave", "next": "crossroads" }
-        ]
-      },
-      "crossroads": {
-        "text": "Two final paths stand before you.",
-        "choices": [
-          { "text": "Path of bravery", "next": "brave_end" },
-          { "text": "Path of wisdom", "next": "wise_end" }
-        ]
-      },
-      "brave_end": {
-        "text": "You confront the final challenge and prevail.",
-        "choices": []
-      },
-      "wise_end": {
-        "text": "You solve the final puzzle and succeed.",
-        "choices": []
+    ],
+    "Medium": [
+      {
+        "meta": {
+          "title": "The Harmonic Caravan",
+          "subtitle": "A {{tone}} {{genre}} journey balancing {{focus_trait}} with {{playstyle_trait}}.",
+          "stats": {
+            "health": 14,
+            "insight": 5,
+            "resolve": 4,
+            "influence": 3,
+            "fortune": 3
+          },
+          "inventory": [
+            "Harmonic Chart"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Gathering of the Harmonic Caravan",
+            "text": "Caravans of storytellers and tinkerers converge beneath auroral banners, inviting you to guide their next move.",
+            "flavor": "Rumor speaks of a threat to the trade roads unless a leader balances {{focus_trait}} with {{playstyle_trait}}.",
+            "log": "The caravan looks to you for direction.",
+            "choices": [
+              {
+                "text": "Visit the performance circle",
+                "next": "caravan",
+                "style": "primary"
+              },
+              {
+                "text": "Study the luminous archives",
+                "next": "archives"
+              },
+              {
+                "text": "Scout the surrounding wilds",
+                "next": "wilds",
+                "style": "secondary"
+              }
+            ]
+          },
+          "caravan": {
+            "title": "Voices in Rehearsal",
+            "text": "Performers test harmonies that could soothe restless spirits along the road.",
+            "log": "You enter the performance circle.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Lead the rehearsal yourself",
+                "next": "rehearsal",
+                "hint": "Showcase your {{playstyle_trait}}."
+              },
+              {
+                "text": "Observe the mechanist tuning instruments",
+                "next": "mechanist"
+              }
+            ]
+          },
+          "mechanist": {
+            "title": "Mechanist's Workshop",
+            "text": "A mechanist demonstrates a clockwork amplifier attuned to {{genre}} rhythms.",
+            "log": "You study the mechanist's work.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Clockwork Focus"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Schedule the amplifier for the finale",
+                "next": "junction"
+              },
+              {
+                "text": "Tinker with the device alongside your companion",
+                "next": "companion_plan",
+                "style": "secondary"
+              }
+            ]
+          },
+          "rehearsal": {
+            "title": "Leading the Chorus",
+            "text": "You guide the voices into resonance, weaving tales of {{motivation}} achieved.",
+            "log": "You lead the rehearsal to victory.",
+            "effects": {
+              "stats": {
+                "influence": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Perform for the gathered crowd",
+                "next": "crowd"
+              },
+              {
+                "text": "Collect whispers about looming dangers",
+                "next": "whispers"
+              }
+            ]
+          },
+          "crowd": {
+            "title": "Performance Under the Banners",
+            "text": "The crowd offers gifts for your leadership, eager to support your {{motivation}}.",
+            "log": "You perform for the caravan.",
+            "effects": {
+              "stats": {
+                "fortune": 2
+              },
+              "inventory": {
+                "add": [
+                  "Festival Medallion"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Share the momentum at the junction",
+                "next": "junction"
+              }
+            ]
+          },
+          "whispers": {
+            "title": "Gathered Whispers",
+            "text": "Informants warn of saboteurs stalking the road, noting weaknesses in the caravan's morale.",
+            "log": "You gather whispers of trouble.",
+            "effects": {
+              "stats": {
+                "insight": 1,
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Prepare defenses at the junction",
+                "next": "junction"
+              }
+            ]
+          },
+          "archives": {
+            "title": "Luminous Archives",
+            "text": "Crystalline shelves shimmer with records of previous pilgrimages.",
+            "log": "You consult the archives.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Decode the starlit codex",
+                "next": "codex"
+              },
+              {
+                "text": "Consult the prism keeper",
+                "next": "keeper"
+              }
+            ]
+          },
+          "codex": {
+            "title": "Starlit Codex",
+            "text": "Ancient glyphs describe how {{focus_trait}} can shield caravans from harm.",
+            "log": "You decode the codex.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Starlit Fragment"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Bring the fragment to the junction",
+                "next": "junction"
+              }
+            ]
+          },
+          "keeper": {
+            "title": "Prism Keeper",
+            "text": "The keeper entrusts you with a prism key that focuses communal intentions.",
+            "log": "You gain the prism key.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Prism Key"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Plan with the caravan leaders",
+                "next": "junction"
+              },
+              {
+                "text": "Share the key with your companion",
+                "next": "companion_plan",
+                "style": "secondary"
+              }
+            ]
+          },
+          "wilds": {
+            "title": "Scouting the Wilds",
+            "text": "You and {{companion}} explore the wild outskirts where strange echoes gather.",
+            "log": "You scout the wilds.",
+            "effects": {
+              "stats": {
+                "health": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Follow the glowing spores",
+                "next": "grove"
+              },
+              {
+                "text": "Chase the wandering echo",
+                "next": "echo"
+              }
+            ]
+          },
+          "grove": {
+            "title": "Resonant Grove",
+            "text": "A grove of luminescent blooms responds to your {{signature}}.",
+            "log": "You harvest a resonant bloom.",
+            "effects": {
+              "stats": {
+                "health": 1
+              },
+              "inventory": {
+                "add": [
+                  "Resonant Bloom"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Bring the bloom to reinforce the junction",
+                "next": "junction"
+              }
+            ]
+          },
+          "echo": {
+            "title": "Wandering Echo",
+            "text": "The echo mirrors fears of the road ahead but also reveals hidden paths.",
+            "log": "You learn from the wandering echo.",
+            "effects": {
+              "stats": {
+                "resolve": 1,
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Warn the caravan council",
+                "next": "junction"
+              }
+            ]
+          },
+          "companion_plan": {
+            "title": "Companion's Strategy",
+            "text": "{{companion}} proposes a daring plan leveraging {{playstyle_trait}}.",
+            "log": "You plan alongside your companion.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Lead the plan at the junction",
+                "next": "junction"
+              }
+            ]
+          },
+          "junction": {
+            "title": "Crossroads Council",
+            "text": "Leaders gather at the junction, debating how to secure the route before dawn.",
+            "flavor": "All eyes fall on you to balance {{focus_trait}} with the caravan's needs.",
+            "log": "You convene the crossroads council.",
+            "choices": [
+              {
+                "text": "Unite the voices into a single anthem",
+                "next": "finale_celebration",
+                "requirements": {
+                  "stats": {
+                    "influence": 4
+                  }
+                },
+                "hint": "Strong leadership inspires confidence."
+              },
+              {
+                "text": "Channel resonance into a protective ward",
+                "next": "finale_guard",
+                "requirements": {
+                  "inventory": [
+                    "Resonant Bloom"
+                  ]
+                },
+                "effects": {
+                  "inventory": {
+                    "remove": [
+                      "Resonant Bloom"
+                    ]
+                  },
+                  "stats": {
+                    "resolve": 2
+                  }
+                },
+                "hint": "Natural resonance can shield the road."
+              },
+              {
+                "text": "Deploy the mechanist's amplifier",
+                "next": "finale_clockwork",
+                "requirements": {
+                  "inventory": [
+                    "Clockwork Focus"
+                  ]
+                },
+                "hint": "Technology amplifies your plan."
+              },
+              {
+                "text": "Trust {{companion}} to lead the scouts",
+                "next": "finale_duo",
+                "requirements": {
+                  "inventory": [
+                    "{{companion}}"
+                  ]
+                },
+                "hint": "Your bond opens unexpected options."
+              },
+              {
+                "text": "Focus the prism key to forge alliances",
+                "next": "finale_alliance",
+                "requirements": {
+                  "inventory": [
+                    "Prism Key"
+                  ]
+                }
+              },
+              {
+                "text": "Consult the starlit fragment for guidance",
+                "next": "finale_fragment",
+                "requirements": {
+                  "inventory": [
+                    "Starlit Fragment"
+                  ]
+                }
+              }
+            ]
+          },
+          "finale_celebration": {
+            "title": "Caravan Celebration",
+            "text": "Your anthem rallies the caravan, fulfilling {{motivation}} while honoring {{focus_trait}}.",
+            "flavor": "The road ahead feels safer beneath your guidance.",
+            "log": "The caravan celebrates your leadership.",
+            "choices": []
+          },
+          "finale_guard": {
+            "title": "Ward of Resonance",
+            "text": "The ward pulses with {{tone}} energy, forming a barrier guided by {{playstyle_trait}}.",
+            "log": "You raise a protective ward.",
+            "choices": []
+          },
+          "finale_clockwork": {
+            "title": "Clockwork Overture",
+            "text": "The amplifier projects melodies that confuse saboteurs and bolster trade.",
+            "log": "Technology secures the caravan.",
+            "choices": []
+          },
+          "finale_duo": {
+            "title": "Bonded Scouts",
+            "text": "You and {{companion}} lead swift scouts, ensuring paths remain open for those who follow.",
+            "log": "You and your companion safeguard the road.",
+            "choices": []
+          },
+          "finale_alliance": {
+            "title": "Alliance of Prism Lights",
+            "text": "The prism key links distant allies, aligning their efforts with your {{motivation}}.",
+            "log": "Allies answer your call.",
+            "choices": []
+          },
+          "finale_fragment": {
+            "title": "Starlit Guidance",
+            "text": "Visions from the fragment reveal safe passages and hidden opportunities.",
+            "log": "The starlit fragment charts the future.",
+            "choices": []
+          }
+        }
       }
-    },
-    "Long": {
-      "stats": { "health": 20, "gold": 10 },
-      "inventory": ["map", "compass"],
-      "start": {
-        "text": "An epic {{tone}} {{genre}} quest begins at the village gate.",
-        "choices": [
-          { "text": "Visit the tavern", "next": "tavern" },
-          { "text": "Head straight to the wilderness", "next": "wilderness" }
-        ]
-      },
-      "tavern": {
-        "text": "The tavern is bustling with rumors.",
-        "choices": [
-          { "text": "Listen to rumors", "next": "rumors" },
-          { "text": "Recruit an ally", "next": "ally" }
-        ]
-      },
-      "wilderness": {
-        "text": "The wilderness is harsh and uncharted.",
-        "choices": [
-          { "text": "Explore the forest", "next": "forest" },
-          { "text": "Traverse the desert", "next": "desert" }
-        ]
-      },
-      "rumors": {
-        "text": "You learn of treasure in the north.",
-        "choices": [
-          { "text": "Set out north", "next": "mountains" }
-        ]
-      },
-      "ally": {
-        "text": "A seasoned adventurer joins you.",
-        "stats": { "health": 25 },
-        "inventory": ["ally"],
-        "choices": [
-          { "text": "Begin the quest", "next": "wilderness" }
-        ]
-      },
-      "forest": {
-        "text": "You encounter hostile creatures.",
-        "choices": [
-          { "text": "Fight", "next": "fight" },
-          { "text": "Flee", "next": "flee" }
-        ]
-      },
-      "desert": {
-        "text": "The desert tests your endurance.",
-        "choices": [
-          { "text": "Search for an oasis", "next": "oasis" },
-          { "text": "Push forward", "next": "ruins" }
-        ]
-      },
-      "mountains": {
-        "text": "Treacherous mountains block your path.",
-        "choices": [
-          { "text": "Climb carefully", "next": "peak" },
-          { "text": "Find a cave", "next": "cave" }
-        ]
-      },
-      "fight": {
-        "text": "After a fierce battle, you emerge victorious.",
-        "choices": [
-          { "text": "Continue", "next": "ruins" }
-        ]
-      },
-      "flee": {
-        "text": "You escape but lose some gold.",
-        "stats": { "gold": -5 },
-        "choices": [
-          { "text": "Regroup", "next": "ruins" }
-        ]
-      },
-      "oasis": {
-        "text": "The oasis refreshes you.",
-        "stats": { "health": 5 },
-        "choices": [
-          { "text": "Head to the ruins", "next": "ruins" }
-        ]
-      },
-      "ruins": {
-        "text": "Ancient ruins contain the final challenge.",
-        "choices": [
-          { "text": "Solve the puzzle", "next": "puzzle_end" },
-          { "text": "Force the door", "next": "battle_end" }
-        ]
-      },
-      "peak": {
-        "text": "From the peak, the world unfolds before you.",
-        "choices": [
-          { "text": "Descend to the ruins", "next": "ruins" }
-        ]
-      },
-      "cave": {
-        "text": "A hidden passage leads toward the ruins.",
-        "choices": [
-          { "text": "Follow the passage", "next": "ruins" }
-        ]
-      },
-      "puzzle_end": {
-        "text": "You unlock the secrets and claim your reward.",
-        "choices": []
-      },
-      "battle_end": {
-        "text": "You battle guardians and seize the treasure.",
-        "choices": []
+    ],
+    "Long": [
+      {
+        "meta": {
+          "title": "Siege of the Veiled Bastion",
+          "subtitle": "A {{tone}} {{genre}} saga pursuing {{motivation}} across perilous fronts.",
+          "stats": {
+            "health": 18,
+            "insight": 6,
+            "resolve": 6,
+            "influence": 4,
+            "fortune": 4
+          },
+          "inventory": [
+            "Campaign Map",
+            "Signal Whistle"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Summoning the War Council",
+            "text": "Rumors speak of the Veiled Bastion choking the trade arteries. Leaders gather, awaiting your strategy.",
+            "flavor": "Your {{signature}} rests on the table beside maps annotated with {{focus_trait}}.",
+            "log": "You convene a war council.",
+            "choices": [
+              {
+                "text": "Recruit allies in the tavern district",
+                "next": "tavern",
+                "style": "primary"
+              },
+              {
+                "text": "Plan at the grand council chamber",
+                "next": "council"
+              },
+              {
+                "text": "Scout the wilderness approaches",
+                "next": "wilderness",
+                "style": "secondary"
+              }
+            ]
+          },
+          "tavern": {
+            "title": "Tavern of Prospects",
+            "text": "Mercenaries and informants crowd around, curious about your {{tone}} mission.",
+            "log": "You canvas the tavern for support.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Recruit a daring fighter",
+                "next": "recruit_blade"
+              },
+              {
+                "text": "Recruit a cunning informant",
+                "next": "recruit_rogue"
+              }
+            ]
+          },
+          "recruit_blade": {
+            "title": "Daring Fighter",
+            "text": "A warrior pledges their blade, admiring your resolve toward {{motivation}}.",
+            "log": "You recruit a daring fighter.",
+            "effects": {
+              "stats": {
+                "health": 2
+              },
+              "inventory": {
+                "add": [
+                  "Daring Fighter"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Report to the council with your new ally",
+                "next": "council"
+              }
+            ]
+          },
+          "recruit_rogue": {
+            "title": "Cunning Informant",
+            "text": "An informant slips you coded messages about the bastion's routines.",
+            "log": "You gain a cunning informant.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Cunning Informant"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Bring the intelligence to the council",
+                "next": "council"
+              }
+            ]
+          },
+          "council": {
+            "title": "Grand Council Chamber",
+            "text": "Strategists and mages await your command, keen to align with {{focus_trait}}.",
+            "log": "You take command of the council.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Draft a meticulous siege plan",
+                "next": "strategize"
+              },
+              {
+                "text": "Send spies to probe the bastion",
+                "next": "spy"
+              },
+              {
+                "text": "Signal the wilderness scouts",
+                "next": "wilderness"
+              }
+            ]
+          },
+          "strategize": {
+            "title": "Detailed Strategies",
+            "text": "Your quills dance across the map, arranging {{playstyle_trait}} into staged assaults.",
+            "log": "You draft a siege plan.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Siege Plan"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Prepare supply lines to support the siege",
+                "next": "supply"
+              },
+              {
+                "text": "Coordinate with the arcane sages",
+                "next": "sage_bridge"
+              }
+            ]
+          },
+          "spy": {
+            "title": "Shadowed Agents",
+            "text": "Spies vanish into the night to pry secrets from the bastion's walls.",
+            "log": "You dispatch spies into the shadows.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Shadow Intel"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Ambush the enemy couriers",
+                "next": "ambush"
+              },
+              {
+                "text": "Expose traitors within your ranks",
+                "next": "expose"
+              }
+            ]
+          },
+          "wilderness": {
+            "title": "Wilderness Recon",
+            "text": "You and {{companion}} traverse hidden paths seeking weaknesses in the bastion's perimeter.",
+            "log": "You scout the wild approaches.",
+            "effects": {
+              "stats": {
+                "health": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Scout the ancient ruins nearby",
+                "next": "scout_ruins"
+              },
+              {
+                "text": "Forge an alliance with roaming guardians",
+                "next": "alliance_guardians"
+              }
+            ]
+          },
+          "scout_ruins": {
+            "title": "Forgotten Ruins",
+            "text": "The ruins conceal catacombs rumored to open beneath the bastion.",
+            "log": "You uncover ancient catacombs.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Ancient Key"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Map the catacombs for infiltration",
+                "next": "catacombs"
+              },
+              {
+                "text": "Return to the council with news",
+                "next": "council"
+              }
+            ]
+          },
+          "alliance_guardians": {
+            "title": "Guardian Accord",
+            "text": "Forest guardians agree to aid you if {{focus_trait}} is respected.",
+            "log": "You forge a pact with guardians.",
+            "effects": {
+              "stats": {
+                "influence": 2
+              },
+              "inventory": {
+                "add": [
+                  "Guardian Pact"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Escort the guardians toward the bastion",
+                "next": "bastion"
+              },
+              {
+                "text": "Investigate rumors of a rift",
+                "next": "rift"
+              }
+            ]
+          },
+          "supply": {
+            "title": "Securing Supply Lines",
+            "text": "Merchants pledge support, lending weight to your {{motivation}}.",
+            "log": "You coordinate supply caravans.",
+            "effects": {
+              "stats": {
+                "fortune": 2
+              },
+              "inventory": {
+                "add": [
+                  "Supply Caravan"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Protect the caravans personally",
+                "next": "caravan_defense"
+              },
+              {
+                "text": "Send the supplies ahead to the front",
+                "next": "bastion"
+              }
+            ]
+          },
+          "sage_bridge": {
+            "title": "Arcane Bridge",
+            "text": "Sages weave a bridge of light that could deliver troops past the walls.",
+            "log": "You obtain an arcane bridge.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Arcane Bridge"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Test the bridge in a daring raid",
+                "next": "bridge_trial"
+              },
+              {
+                "text": "Reserve it for the final assault",
+                "next": "bastion"
+              }
+            ]
+          },
+          "ambush": {
+            "title": "Courier Ambush",
+            "text": "You seize enemy dispatches before they reach the bastion.",
+            "log": "You ambush enemy couriers.",
+            "effects": {
+              "stats": {
+                "resolve": 2
+              },
+              "inventory": {
+                "add": [
+                  "Seized Seals"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Interrogate the captured couriers",
+                "next": "interrogate"
+              },
+              {
+                "text": "Race to the bastion with new intel",
+                "next": "bastion"
+              }
+            ]
+          },
+          "expose": {
+            "title": "Traitors Revealed",
+            "text": "You uncover spies within your own ranks and turn them to your cause.",
+            "log": "You expose traitors.",
+            "effects": {
+              "stats": {
+                "influence": 1
+              },
+              "inventory": {
+                "add": [
+                  "Traitor List"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Redeploy loyalists to key positions",
+                "next": "redeploy"
+              },
+              {
+                "text": "Spread an inspiring message",
+                "next": "inspire"
+              }
+            ]
+          },
+          "catacombs": {
+            "title": "Underway Network",
+            "text": "The catacomb map reveals an entrance beneath the bastion's keep.",
+            "log": "You secure a catacomb approach.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Catacomb Map"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Plant diversions within the tunnels",
+                "next": "diversions"
+              },
+              {
+                "text": "Open the secret gate during the assault",
+                "next": "bastion"
+              }
+            ]
+          },
+          "caravan_defense": {
+            "title": "Defending the Caravan",
+            "text": "You repel raiders, ensuring the siege will be supplied.",
+            "log": "You safeguard the supply caravan.",
+            "effects": {
+              "stats": {
+                "health": 2
+              },
+              "inventory": {
+                "add": [
+                  "Shielded Wagons"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "March with the caravan toward the bastion",
+                "next": "bastion"
+              }
+            ]
+          },
+          "bridge_trial": {
+            "title": "Bridge Raid",
+            "text": "You and {{companion}} lead a strike across the arcane bridge, testing its stability.",
+            "log": "You test the arcane bridge.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Stabilized Bridge"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Launch a surprise attack on the bastion",
+                "next": "bastion"
+              }
+            ]
+          },
+          "interrogate": {
+            "title": "Prisoner Interrogations",
+            "text": "The couriers reveal schedules and hidden gates.",
+            "log": "You extract vital schedules.",
+            "effects": {
+              "stats": {
+                "insight": 1
+              },
+              "inventory": {
+                "add": [
+                  "Enemy Schedules"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Coordinate the assault using the schedules",
+                "next": "bastion"
+              }
+            ]
+          },
+          "redeploy": {
+            "title": "Redeployed Veterans",
+            "text": "Seasoned warriors reinforce your lines.",
+            "log": "Veteran units bolster your ranks.",
+            "effects": {
+              "stats": {
+                "health": 1
+              },
+              "inventory": {
+                "add": [
+                  "Veteran Unit"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Bolster the front lines at the bastion",
+                "next": "bastion"
+              }
+            ]
+          },
+          "inspire": {
+            "title": "Rallying Cry",
+            "text": "Your speech reminds everyone why {{motivation}} must prevail.",
+            "log": "You inspire your forces.",
+            "effects": {
+              "stats": {
+                "influence": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Lead the morale charge",
+                "next": "bastion"
+              }
+            ]
+          },
+          "diversions": {
+            "title": "Hidden Diversions",
+            "text": "Explosives and distractions are placed along the underground paths.",
+            "log": "You plant diversions in the tunnels.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Fireworks Cache"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Signal the diversions during the assault",
+                "next": "bastion"
+              }
+            ]
+          },
+          "rift": {
+            "title": "Rift Discovery",
+            "text": "A shimmering rift promises a shortcut behind enemy lines.",
+            "log": "You secure a rift compass.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Rift Compass"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Plan to use the rift mid-siege",
+                "next": "bastion"
+              }
+            ]
+          },
+          "bastion": {
+            "title": "Siege of the Veiled Bastion",
+            "text": "Siege horns echo as you orchestrate the assault, balancing {{focus_trait}} and {{playstyle_trait}}.",
+            "flavor": "Every ally watches to see how {{motivation}} will reshape the bastion's rule.",
+            "log": "You direct the final assault.",
+            "choices": [
+              {
+                "text": "Command the armies using the siege plan",
+                "next": "final_command",
+                "requirements": {
+                  "inventory": [
+                    "Siege Plan"
+                  ]
+                }
+              },
+              {
+                "text": "Send guardians across the arcane bridge",
+                "next": "final_bridge",
+                "requirements": {
+                  "inventory": [
+                    "Arcane Bridge"
+                  ]
+                }
+              },
+              {
+                "text": "Open the secret gate with the ancient key",
+                "next": "final_gate",
+                "requirements": {
+                  "inventory": [
+                    "Ancient Key"
+                  ]
+                }
+              },
+              {
+                "text": "Unleash the tunnel diversions",
+                "next": "final_diversion",
+                "requirements": {
+                  "inventory": [
+                    "Fireworks Cache"
+                  ]
+                }
+              },
+              {
+                "text": "Lead a rift strike behind the bastion",
+                "next": "final_rift",
+                "requirements": {
+                  "inventory": [
+                    "Rift Compass"
+                  ]
+                }
+              },
+              {
+                "text": "Coordinate allied guardians on the front",
+                "next": "final_alliance",
+                "requirements": {
+                  "inventory": [
+                    "Guardian Pact"
+                  ]
+                }
+              },
+              {
+                "text": "Reinforce with the supply caravan",
+                "next": "final_supply",
+                "requirements": {
+                  "inventory": [
+                    "Supply Caravan"
+                  ]
+                }
+              },
+              {
+                "text": "Deploy informants for sabotage",
+                "next": "final_shadow",
+                "requirements": {
+                  "inventory": [
+                    "Shadow Intel"
+                  ]
+                }
+              },
+              {
+                "text": "Charge personally with {{signature}}",
+                "next": "final_duel",
+                "requirements": {
+                  "stats": {
+                    "health": 16
+                  }
+                }
+              },
+              {
+                "text": "Retreat to regroup for another day",
+                "next": "final_retreat",
+                "style": "secondary"
+              }
+            ]
+          },
+          "final_command": {
+            "title": "Coordinated Command",
+            "text": "Your plan unfolds flawlessly, knitting {{focus_trait}} into victory and advancing {{motivation}}.",
+            "log": "The siege succeeds under your command.",
+            "choices": []
+          },
+          "final_bridge": {
+            "title": "Bridge of Light",
+            "text": "Guardians race across the arcane bridge, opening the gates to those who dream of {{motivation}}.",
+            "log": "Allied guardians storm the bastion.",
+            "choices": []
+          },
+          "final_gate": {
+            "title": "Gate of Echoing Steps",
+            "text": "The ancient key opens a silent passage, allowing {{playstyle_trait}} to shine in precise strikes.",
+            "log": "You slip through the secret gate.",
+            "choices": []
+          },
+          "final_diversion": {
+            "title": "Explosive Diversions",
+            "text": "Fireworks bloom, distracting defenders while your forces secure the walls.",
+            "log": "Diversions tip the battle in your favor.",
+            "choices": []
+          },
+          "final_rift": {
+            "title": "Rift Maneuver",
+            "text": "You emerge behind enemy lines, fulfilling {{motivation}} with daring precision.",
+            "log": "The rift strike collapses the bastion's command.",
+            "choices": []
+          },
+          "final_alliance": {
+            "title": "Alliance Triumph",
+            "text": "Guardians and allies unite, proving {{focus_trait}} can reshape power.",
+            "log": "Allies secure the bastion together.",
+            "choices": []
+          },
+          "final_supply": {
+            "title": "Enduring Supply",
+            "text": "Shielded wagons keep the assault relentless until the bastion yields.",
+            "log": "Supplies sustain the siege to victory.",
+            "choices": []
+          },
+          "final_shadow": {
+            "title": "Shadow Sabotage",
+            "text": "Informants disrupt defenses, letting your forces sweep through.",
+            "log": "Sabotage clears a path to triumph.",
+            "choices": []
+          },
+          "final_duel": {
+            "title": "Champion's Duel",
+            "text": "You and {{companion}} confront the bastion commander, proving {{motivation}} cannot be denied.",
+            "log": "You win the duel at the bastion's heart.",
+            "choices": []
+          },
+          "final_retreat": {
+            "title": "Measured Retreat",
+            "text": "You preserve your forces, knowing {{playstyle_trait}} will reveal another chance.",
+            "log": "You withdraw to plan anew.",
+            "choices": []
+          }
+        }
       }
-    }
+    ],
+    "Epic": [
+      {
+        "meta": {
+          "title": "Chronicle of the Sky Loom",
+          "subtitle": "An epic {{tone}} {{genre}} odyssey weaving {{focus_trait}} into the fate of the skies.",
+          "stats": {
+            "health": 22,
+            "insight": 7,
+            "resolve": 7,
+            "influence": 6,
+            "fortune": 5
+          },
+          "inventory": [
+            "Sky Loom Compass",
+            "Archivist Sigil"
+          ]
+        },
+        "nodes": {
+          "start": {
+            "title": "Summit of Beginnings",
+            "text": "At the summit observatory, constellations realign, heralding a threat to the aerial realms.",
+            "flavor": "Only one guided by {{motivation}} and {{playstyle_trait}} can respond in time.",
+            "log": "You witness omens in the skies.",
+            "choices": [
+              {
+                "text": "Consult the star archivists",
+                "next": "archives",
+                "style": "primary"
+              },
+              {
+                "text": "Rally the skyship captains",
+                "next": "skyship"
+              },
+              {
+                "text": "Descend to the world below for allies",
+                "next": "worldroot",
+                "style": "secondary"
+              }
+            ]
+          },
+          "archives": {
+            "title": "Star Archives",
+            "text": "Ancient charts reveal fractures spreading across ley-lines.",
+            "log": "You glean knowledge from the archives.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Decode the sky loom pattern",
+                "next": "pattern"
+              },
+              {
+                "text": "Seek the archivist council's blessing",
+                "next": "council"
+              }
+            ]
+          },
+          "skyship": {
+            "title": "Deck of the Stormrider",
+            "text": "Captains await your command to secure the skies for {{motivation}}.",
+            "log": "You take command of the skyships.",
+            "effects": {
+              "stats": {
+                "influence": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Chart a course to the tempest border",
+                "next": "tempest"
+              },
+              {
+                "text": "Patrol for looming threats",
+                "next": "patrol"
+              }
+            ]
+          },
+          "worldroot": {
+            "title": "Worldroot Assembly",
+            "text": "Below the clouds, druids and artificers debate how {{focus_trait}} can restore balance.",
+            "log": "You gather support from below.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              },
+              "inventory": {
+                "add": [
+                  "Worldroot Pact"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Forge an alliance with the earthbound",
+                "next": "alliance"
+              },
+              {
+                "text": "Return to the summit with reinforcements",
+                "next": "summit_return"
+              }
+            ]
+          },
+          "pattern": {
+            "title": "Sky Loom Pattern",
+            "text": "Mathematical constellations predict a collapse unless threads are rewoven.",
+            "log": "You decode the sky loom's warnings.",
+            "effects": {
+              "stats": {
+                "insight": 2
+              },
+              "inventory": {
+                "add": [
+                  "Loom Diagram"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Project the pattern to the captains",
+                "next": "skyship"
+              },
+              {
+                "text": "Synchronize with {{companion}}'s intuition",
+                "next": "companion_sync"
+              }
+            ]
+          },
+          "council": {
+            "title": "Archivist Council",
+            "text": "Archivists lend artifacts tuned to {{tone}} destinies.",
+            "log": "You gain the council's favor.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Harmonic Prism"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Empower the sky loom compass",
+                "next": "loom_station"
+              },
+              {
+                "text": "Share the prism with allied captains",
+                "next": "skyship"
+              }
+            ]
+          },
+          "tempest": {
+            "title": "Tempest Border",
+            "text": "Living storms swirl with messages about impending collapse.",
+            "log": "You confront the tempest border.",
+            "effects": {
+              "stats": {
+                "resolve": 2
+              }
+            },
+            "choices": [
+              {
+                "text": "Harness the storm into a ward",
+                "next": "stormward"
+              },
+              {
+                "text": "Follow lightning trails to hidden bastions",
+                "next": "hidden_bastion"
+              }
+            ]
+          },
+          "patrol": {
+            "title": "Sky Patrol",
+            "text": "Patrols intercept raiders seeking to exploit the chaos.",
+            "log": "You secure the air lanes.",
+            "effects": {
+              "stats": {
+                "health": 1
+              },
+              "inventory": {
+                "add": [
+                  "Seized Sky Charts"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Deliver the charts to the archives",
+                "next": "archives"
+              },
+              {
+                "text": "Use the charts to plan a counterstrike",
+                "next": "counterstrike"
+              }
+            ]
+          },
+          "alliance": {
+            "title": "Earthbound Alliance",
+            "text": "The worldroot coalition pledges aid if {{focus_trait}} guides your choices.",
+            "log": "You secure earthbound allies.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Alliance Standard"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Unite them with the sky captains",
+                "next": "summit_return"
+              },
+              {
+                "text": "Channel their strength into the loom",
+                "next": "loom_station"
+              }
+            ]
+          },
+          "summit_return": {
+            "title": "Return to the Summit",
+            "text": "Allies gather, awaiting the weaving of destiny.",
+            "log": "You return with newfound support.",
+            "choices": [
+              {
+                "text": "Prepare the sky loom station",
+                "next": "loom_station"
+              },
+              {
+                "text": "Deploy to the storm front",
+                "next": "tempest"
+              }
+            ]
+          },
+          "companion_sync": {
+            "title": "Shared Resonance",
+            "text": "You and {{companion}} synchronize visions, blending logic and intuition.",
+            "log": "Your bond deepens through the loom.",
+            "effects": {
+              "stats": {
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Translate the vision into a flight plan",
+                "next": "skyship"
+              },
+              {
+                "text": "Imprint the resonance on the loom",
+                "next": "loom_station"
+              }
+            ]
+          },
+          "loom_station": {
+            "title": "Sky Loom Station",
+            "text": "The loom awaits threads from allies, artifacts, and your {{motivation}}.",
+            "log": "You approach the sky loom core.",
+            "choices": [
+              {
+                "text": "Weave the loom with harmonic prisms",
+                "next": "loom_prism",
+                "requirements": {
+                  "inventory": [
+                    "Harmonic Prism"
+                  ]
+                }
+              },
+              {
+                "text": "Integrate the worldroot pact",
+                "next": "loom_worldroot",
+                "requirements": {
+                  "inventory": [
+                    "Worldroot Pact"
+                  ]
+                }
+              },
+              {
+                "text": "Deploy the alliance standard",
+                "next": "loom_alliance",
+                "requirements": {
+                  "inventory": [
+                    "Alliance Standard"
+                  ]
+                }
+              },
+              {
+                "text": "Thread the loom using the diagram",
+                "next": "loom_diagram",
+                "requirements": {
+                  "inventory": [
+                    "Loom Diagram"
+                  ]
+                }
+              },
+              {
+                "text": "Channel the storm ward",
+                "next": "loom_storm",
+                "requirements": {
+                  "inventory": [
+                    "Storm Ward"
+                  ]
+                }
+              },
+              {
+                "text": "Focus on your bond with {{companion}}",
+                "next": "loom_companion",
+                "requirements": {
+                  "inventory": [
+                    "{{companion}}"
+                  ]
+                }
+              },
+              {
+                "text": "Call for aid from the sky captains",
+                "next": "loom_captains"
+              },
+              {
+                "text": "Open the loom to future wanderers",
+                "next": "loom_future",
+                "style": "secondary"
+              }
+            ]
+          },
+          "stormward": {
+            "title": "Storm Ward",
+            "text": "You tame the tempest into a shield of crackling light.",
+            "log": "You capture storm power.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Storm Ward"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Bring the ward to the loom",
+                "next": "loom_station"
+              }
+            ]
+          },
+          "hidden_bastion": {
+            "title": "Hidden Bastion",
+            "text": "A fortress in the clouds holds prisoners vital to {{motivation}}.",
+            "log": "You liberate hidden captives.",
+            "effects": {
+              "inventory": {
+                "add": [
+                  "Liberated Navigators"
+                ]
+              }
+            },
+            "choices": [
+              {
+                "text": "Send the navigators to aid the loom",
+                "next": "loom_captains"
+              },
+              {
+                "text": "Escort them to the skyship fleet",
+                "next": "skyship"
+              }
+            ]
+          },
+          "counterstrike": {
+            "title": "Precision Counterstrike",
+            "text": "You strike at raider strongholds, ensuring safe skies.",
+            "log": "You secure crucial victories.",
+            "effects": {
+              "stats": {
+                "health": 1,
+                "resolve": 1
+              }
+            },
+            "choices": [
+              {
+                "text": "Devote the momentum to the loom",
+                "next": "loom_station"
+              }
+            ]
+          },
+          "loom_prism": {
+            "title": "Prismatic Weave",
+            "text": "Prismatic light amplifies {{focus_trait}}, stabilizing the loom's resonance.",
+            "log": "You weave with harmonic prisms.",
+            "choices": []
+          },
+          "loom_worldroot": {
+            "title": "Worldroot Threads",
+            "text": "Earthbound energy anchors the loom, honoring {{motivation}}.",
+            "log": "Worldroot power steadies the loom.",
+            "choices": []
+          },
+          "loom_alliance": {
+            "title": "Alliance Weave",
+            "text": "United banners form new constellations reflecting {{focus_trait}}.",
+            "log": "Allies leave their mark on the loom.",
+            "choices": []
+          },
+          "loom_diagram": {
+            "title": "Diagrammatic Symphony",
+            "text": "Mathematics guides each thread, blending {{playstyle_trait}} with precision.",
+            "log": "The loom responds to your calculations.",
+            "choices": []
+          },
+          "loom_storm": {
+            "title": "Storm Threading",
+            "text": "Storm energy crackles through the loom, fortifying the skies.",
+            "log": "Storm power fortifies the loom.",
+            "choices": []
+          },
+          "loom_companion": {
+            "title": "Bonded Thread",
+            "text": "{{companion}} adds heart to the weave, ensuring {{motivation}} serves all.",
+            "log": "Your bond shapes the loom.",
+            "choices": []
+          },
+          "loom_captains": {
+            "title": "Captain's Accord",
+            "text": "Sky captains pledge ongoing patrols to protect the loom.",
+            "log": "Captains commit to your cause.",
+            "choices": []
+          },
+          "loom_future": {
+            "title": "Future Horizons",
+            "text": "You leave parts of the loom unwoven, inviting future adventurers guided by {{playstyle_trait}}.",
+            "log": "You open the loom to new legends.",
+            "choices": []
+          }
+        }
+      }
+    ]
   }
 }

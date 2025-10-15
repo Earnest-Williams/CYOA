@@ -1,9 +1,44 @@
 {
   "questions": [
-    { "id": "genre", "text": "Preferred genre?", "answers": ["Fantasy", "Sci-Fi", "Mystery"] },
-    { "id": "tone", "text": "Preferred tone?", "answers": ["Light-hearted", "Serious"] },
-    { "id": "length", "text": "Desired length?", "answers": ["Short", "Medium", "Long"] },
-    { "id": "playstyle", "text": "Preferred playstyle?", "answers": ["Casual", "Strategic", "Narrative"] },
-    { "id": "focus", "text": "Main story focus?", "answers": ["Character", "Plot", "World"] }
+    {
+      "id": "genre",
+      "text": "Choose your favorite setting:",
+      "answers": ["Fantasy", "Sci-Fi", "Mystery", "Post-Apocalyptic", "Steampunk"]
+    },
+    {
+      "id": "tone",
+      "text": "Select the tone you'd like to play in:",
+      "answers": ["Light-hearted", "Balanced", "Serious", "Grim"]
+    },
+    {
+      "id": "length",
+      "text": "How long should this journey be?",
+      "answers": ["Short", "Medium", "Long", "Epic"]
+    },
+    {
+      "id": "playstyle",
+      "text": "What's your adventuring style?",
+      "answers": ["Casual", "Strategic", "Narrative", "Risk-Taker"]
+    },
+    {
+      "id": "focus",
+      "text": "Which story element should shine brightest?",
+      "answers": ["Character", "Plot", "World", "Discovery"]
+    },
+    {
+      "id": "motivation",
+      "text": "What drives your hero forward?",
+      "answers": ["Redemption", "Wealth", "Knowledge", "Legacy"]
+    },
+    {
+      "id": "companion",
+      "text": "Who accompanies you on this quest?",
+      "answers": ["A stalwart guardian", "An insightful sage", "A cunning rogue", "A loyal beast"]
+    },
+    {
+      "id": "signature",
+      "text": "Choose a signature tool to rely on:",
+      "answers": ["Enchanted Blade", "Arcane Codex", "Ingenious Gadget", "Shadow Cloak"]
+    }
   ]
 }
